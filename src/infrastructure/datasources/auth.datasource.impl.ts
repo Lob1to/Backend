@@ -19,7 +19,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
             return UserEntity.fromObject(user);
 
         } catch (error) {
-            throw CustomError.internalServer('Internal server error', 'unknown-error', 'AuthDatasourceImpl.login');
+            throw CustomError.internalServer('Internal server error', 'unknown-error');
         }
     }
 
