@@ -18,7 +18,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
     async execute(email: string): Promise<boolean> {
 
         const token = await JwtAdapter.generateToken({ email });
-        if (!token) throw CustomError.internalServer('Error while getting token');
+        if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
 
         const link = `${this.webServiceUrl}/auth/validate-email/${token}`;
         const html = `
@@ -34,7 +34,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
         }
 
         const isSent = await this.emailService.sendEmail(options);
-        if (!isSent) throw CustomError.internalServer('Error while sending email');
+        if (!isSent) throw CustomError.internalServer('Error while sending email', 'server-error');
 
         return true;
 

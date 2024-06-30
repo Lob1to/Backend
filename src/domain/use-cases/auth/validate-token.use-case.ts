@@ -13,13 +13,13 @@ export class ValidateToken implements ValidateTokenUseCase {
 
         const payload = await JwtAdapter.validateToken(token);
 
-        if (!payload) throw CustomError.unauthorized('Invalid Token');
+        if (!payload) throw CustomError.unauthorized('Invalid Token', 'invalid-token');
 
         const { email } = payload as { email: string };
-        if (!email) throw CustomError.unauthorized('Invalid Token Data');
+        if (!email) throw CustomError.unauthorized('Invalid Token Data', 'invalid-token-data');
 
         const user = await UserModel.findOne({ email });
-        if (!user) throw CustomError.internalServer('Email does not exists');
+        if (!user) throw CustomError.internalServer('Email does not exists', 'email-not-exists');
 
         user.emailValidated = true;
         await user.save();

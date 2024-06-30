@@ -22,7 +22,7 @@ export class RegisterUser implements RegisterUserUseCase {
         await this.sendEmail.execute(newUser.email);
 
         const token = await JwtAdapter.generateToken({ id: newUser.id });
-        if (!token) throw CustomError.internalServer('Internal server error on token generation');
+        if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
 
         const { password, ...userEntity } = newUser;
 
