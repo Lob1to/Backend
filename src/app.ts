@@ -1,4 +1,4 @@
-import { envs } from "./config/plugins/envs.plugin";
+import { envs } from "./config/envs.plugin";
 import { MongoDatabase } from "./data/mongo";
 import { AppRoutes } from "./presentation/routes";
 import { Server } from "./presentation/server";
