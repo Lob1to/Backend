@@ -1,5 +1,11 @@
 import { Request, Response } from "express";
-import { AuthRepository, RegisterUserDto, ValidateToken, SendEmailValidationLink, LoginUserDto, RegisterUser, CustomError, LoginUser, LogRepository, CreateLog, LogSeverityLevel } from "../../domain";
+
+import {
+    AuthRepository, RegisterUserDto, ValidateToken, SendEmailValidationLink,
+    LoginUserDto, RegisterUser, CustomError, LoginUser, LogRepository, UpdateUserDto
+} from "../../domain";
+
+import { UpdateUser } from "../../domain/use-cases/auth/update-user.use-case";
 
 
 export class AuthController {
@@ -22,17 +28,11 @@ export class AuthController {
         if (error) return res.status(400).json({ success: false, message: error, errorCode: errorCode });
 
         try {
-            new LoginUser(this.authRepository).execute(loginDto!)
+            new LoginUser(this.authRepository, this.logRepository).execute(loginDto!)
                 .then(user => res.status(200).json({ success: true, message: 'Login successful', data: user }))
                 .catch(error => this.handleErrors(error, res));
 
         } catch (error) {
-
-            new CreateLog(this.logRepository).execute({
-                message: `${error}`,
-                level: LogSeverityLevel.high,
-                origin: 'auth-controller',
-            });
 
             return res.status(500).json({ success: false, message: 'Internal server error', errorCode: 'unknown-error' });
         }
@@ -43,17 +43,11 @@ export class AuthController {
         if (error) return res.status(400).json({ success: false, message: error, errorCode: errorCode });
 
         try {
-            new RegisterUser(this.authRepository, this.sendEmail).execute(registerDto!)
+            new RegisterUser(this.authRepository, this.logRepository, this.sendEmail).execute(registerDto!)
                 .then(user => res.status(200).json({ success: true, message: 'Register successful', data: user }))
                 .catch(error => this.handleErrors(error, res));
 
         } catch (error) {
-
-            new CreateLog(this.logRepository).execute({
-                message: `${error}`,
-                level: LogSeverityLevel.high,
-                origin: 'auth-controller',
-            });
 
             return res.status(500).json({ success: false, message: 'Internal server error', errorCode: 'unknown-error' });
         }
@@ -65,17 +59,47 @@ export class AuthController {
         if (!token) return res.status(400).json({ success: false, message: 'Missing token', errorCode: 'missing-token' });
 
         try {
-            new ValidateToken().execute(token)
+            new ValidateToken(this.logRepository).execute(token)
                 .then((_) => res.status(200).json({ success: true, message: 'Email validated', data: null }))
                 .catch(error => this.handleErrors(error, res));
 
         } catch (error) {
 
-            new CreateLog(this.logRepository).execute({
-                message: `${error}`,
-                level: LogSeverityLevel.high,
-                origin: 'auth-controller',
-            });
+            return res.status(500).json({ success: false, message: 'Internal server error', errorCode: 'unknown-error' });
+        }
+    }
+
+    deleteUser = (req: Request, res: Response) => {
+        const token = req.params.token;
+        if (!token) return res.status(400).json({ success: false, message: 'Missing token', errorCode: 'missing-token' });
+
+        try {
+
+            // new DeleteUser().execute(token)
+            //     .then((_) => res.status(200).json({ success: true, message: 'User deleted', data: null }))
+            //     .catch(error => this.handleErrors(error, res));
+
+        } catch (error) {
+
+            return res.status(500).json({ success: false, message: 'Internal server error', errorCode: 'unknown-error' });
+        }
+    }
+
+    updateUser = (req: Request, res: Response) => {
+
+        const id = req.params.id;
+        const [error, errorCode, updateDto] = UpdateUserDto.create({ id: id, ...req.body });
+
+        if (error) return res.status(400).json({ success: false, message: error, errorCode: errorCode });
+
+        try {
+
+            new UpdateUser(this.authRepository, this.logRepository).execute(updateDto!)
+                .then(message => res.status(200).json({ success: true, message: message, data: null }))
+                .catch(error => this.handleErrors(error, res));
+
+
+        } catch (error) {
 
             return res.status(500).json({ success: false, message: 'Internal server error', errorCode: 'unknown-error' });
         }

@@ -1,6 +1,7 @@
+import { MongooseError } from "mongoose";
 import { bcryptAdapter } from "../../config";
 import { UserModel } from "../../data/mongo/models/user.model";
-import { AuthDatasource, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
+import { AuthDatasource, CreateLog, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity } from "../../domain";
 import { CustomError } from "../../domain/errors/custom-error";
 
 
@@ -41,6 +42,32 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
             throw error;
         }
+    }
+
+    async updateUser(updateUserDto: UpdateUserDto): Promise<string> {
+
+        try {
+
+            const user = await UserModel.findById(updateUserDto.id);
+            if (!user) throw CustomError.badRequest('User not found', 'user-not-found');
+
+            await UserModel.findByIdAndUpdate(user.id, updateUserDto.values, { new: true });
+
+            return 'User updated successfully';
+
+        } catch (error) {
+
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+
+        }
+
+    }
+
+    deleteUser(token: string): Promise<UserEntity> {
+        throw new Error("Method not implemented.");
     }
 
 }

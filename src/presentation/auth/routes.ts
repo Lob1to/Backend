@@ -8,6 +8,7 @@ import { AuthDatasourceImpl } from "../../infrastructure/datasources/auth.dataso
 import { AuthRepositoryImpl } from "../../infrastructure/repositories/auth.repository.impl";
 import { LogRepositoryImpl } from "../../infrastructure/repositories/log.repository.impl";
 import { MongoLogDatasource } from "../../infrastructure/datasources/logs/mongo-log.datasource";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 
 
@@ -32,11 +33,17 @@ export class AuthRoutes {
             emailService,
         );
 
-        const controller = new AuthController(logDatasource, authRepository, sendEmail);
+        const controller = new AuthController(
+            logRepository,
+            authRepository,
+            sendEmail
+        );
 
         router.post('/register', controller.register);
         router.post('/login', controller.login);
         router.get('/validate-email/:token', controller.validateEmail);
+        router.delete('/delete-user/:token', controller.deleteUser);
+        router.put('/update-user/:id', AuthMiddleware.validateJWT, controller.updateUser);
 
         return router;
     }

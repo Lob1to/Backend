@@ -1,11 +1,10 @@
-import { AuthDatasource, AuthRepository, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
+import { AuthDatasource, AuthRepository, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity } from "../../domain";
 
 export class AuthRepositoryImpl implements AuthRepository {
 
     constructor(
         private readonly datasource: AuthDatasource,
     ) { }
-
 
     login(loginUserDto: LoginUserDto): Promise<UserEntity> {
 
@@ -16,6 +15,16 @@ export class AuthRepositoryImpl implements AuthRepository {
 
 
         return this.datasource.register(registerUserDto);
+    }
+
+    deleteUser(token: string): Promise<UserEntity> {
+
+        return this.datasource.deleteUser(token);
+    }
+
+    updateUser(updateUserDto: UpdateUserDto): Promise<string> {
+
+        return this.datasource.updateUser(updateUserDto);
     }
 
 

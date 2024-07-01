@@ -1,4 +1,4 @@
-import { AuthRepository, LoginUserDto } from "../..";
+import { AuthRepository, CreateLog, LogRepository, LogSeverityLevel, LoginUserDto } from "../..";
 import { JwtAdapter } from "../../../config/jwt.adapter";
 import { CustomError } from "../../errors/custom-error";
 
@@ -12,23 +12,39 @@ export class LoginUser implements LoginUserUseCase {
 
     constructor(
         private authRepository: AuthRepository,
+        private logRepository: LogRepository,
     ) { }
 
 
     async execute(loginUserDto: LoginUserDto): Promise<{ [key: string]: any }> {
 
-        const newUser = await this.authRepository.login(loginUserDto);
+        try {
+            const newUser = await this.authRepository.login(loginUserDto);
 
-        const token = await JwtAdapter.generateToken({ id: newUser.id });
+            const token = await JwtAdapter.generateToken({ id: newUser.id });
 
-        if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
+            if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
 
-        const { password, ...userEntity } = newUser;
+            const { password, ...userEntity } = newUser;
 
-        return {
-            user: userEntity,
-            token: token,
-        };
+            return {
+                user: userEntity,
+                token: token,
+            };
+
+        } catch (error) {
+
+            if (error instanceof CustomError) throw error;
+
+            new CreateLog(this.logRepository).execute({
+                message: `${error}`,
+                level: LogSeverityLevel.high,
+                origin: 'login.use-case',
+            });
+
+            throw CustomError.internalServer('Internal server error', 'unknown-error');
+
+        }
 
     }
 
