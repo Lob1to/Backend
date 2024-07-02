@@ -1,32 +1,66 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface IOptionModel extends Document {
-    name: string;
-    price?: number;
+interface IContainer {
+    type: string;
+    material: string;
+    color: string;
+    size: string;
 }
 
-const optionSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    price: { type: Number },
-});
-
-interface IProductModel extends Document {
-    name: string;
+interface IContent {
+    type: string;
+    item: string;
+    quantity: number;
     description?: string;
-    price: number;
-    images: string[];
-    subcategoryId: mongoose.Types.ObjectId;
-    options?: IOptionModel[];
 }
 
-const productSchema: Schema = new Schema({
+interface IDecoration {
+    type: string;
+    color: string;
+    description?: string;
+}
+
+interface IProduct extends Document {
+    name: string;
+    description: string;
+    price: number;
+    container: IContainer;
+    contents: IContent[];
+    decorations: IDecoration[];
+    customized: boolean;
+    images: string[];
+    category: mongoose.Schema.Types.ObjectId;
+    subcategory: mongoose.Schema.Types.ObjectId;
+}
+
+const productSchema: Schema<IProduct> = new Schema({
+
     name: { type: String, required: true },
-    description: { type: String },
+    description: { type: String, required: true },
     price: { type: Number, required: true },
+    container: {
+        type: { type: String, required: true },
+        material: { type: String, required: true },
+        color: { type: String, required: true },
+        size: { type: String, required: true },
+    },
+    contents: [{
+        type: { type: String, required: true },
+        item: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        description: { type: String },
+    }],
+    decorations: [{
+        type: { type: String, required: true },
+        color: { type: String, required: true },
+        description: { type: String },
+    }],
+    customized: { type: Boolean, default: false },
     images: [{ type: String }],
-    subcategoryId: { type: Schema.Types.ObjectId, ref: 'Subcategory', required: true },
-    options: [optionSchema],
+    category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
+    subcategory: { type: Schema.Types.ObjectId, ref: 'Subcategory', required: true },
+
 });
 
-export const Product = mongoose.model<IProductModel>('Product', productSchema);
+export const Product = mongoose.model<IProduct>('Product', productSchema);
 

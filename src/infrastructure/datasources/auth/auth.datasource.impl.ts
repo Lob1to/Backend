@@ -1,11 +1,11 @@
-import { AuthDatasource, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity, CustomError } from "../../domain";
-import { UserModel } from "../../data/mongo/models/user.model";
+import { AuthDatasource, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity, CustomError } from "../../../domain";
+import { UserModel } from "../../../data/mongo/models/user.model";
+import { bcryptAdapter, authErrors } from "../../../config";
 import mongoose, { MongooseError } from "mongoose";
-import { bcryptAdapter, authErrors } from "../../config";
 
 const {
     invalidCredentials,
-    invalidPassword,
+    incorrectPassword,
     emailAlreadyInUse,
     invalidId,
     userNotFound,
@@ -22,7 +22,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
         try {
 
             const isPasswordMatch = bcryptAdapter.compare(loginUserDto.password, user.password);
-            if (!isPasswordMatch) throw CustomError.unauthorized(invalidPassword.message, invalidPassword.code);
+            if (!isPasswordMatch) throw CustomError.unauthorized(incorrectPassword.message, incorrectPassword.code);
 
             return UserEntity.fromObject(user);
 

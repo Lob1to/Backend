@@ -8,7 +8,6 @@ import {
     SendEmailValidationLink,
     LoginUserDto,
     RegisterUser,
-    CustomError,
     LoginUser,
     LogRepository,
     UpdateUserDto,
@@ -18,7 +17,7 @@ import {
 } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 
-const { unknownError, missingToken, missingId } = authErrors;
+const { missingToken, missingId } = authErrors;
 
 export class AuthController {
 
@@ -34,10 +33,7 @@ export class AuthController {
 
     login = (req: Request, res: Response) => {
         const [error, errorCode, loginDto] = LoginUserDto.create(req.body);
-        if (error)
-            return res
-                .status(400)
-                .json({ success: false, message: error, errorCode: errorCode });
+        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
         try {
             new LoginUser(this.authRepository, this.logRepository)
@@ -53,7 +49,7 @@ export class AuthController {
     register = (req: Request, res: Response) => {
         const [error, errorCode, registerDto] = RegisterUserDto.create(req.body);
 
-        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'no-code');
+        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
         try {
             new RegisterUser(this.authRepository, this.logRepository, this.sendEmail)
@@ -115,7 +111,7 @@ export class AuthController {
             ...req.body,
         });
 
-        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'no-code');
+        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
         try {
 

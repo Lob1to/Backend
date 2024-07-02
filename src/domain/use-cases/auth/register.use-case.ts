@@ -26,7 +26,7 @@ export class RegisterUser implements RegisterUserUseCase {
             const token = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role });
             if (!token) throw CustomError.internalServer('Ha ocurrido un error obteniendo el token', 'server-error');
 
-            const { password, role, ...userEntity } = newUser;
+            const { password, ...userEntity } = newUser;
 
             return {
                 user: userEntity,

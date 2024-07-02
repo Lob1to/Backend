@@ -5,6 +5,10 @@ export const validators = {
         minLength: 6,
         maxLength: 16,
         RegExp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).{6,16}$/
-    }
+    },
+
+    description: {
+        maxLength: 100,
+    },
 }
 
