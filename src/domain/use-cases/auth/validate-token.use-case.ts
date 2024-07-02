@@ -1,6 +1,7 @@
+import { LogSeverityLevel, CustomError, CreateLog, LogRepository } from "../../";
+import { authErrors } from "../../../config";
 import { JwtAdapter } from "../../../config/jwt.adapter";
 import { UserModel } from "../../../data/mongo/";
-import { CustomError } from "../../errors/custom-error";
 
 interface ValidateTokenUseCase {
     execute(token: string): Promise<boolean>;
@@ -9,22 +10,43 @@ interface ValidateTokenUseCase {
 
 export class ValidateToken implements ValidateTokenUseCase {
 
+    constructor(
+        private readonly logRepository: LogRepository,
+    ) { }
+
     async execute(token: string): Promise<boolean> {
 
-        const payload = await JwtAdapter.validateToken(token);
+        const { invalidToken, invalidTokenData, userNotFound } = authErrors;
 
-        if (!payload) throw CustomError.unauthorized('Invalid Token', 'invalid-token');
+        try {
+            const payload = await JwtAdapter.validateToken(token);
 
-        const { email } = payload as { email: string };
-        if (!email) throw CustomError.unauthorized('Invalid Token Data', 'invalid-token-data');
+            if (!payload) throw CustomError.unauthorized(invalidToken.message, invalidToken.code);
 
-        const user = await UserModel.findOne({ email });
-        if (!user) throw CustomError.internalServer('Email does not exists', 'email-not-exists');
+            const { email } = payload as { email: string };
+            if (!email) throw CustomError.unauthorized(invalidTokenData.message, invalidTokenData.code);
 
-        user.emailValidated = true;
-        await user.save();
+            const user = await UserModel.findOne({ email });
+            if (!user) throw CustomError.internalServer(userNotFound.message, userNotFound.code);
 
-        return true;
+            user.emailValidated = true;
+            await user.save();
+
+            return true;
+
+        } catch (error) {
+
+            if (error instanceof CustomError) throw error;
+
+            new CreateLog(this.logRepository).execute({
+                message: `${error}`,
+                level: LogSeverityLevel.high,
+                origin: 'validate-token.use-case',
+            });
+
+            return false;
+
+        }
 
     }
 

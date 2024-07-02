@@ -1,4 +1,4 @@
-import { RegisterUserDto, UserEntity, LoginUserDto } from "../";
+import { RegisterUserDto, UserEntity, LoginUserDto, UpdateUserDto } from "../";
 
 /**
  * Defines the contract for an authentication data source, providing methods to login and register users.
@@ -21,4 +21,8 @@ export abstract class AuthDatasource {
      */
 
     abstract register(registerUserDto: RegisterUserDto): Promise<UserEntity>;
+
+    abstract deleteUser(id: string): Promise<string>;
+
+    abstract updateUser(updateUserDto: UpdateUserDto): Promise<string>;
 }
