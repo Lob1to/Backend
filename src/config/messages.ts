@@ -36,6 +36,11 @@ export const authErrors = {
         code: 'invalid-password',
     },
 
+    incorrectPassword: {
+        message: 'La contraseña ingresada no es correcta',
+        code: 'incorrect-password',
+    },
+
     noFieldToUpdate: {
         message: 'No se puede actualizar un usuario si no se proporciona ningún parámetro',
         code: 'no-field-to-update',
@@ -113,6 +118,41 @@ export const authErrors = {
 
 }
 
+export const categoryErrors = {
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre de la categoría',
+        code: 'missing-name',
+    },
+
+    tooLongDescription: {
+        message: 'La descripción de la categoría es muy larga, no puede superar los 100 caracteres',
+        code: 'too-long-description',
+    },
+
+    invalidId: {
+        message: 'La ID proporcionada no es valida',
+        code: 'invalid-id',
+    },
+
+    invalidImg: {
+        message: 'La imagen ingresada no es valida',
+        code: 'invalid-img',
+    },
+
+
+    categoryAlreadyExist: {
+        message: 'La categoría ya existe en la base de datos',
+        code: 'category-already-exist',
+    },
+
+    categoryNotFound: {
+        message: 'La categoría no existe en la base de datos',
+        code: 'category-not-found',
+    }
+
+}
+
 export const sharedErrors = {
 
     unauthorized: {
@@ -128,6 +168,26 @@ export const sharedErrors = {
     invalidBearer: {
         message: 'El Bearer ingresado no es valido',
         code: 'invalid-bearer',
+    },
+
+    noFieldToUpdate: {
+        message: 'No se puede realizar esta acción si no se proporciona ningún parámetro',
+        code: 'no-field-to-update',
+    },
+
+    missingId: {
+        message: 'No se ha proporcionado una ID',
+        code: 'missing-id',
+    },
+
+    unknownError: {
+        message: 'Ups, algo malo ha pasado',
+        code: 'unknown-error',
+    },
+
+    invalidId: {
+        message: 'La ID proporcionada no es valida',
+        code: 'invalid-id',
     }
 
 
