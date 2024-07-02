@@ -1,6 +1,5 @@
-import { validators } from "../../../config";
+import { validators, authErrors } from "../../../config";
 import { CustomError } from "../../errors/custom-error";
-
 
 export class UpdateUserDto {
 
@@ -11,6 +10,8 @@ export class UpdateUserDto {
         public img?: string,
     ) { }
 
+
+
     get values() {
         const returnObj: { [key: string]: any } = {};
 
@@ -19,7 +20,9 @@ export class UpdateUserDto {
         if (this.img) returnObj.img = this.img;
 
         if (!returnObj.name && !returnObj.email && !returnObj.img) {
-            throw CustomError.badRequest('Cannot update user without any field', 'no-field-to-update');
+            const { noFieldToUpdate } = authErrors;
+
+            throw CustomError.badRequest(noFieldToUpdate.message, noFieldToUpdate.code);
         }
 
         return returnObj
@@ -28,14 +31,15 @@ export class UpdateUserDto {
     static create(props: { [key: string]: any }): [string?, string?, UpdateUserDto?] {
 
         const { id, name, email, img } = props;
+        const { missingId, invalidEmail, invalidImg } = authErrors;
 
-        if (!id) return ['Id parameter is required', 'missing-id'];
+        if (!id) return [missingId.message, missingId.code];
 
         if (email) {
-            if (!validators.email.test(email)) return ['Invalid email', 'invalid-email'];
+            if (!validators.email.test(email)) return [invalidEmail.message, invalidEmail.code];
         }
         if (img) {
-            if (typeof img !== 'string') return ['Invalid image', 'invalid-img'];
+            if (typeof img !== 'string') return [invalidImg.message, invalidImg.code];
         }
 
         return [undefined, undefined, new UpdateUserDto(id, name, email, img)];

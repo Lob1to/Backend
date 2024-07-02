@@ -1,4 +1,5 @@
 import { AuthRepository, CreateLog, LogRepository, LogSeverityLevel, LoginUserDto } from "../..";
+import { authErrors } from "../../../config";
 import { JwtAdapter } from "../../../config/jwt.adapter";
 import { CustomError } from "../../errors/custom-error";
 
@@ -18,12 +19,14 @@ export class LoginUser implements LoginUserUseCase {
 
     async execute(loginUserDto: LoginUserDto): Promise<{ [key: string]: any }> {
 
+        const { tokenGenerationError, unknownError } = authErrors;
+
         try {
             const newUser = await this.authRepository.login(loginUserDto);
 
-            const token = await JwtAdapter.generateToken({ id: newUser.id });
+            const token = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role });
 
-            if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
+            if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
             const { password, ...userEntity } = newUser;
 
@@ -42,7 +45,7 @@ export class LoginUser implements LoginUserUseCase {
                 origin: 'login.use-case',
             });
 
-            throw CustomError.internalServer('Internal server error', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
 

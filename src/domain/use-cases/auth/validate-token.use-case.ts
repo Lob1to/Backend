@@ -1,4 +1,5 @@
 import { LogSeverityLevel, CustomError, CreateLog, LogRepository } from "../../";
+import { authErrors } from "../../../config";
 import { JwtAdapter } from "../../../config/jwt.adapter";
 import { UserModel } from "../../../data/mongo/";
 
@@ -15,22 +16,27 @@ export class ValidateToken implements ValidateTokenUseCase {
 
     async execute(token: string): Promise<boolean> {
 
+        const { invalidToken, invalidTokenData, userNotFound } = authErrors;
+
         try {
             const payload = await JwtAdapter.validateToken(token);
 
-            if (!payload) throw CustomError.unauthorized('Invalid Token', 'invalid-token');
+            if (!payload) throw CustomError.unauthorized(invalidToken.message, invalidToken.code);
 
             const { email } = payload as { email: string };
-            if (!email) throw CustomError.unauthorized('Invalid Token Data', 'invalid-token-data');
+            if (!email) throw CustomError.unauthorized(invalidTokenData.message, invalidTokenData.code);
 
             const user = await UserModel.findOne({ email });
-            if (!user) throw CustomError.internalServer('Email does not exists', 'email-not-exists');
+            if (!user) throw CustomError.internalServer(userNotFound.message, userNotFound.code);
 
             user.emailValidated = true;
             await user.save();
 
             return true;
+
         } catch (error) {
+
+            if (error instanceof CustomError) throw error;
 
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,

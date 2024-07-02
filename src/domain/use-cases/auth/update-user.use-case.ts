@@ -1,5 +1,6 @@
 import { MongooseError } from "mongoose";
 import { AuthRepository, CreateLog, CustomError, LogRepository, LogSeverityLevel, UpdateUserDto } from "../..";
+import { authErrors } from "../../../config";
 
 
 interface UpdateUserUseCase {
@@ -32,7 +33,7 @@ export class UpdateUser implements UpdateUserUseCase {
                 origin: 'UpdateUser.execute'
             });
 
-            throw CustomError.internalServer('Internal server error', 'unknown-error');
+            throw CustomError.internalServer(authErrors.unknownError.message, authErrors.unknownError.code);
 
         }
     }

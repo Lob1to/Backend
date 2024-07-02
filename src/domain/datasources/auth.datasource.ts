@@ -22,7 +22,7 @@ export abstract class AuthDatasource {
 
     abstract register(registerUserDto: RegisterUserDto): Promise<UserEntity>;
 
-    abstract deleteUser(token: string): Promise<UserEntity>;
+    abstract deleteUser(id: string): Promise<string>;
 
     abstract updateUser(updateUserDto: UpdateUserDto): Promise<string>;
 }

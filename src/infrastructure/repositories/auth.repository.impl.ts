@@ -17,9 +17,9 @@ export class AuthRepositoryImpl implements AuthRepository {
         return this.datasource.register(registerUserDto);
     }
 
-    deleteUser(token: string): Promise<UserEntity> {
+    deleteUser(id: string): Promise<string> {
 
-        return this.datasource.deleteUser(token);
+        return this.datasource.deleteUser(id);
     }
 
     updateUser(updateUserDto: UpdateUserDto): Promise<string> {

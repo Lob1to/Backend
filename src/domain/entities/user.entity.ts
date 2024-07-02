@@ -1,3 +1,4 @@
+import { authErrors } from "../../config";
 import { CustomError } from "../errors/custom-error";
 
 
@@ -30,15 +31,20 @@ export class UserEntity {
     static fromObject(object: { [key: string]: any }): UserEntity {
 
         const { id, _id, name, email, emailValidated, password, role, img } = object;
+        const { missingId, missingName, missingEmail, missingEmailValidated, missingPassword, missingRole } = authErrors;
 
         if (!id || !_id) {
-            throw CustomError.badRequest('Missing id', 'missing-id');
+            throw CustomError.badRequest(missingId.message, missingId.code);
         }
-        if (!name) throw CustomError.badRequest('Missing name', 'missing-name');
-        if (!email) throw CustomError.badRequest('Missing email', 'missing-email');
-        if (emailValidated === undefined) throw CustomError.badRequest('Missing emailValidated', 'missing-emailValidated');
-        if (!password) throw CustomError.badRequest('Missing password', 'missing-password');
-        if (!role) throw CustomError.badRequest('Missing role', 'missing-role');
+        if (!name) throw CustomError.badRequest(missingName.message, missingName.code);
+
+        if (!email) throw CustomError.badRequest(missingEmail.message, missingEmail.code);
+
+        if (emailValidated === undefined) throw CustomError.badRequest(missingEmailValidated.message, missingEmailValidated.code);
+
+        if (!password) throw CustomError.badRequest(missingPassword.message, missingPassword.code);
+
+        if (!role) throw CustomError.badRequest(missingRole.message, missingRole.code);
 
         return new UserEntity(id, name, email, emailValidated, password, role, img);
 

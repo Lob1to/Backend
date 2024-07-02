@@ -1,4 +1,4 @@
-import { validators } from "../../../config";
+import { validators, authErrors } from "../../../config";
 
 
 /**
@@ -20,11 +20,17 @@ export class LoginUserDto {
     static create(props: { [key: string]: any }): [string?, string?, LoginUserDto?] {
 
         const { email, password } = props;
-        if (!email) return ['Missing email', 'missing-email'];
-        if (!validators.email.test(email)) return ['Invalid email', 'invalid-email'];
-        if (!password) return ['Missing password', 'missing-password'];
-        if (password.length < validators.password.minLength) return ['Password too short', 'short-password'];
-        if (password.length >= validators.password.maxLength) return ['Password too long', 'long-password'];
+        const { missingEmail, invalidEmail, missingPassword, shortPassword, longPassword } = authErrors;
+
+        if (!email) return [missingEmail.message, missingEmail.code];
+
+        if (!validators.email.test(email)) return [invalidEmail.message, invalidEmail.code];
+
+        if (!password) return [missingPassword.message, missingPassword.code];
+
+        if (password.length < validators.password.minLength) return [shortPassword.message, shortPassword.code];
+
+        if (password.length >= validators.password.maxLength) return [longPassword.message, longPassword.code];
 
         return [undefined, undefined, new LoginUserDto(email, password)];
 

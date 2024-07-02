@@ -1,33 +1,44 @@
-import { MongooseError } from "mongoose";
-import { bcryptAdapter } from "../../config";
+import { AuthDatasource, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity, CustomError } from "../../domain";
 import { UserModel } from "../../data/mongo/models/user.model";
-import { AuthDatasource, CreateLog, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity } from "../../domain";
-import { CustomError } from "../../domain/errors/custom-error";
+import mongoose, { MongooseError } from "mongoose";
+import { bcryptAdapter, authErrors } from "../../config";
 
+const {
+    invalidCredentials,
+    invalidPassword,
+    emailAlreadyInUse,
+    invalidId,
+    userNotFound,
+} = authErrors;
 
 export class AuthDatasourceImpl implements AuthDatasource {
 
     async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
 
         const user = await UserModel.findOne({ email: loginUserDto.email });
-        if (!user) throw CustomError.unauthorized('Invalid email', 'invalid-email');
+
+        if (!user) throw CustomError.unauthorized(invalidCredentials.message, invalidCredentials.code);
 
         try {
 
             const isPasswordMatch = bcryptAdapter.compare(loginUserDto.password, user.password);
-            if (!isPasswordMatch) throw CustomError.unauthorized('Invalid password', 'invalid-password');
+            if (!isPasswordMatch) throw CustomError.unauthorized(invalidPassword.message, invalidPassword.code);
 
             return UserEntity.fromObject(user);
 
         } catch (error) {
-            throw CustomError.internalServer('Internal server error', 'unknown-error');
+
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
         }
     }
 
     async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
 
         const existUser = await UserModel.findOne({ email: registerUserDto.email });
-        if (existUser) throw CustomError.badRequest('User already exist', 'user-already-exist');
+        if (existUser) throw CustomError.badRequest(emailAlreadyInUse.message, emailAlreadyInUse.code);
 
         try {
             const user = new UserModel(registerUserDto);
@@ -38,7 +49,8 @@ export class AuthDatasourceImpl implements AuthDatasource {
             return UserEntity.fromObject(user);
 
         } catch (error) {
-            console.log(error);
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
 
             throw error;
         }
@@ -47,13 +59,17 @@ export class AuthDatasourceImpl implements AuthDatasource {
     async updateUser(updateUserDto: UpdateUserDto): Promise<string> {
 
         try {
+            const { id } = updateUserDto;
 
-            const user = await UserModel.findById(updateUserDto.id);
-            if (!user) throw CustomError.badRequest('User not found', 'user-not-found');
+            if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
-            await UserModel.findByIdAndUpdate(user.id, updateUserDto.values, { new: true });
+            const user = await UserModel.findById(id);
 
-            return 'User updated successfully';
+            if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+
+            await UserModel.findByIdAndUpdate(id, updateUserDto.values, { new: true });
+
+            return 'El usuario ha sido actualizado correctamente';
 
         } catch (error) {
 
@@ -66,8 +82,25 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
     }
 
-    deleteUser(token: string): Promise<UserEntity> {
-        throw new Error("Method not implemented.");
+    async deleteUser(id: string): Promise<string> {
+
+        if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+
+        try {
+            const user = await UserModel.findById(id);
+            if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+
+            await UserModel.findByIdAndDelete(id);
+
+            return 'El usuario ha sido eliminado correctamente';
+
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+        }
     }
 
 }

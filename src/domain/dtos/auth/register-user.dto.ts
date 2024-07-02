@@ -1,4 +1,4 @@
-import { validators } from "../../../config";
+import { validators, authErrors } from "../../../config";
 
 
 /**
@@ -29,14 +29,21 @@ export class RegisterUserDto {
         // Implementation details omitted
 
         const { name, email, password } = props;
+        const { missingName, missingEmail, invalidEmail, missingPassword, shortPassword, longPassword, invalidPassword } = authErrors;
 
-        if (!name) return ['Missing name', 'missing-name'];
-        if (!email) return ['Missing email', 'missing-email'];
-        if (!validators.email.test(email)) return ['Invalid email', 'invalid-email'];
-        if (!password) return ['Missing password', 'missing-password'];
-        if (password.length < validators.password.minLength) return ['Password too short', 'password-too-short'];
-        if (password.length > validators.password.maxLength) return ['Password too long', 'password-too-long'];
-        if (!validators.password.RegExp.test(password)) return ['Invalid password', 'invalid-password'];
+        if (!name) return [missingName.message, missingName.code];
+
+        if (!email) return [missingEmail.message, missingEmail.code];
+
+        if (!validators.email.test(email)) return [invalidEmail.message, invalidEmail.code];
+
+        if (!password) return [missingPassword.message, missingPassword.code];
+
+        if (password.length < validators.password.minLength) return [shortPassword.message, shortPassword.code];
+
+        if (password.length > validators.password.maxLength) return [longPassword.message, longPassword.code];
+
+        if (!validators.password.RegExp.test(password)) return [invalidPassword.message, invalidPassword.code];
 
         return [undefined, undefined, new RegisterUserDto(name, email, password)];
     }

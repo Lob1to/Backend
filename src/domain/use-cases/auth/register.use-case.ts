@@ -23,10 +23,10 @@ export class RegisterUser implements RegisterUserUseCase {
             const newUser = await this.authRepository.register(registerUserDto);
             await this.sendEmail.execute(newUser.email);
 
-            const token = await JwtAdapter.generateToken({ id: newUser.id });
-            if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
+            const token = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role });
+            if (!token) throw CustomError.internalServer('Ha ocurrido un error obteniendo el token', 'server-error');
 
-            const { password, ...userEntity } = newUser;
+            const { password, role, ...userEntity } = newUser;
 
             return {
                 user: userEntity,
@@ -43,7 +43,7 @@ export class RegisterUser implements RegisterUserUseCase {
                 origin: 'register.use-case',
             });
 
-            throw CustomError.internalServer('Internal server error', 'unknown-error');
+            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
 
         }
 

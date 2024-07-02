@@ -1,16 +1,10 @@
 import { Router } from "express";
-import { AuthController } from "./controller";
-import { EmailService } from "../services";
 import { envs } from "../../config";
+import { EmailService } from "../services";
+import { AuthController } from "./controller";
 import { SendEmailValidationLink } from "../../domain/";
-
-import { AuthDatasourceImpl } from "../../infrastructure/datasources/auth.datasource.impl";
-import { AuthRepositoryImpl } from "../../infrastructure/repositories/auth.repository.impl";
-import { LogRepositoryImpl } from "../../infrastructure/repositories/log.repository.impl";
-import { MongoLogDatasource } from "../../infrastructure/datasources/logs/mongo-log.datasource";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
-
-
+import { AuthDatasourceImpl, AuthRepositoryImpl, LogRepositoryImpl, MongoLogDatasource } from "../../infrastructure/";
 
 export class AuthRoutes {
 
@@ -31,6 +25,7 @@ export class AuthRoutes {
         const sendEmail = new SendEmailValidationLink(
             envs.WEBSERVICE_URL,
             emailService,
+            logRepository,
         );
 
         const controller = new AuthController(
@@ -38,12 +33,11 @@ export class AuthRoutes {
             authRepository,
             sendEmail
         );
-
         router.post('/register', controller.register);
         router.post('/login', controller.login);
         router.get('/validate-email/:token', controller.validateEmail);
-        router.delete('/delete-user/:token', controller.deleteUser);
         router.put('/update-user/:id', AuthMiddleware.validateJWT, controller.updateUser);
+        router.delete('/admin/delete-user/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteUser);
 
         return router;
     }

@@ -1,6 +1,6 @@
 import { LogSeverityLevel, CustomError, LogRepository, CreateLog } from "../../";
 import { EmailService } from "../../../presentation/services/email.service";
-import { JwtAdapter } from "../../../config/";
+import { JwtAdapter, authErrors, htmlBodies } from "../../../config/";
 
 interface SendEmailValidationLinkUseCase {
 
@@ -18,16 +18,29 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
 
     async execute(email: string): Promise<boolean> {
 
+        const { tokenGenerationError, sendEmailError } = authErrors;
+
         try {
             const token = await JwtAdapter.generateToken({ email });
-            if (!token) throw CustomError.internalServer('Error while getting token', 'server-error');
+            if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
             const link = `${this.webServiceUrl}/auth/validate-email/${token}`;
-            const html = `
-        <h1>Validate your email</h1>
-        <p> Click on the following link to validate your email </p>
-        <a href="${link}">Validate your email: ${email}</a>
-        `;
+            //TODO: Resend email link
+            const resendEmailLink = `${this.webServiceUrl}/auth/validate-email/resend-email/`;
+
+            const privacyPolicyLink = `${this.webServiceUrl}/privacy-policy`;
+
+            const unsubscribeLink = `${this.webServiceUrl}/unsubscribeLink`;
+
+            const html = htmlBodies.validateEmail({
+                link: link,
+                username: 'User',
+                companyName: 'Nana Anchetas',
+                resendEmailLink: resendEmailLink,
+                privacyPolicyLink: privacyPolicyLink,
+                unsubscribeLink: unsubscribeLink,
+
+            });
 
             const options = {
                 to: email,
@@ -36,7 +49,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
             }
 
             const isSent = await this.emailService.sendEmail(options);
-            if (!isSent) throw CustomError.internalServer('Error while sending email', 'server-error');
+            if (!isSent) throw CustomError.internalServer(sendEmailError.message, sendEmailError.code);
 
             return true;
 

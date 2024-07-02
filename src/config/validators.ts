@@ -1,6 +1,6 @@
 
 export const validators = {
-    email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+    email: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     password: {
         minLength: 6,
         maxLength: 16,
