@@ -1,4 +1,4 @@
-import { CategoriesDatasource, CategoriesRepository, CategoryEntity, CreateCategoryDto, UpdateCategoryDto } from "../../../domain";
+import { CategoriesDatasource, CategoriesRepository, CategoryEntity, CreateCategoryDto, PaginationDto, UpdateCategoryDto } from "../../../domain";
 
 export class CategoriesRepositoryImpl implements CategoriesRepository {
 
@@ -12,8 +12,8 @@ export class CategoriesRepositoryImpl implements CategoriesRepository {
         return this.datasource.createCategory(createDto);
     }
 
-    getAllCategories(): Promise<CategoryEntity[]> {
-        return this.datasource.getAllCategories();
+    getAllCategories(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }> {
+        return this.datasource.getAllCategories(paginationDto);
     }
 
     updateCategory(updateDto: UpdateCategoryDto): Promise<string> {

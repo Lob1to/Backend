@@ -1,6 +1,6 @@
 import mongoose, { MongooseError } from "mongoose";
 import { CategoryModel } from "../../../data/mongo";
-import { CustomError, UpdateCategoryDto, CategoryEntity, CategoriesDatasource, CreateCategoryDto } from "../../../domain";
+import { CustomError, UpdateCategoryDto, CategoryEntity, CategoriesDatasource, CreateCategoryDto, PaginationDto } from "../../../domain";
 import { categoryErrors, sharedErrors } from "../../../config";
 
 const { categoryAlreadyExist, categoryNotFound } = categoryErrors;
@@ -30,13 +30,29 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
 
     }
 
-    async getAllCategories(): Promise<CategoryEntity[]> {
+    async getAllCategories(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }> {
+        const { page, limit } = paginationDto;
 
         try {
 
-            const categories = await CategoryModel.find();
+            const categories = await CategoryModel.find({})
+                .skip((page - 1) * limit).limit(limit);
 
-            return categories.map(category => CategoryEntity.fromObject(category));
+            const totalItems = await CategoryModel.countDocuments();
+            const totalPages = Math.ceil(totalItems / limit);
+            const items = categories.map(category => CategoryEntity.fromObject(category));
+
+            const returnJson = {
+                next: `/api/categories/?page=${page + 1}&limit=${limit}`,
+                prev: (page - 1 > 0) ? `/api/categories/?page=${(page - 1)}&limit=${limit}` : null,
+                page,
+                limit,
+                totalPages,
+                totalItems,
+                items,
+            };
+
+            return returnJson;
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;

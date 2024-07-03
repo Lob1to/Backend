@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
-import { CategoriesRepository, CreateCategory, GetCategories, LogRepository, CreateCategoryDto, UpdateCategoryDto, UpdateCategory, DeleteCategory } from "../../domain";
+import { CategoriesRepository, CreateCategory, GetCategories, LogRepository, CreateCategoryDto, UpdateCategoryDto, UpdateCategory, DeleteCategory, PaginationDto } from "../../domain";
 import mongoose from "mongoose";
 
 
@@ -31,10 +31,14 @@ export class CategoriesController {
 
     getAllCategories = (req: Request, res: Response) => {
 
+        const { page = 1, limit = 10 } = req.query;
+        const [error, errorCode, paginationDto] = PaginationDto.create(+page, +limit);
+        if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+
         try {
 
-            new GetCategories(this.categoriesRepository, this.logRepository).execute()
-                .then(categories => ResponsesHandler.sendSuccessResponse(res, 'Categories found', categories))
+            new GetCategories(this.categoriesRepository, this.logRepository).execute(paginationDto!)
+                .then(data => ResponsesHandler.sendSuccessResponse(res, 'Categories found', data))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {

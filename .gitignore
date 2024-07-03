@@ -3,4 +3,4 @@ node_modules
 /mongo/
 .env
 package-lock.json
-.vscode/
+.vscode
