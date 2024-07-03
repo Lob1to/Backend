@@ -8,4 +8,8 @@ export * from './categories/create-category.use-case';
 export * from './categories/get-categories.use-case';
 export * from './categories/update-category.use-case';
 export * from './categories/delete-category.use-case';
+export * from './subcategories/create-subcategory.use-case';
+export * from './subcategories/get-subcategories.use-case';
+export * from './subcategories/update-subcategory.use-case';
+export * from './subcategories/delete-subcategory.use-case';
 export * from './logs/create-log.use-case';
