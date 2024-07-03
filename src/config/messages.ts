@@ -188,7 +188,24 @@ export const sharedErrors = {
     invalidId: {
         message: 'La ID proporcionada no es valida',
         code: 'invalid-id',
+    },
+
+    invalidParameters: {
+        message: 'Los parámetros ingresados no son validos',
+        code: 'invalid-parameters',
+    },
+
+    invalidPage: {
+        message: 'La página debe ser un número entero mayor a 0',
+        code: 'invalid-page',
+    },
+
+    invalidLimit: {
+        message: 'El limite debe ser un número entero mayor a 0',
+        code: 'invalid-limit',
     }
+
+
 
 
 }

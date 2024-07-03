@@ -1,7 +1,7 @@
-import { CategoriesRepository, CategoryEntity, CreateLog, CustomError, LogRepository, LogSeverityLevel } from "../..";
+import { CategoriesRepository, CategoryEntity, CreateLog, CustomError, LogRepository, LogSeverityLevel, PaginationDto } from "../..";
 
 interface GetCategoriesUseCase {
-    execute(): Promise<CategoryEntity[]>;
+    execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }>;
 }
 
 export class GetCategories implements GetCategoriesUseCase {
@@ -11,10 +11,12 @@ export class GetCategories implements GetCategoriesUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    execute(): Promise<CategoryEntity[]> {
+    execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }> {
 
         try {
-            return this.categoriesRepository.getAllCategories();
+            const categoriesRes = this.categoriesRepository.getAllCategories(paginationDto);
+
+            return categoriesRes;
 
         } catch (error) {
             if (error instanceof CustomError) throw error;

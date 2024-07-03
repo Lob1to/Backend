@@ -1,9 +1,9 @@
-import { UpdateCategoryDto, CreateCategoryDto, CategoryEntity } from "../";
+import { UpdateCategoryDto, CreateCategoryDto, CategoryEntity, PaginationDto } from "../";
 
 export abstract class CategoriesRepository {
 
     abstract createCategory(createDto: CreateCategoryDto): Promise<CategoryEntity>;
-    abstract getAllCategories(): Promise<CategoryEntity[]>;
+    abstract getAllCategories(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }>;
     abstract updateCategory(updateDto: UpdateCategoryDto): Promise<string>;
     abstract deleteCategory(id: string): Promise<string>;
 
