@@ -1,0 +1,119 @@
+import mongoose, { MongooseError } from "mongoose";
+import { CreateSubcategoryDto, CustomError, PaginationDto, SubcategoriesDatasource, SubcategoryEntity, UpdateSubcategoryDto } from "../../../domain/";
+import { SubcategoryModel } from "../../../data/mongo";
+import { sharedErrors, subcategoryErrors } from "../../../config";
+
+const { subcategoryAlreadyExist, invalidCategoryId, subcategoryNotFound } = subcategoryErrors;
+const { invalidId } = sharedErrors;
+
+export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
+
+
+    async createSubcategory(createDto: CreateSubcategoryDto): Promise<SubcategoryEntity> {
+
+        const { name, description, categoryId } = createDto;
+        if (!mongoose.Types.ObjectId.isValid(categoryId)) throw CustomError.badRequest(invalidCategoryId.message, invalidCategoryId.code);
+
+
+        try {
+
+            const subcategory = await SubcategoryModel.findOne({ name });
+            if (subcategory) throw CustomError.badRequest(subcategoryAlreadyExist.message, subcategoryAlreadyExist.code);
+
+            const newSubcategory = await new SubcategoryModel({ name, description, categoryId });
+            newSubcategory.save();
+
+            return SubcategoryEntity.fromObject(newSubcategory);
+
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+        }
+
+    }
+    async getSubcategories(paginationDto: PaginationDto): Promise<{ [key: string]: any; }> {
+
+        try {
+
+            const { page, limit } = paginationDto;
+            const skip = (page - 1) * limit;
+
+            const items = await SubcategoryModel.find().skip(skip).limit(limit);
+            const totalItems = await SubcategoryModel.countDocuments();
+            const totalPages = Math.ceil(totalItems / limit);
+
+            const returnJson = {
+                next: `/api/subcategories/?page=${page + 1}&limit=${limit}`,
+                prev: (page - 1 > 0) ? `/api/subcategories/?page=${(page - 1)}&limit=${limit}` : null,
+                page,
+                limit,
+                totalPages,
+                totalItems,
+                items,
+            }
+
+            return returnJson;
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+        }
+
+
+    }
+    async updateSubcategory(updateDto: UpdateSubcategoryDto): Promise<string> {
+
+        const { id, categoryId } = updateDto;
+        if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+        if (categoryId && !mongoose.Types.ObjectId.isValid(categoryId)) throw CustomError.badRequest(invalidCategoryId.message, invalidCategoryId.code);
+
+        try {
+
+            const subcategory = await SubcategoryModel.findById(id);
+            if (!subcategory) throw CustomError.notFound(subcategoryNotFound.message, subcategoryNotFound.code);
+
+            await SubcategoryModel.findByIdAndUpdate(id, updateDto.values, { new: true });
+
+            return 'La subcategoria se actualizo correctamente';
+
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+        }
+    }
+
+    async deleteSubcategory(id: string): Promise<string> {
+        if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+
+        try {
+
+            const subcategory = await SubcategoryModel.findById(id);
+            if (!subcategory) throw CustomError.notFound(subcategoryNotFound.message, subcategoryNotFound.code);
+
+            await SubcategoryModel.findByIdAndDelete(id);
+
+            return 'La subcategoria se elimino correctamente';
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+            if (error instanceof CustomError) throw error;
+
+            throw error;
+        }
+
+
+    }
+
+
+
+}
+
+

@@ -153,6 +153,49 @@ export const categoryErrors = {
 
 }
 
+export const subcategoryErrors = {
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre de la subcategoría',
+        code: 'missing-name',
+    },
+
+    missingDescription: {
+        message: 'No se ha proporcionado la descripción de la subcategoría',
+        code: 'missing-description',
+    },
+
+    tooLongDescription: {
+        message: 'La descripción de la subcategoría es muy larga, no puede superar los 100 caracteres',
+        code: 'too-long-description',
+    },
+
+    missingCategoryId: {
+        message: 'No se ha proporcionado la categoría a la que pertenece la subcategoría',
+        code: 'missing-category-id',
+    },
+
+    invalidCategoryId: {
+        message: 'La ID proporcionada no es valida',
+        code: 'invalid-id',
+    },
+
+    subcategoryAlreadyExist: {
+        message: 'La subcategoría ya existe en la base de datos',
+        code: 'category-already-exist',
+    },
+
+    missingId: {
+        message: 'No se ha proporcionado una ID',
+        code: 'missing-id',
+    },
+
+    subcategoryNotFound: {
+        message: 'La subcategoría no existe en la base de datos',
+        code: 'subcategory-not-found',
+    }
+}
+
 export const sharedErrors = {
 
     unauthorized: {
@@ -204,9 +247,5 @@ export const sharedErrors = {
         message: 'El limite debe ser un número entero mayor a 0',
         code: 'invalid-limit',
     }
-
-
-
-
 }
 
