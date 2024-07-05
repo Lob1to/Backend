@@ -40,7 +40,8 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
 
             const totalItems = await CategoryModel.countDocuments();
             const totalPages = Math.ceil(totalItems / limit);
-            const items = categories.map(category => CategoryEntity.fromObject(category));
+
+            const items = categories.map(CategoryEntity.fromObject);
 
             const returnJson = {
                 next: `/api/categories/?page=${page + 1}&limit=${limit}`,

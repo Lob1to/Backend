@@ -63,7 +63,7 @@ const orderSchema: Schema<IOrder> = new Schema({
         postalCode: String,
         country: String,
     },
-    paymentMethod: { type: String, enum: ['cod', 'prepaid'] },
+    paymentMethod: { type: String, enum: ['pse', 'creditCard'], required: true },
     couponCode: { type: Schema.Types.ObjectId, ref: 'Coupon' },
     orderTotal: {
         subtotal: Number,
@@ -72,6 +72,16 @@ const orderSchema: Schema<IOrder> = new Schema({
     },
     trackingUrl: { type: String },
 
+});
+
+orderSchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+        // remove these props when object is serialized
+        delete ret._id;
+        delete ret.id;
+    },
 });
 
 export const Order = mongoose.model<IOrder>('Order', orderSchema);

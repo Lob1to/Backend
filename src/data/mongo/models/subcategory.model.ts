@@ -12,5 +12,9 @@ const subcategorySchema: Schema<ISubcategory> = new Schema({
     categoryId: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
 });
 
-export const SubcategoryModel = mongoose.model<ISubcategory>('Subcategory', subcategorySchema);
+subcategorySchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+});
 
+export const SubcategoryModel = mongoose.model<ISubcategory>('Subcategory', subcategorySchema);
