@@ -60,11 +60,11 @@ export class UpdateProductDto {
             if (description.length > validators.description.maxLength) return [tooLongDescription.message, tooLongDescription.code];
         }
         if (price) {
-            if (!isNaN(price) || price < 0) return [invalidPrice.message, invalidPrice.code];
+            if (isNaN(price) || price < 0) return [invalidPrice.message, invalidPrice.code];
         }
 
         if (stock) {
-            if (!isNaN(stock) || stock < 0) return [invalidStock.message, invalidStock.code];
+            if (isNaN(stock) || stock < 0) return [invalidStock.message, invalidStock.code];
         }
 
         if (variants) {
@@ -76,7 +76,7 @@ export class UpdateProductDto {
             if (!Array.isArray(images)) return [invalidImages.message, invalidImages.code];
         }
 
-        return [undefined, undefined, new UpdateProductDto(id, name, description, price, stock, images, categoryId, subcategoryId)];
+        return [undefined, undefined, new UpdateProductDto(id, name, description, price, stock, variants, images, categoryId, subcategoryId)];
 
     }
 

@@ -3,7 +3,7 @@ import { ProductEntity, ProductsDatasource, CreateProductDto, PaginationDto, Get
 import { CategoryModel, ProductModel, SubcategoryModel } from "../../../data/mongo";
 import { categoryErrors, productsErrors, sharedErrors, subcategoryErrors } from "../../../config";
 
-const { productAlreadyExist, productNotFound, invalidPriceParameters } = productsErrors;
+const { productAlreadyExist, productNotFound, invalidPriceParameters, invalidCategoryId, invalidSubcategoryId } = productsErrors;
 const { categoryNotFound } = categoryErrors;
 const { subcategoryNotFound } = subcategoryErrors;
 const { invalidId } = sharedErrors;
@@ -123,7 +123,25 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
     async updateProduct(updateDto: UpdateProductDto): Promise<string> {
 
         const { id, ...updateData } = updateDto;
+        const { name, categoryId, subcategoryId } = updateData;
+
         try {
+            if (name) {
+                const product = await ProductModel.findOne({ name });
+                if (product) throw CustomError.badRequest(productAlreadyExist.message, productAlreadyExist.code);
+            }
+
+            if (categoryId) {
+                if (!mongoose.Types.ObjectId.isValid(categoryId)) throw CustomError.badRequest(invalidCategoryId.message, invalidCategoryId.code);
+                const category = await CategoryModel.findById(categoryId);
+                if (!category) throw CustomError.badRequest(categoryNotFound.message, categoryNotFound.code);
+            }
+
+            if (subcategoryId) {
+                if (!mongoose.Types.ObjectId.isValid(subcategoryId)) throw CustomError.badRequest(invalidSubcategoryId.message, invalidSubcategoryId.code);
+                const subcategory = await SubcategoryModel.findById(subcategoryId);
+                if (!subcategory) throw CustomError.badRequest(subcategoryNotFound.message, subcategoryNotFound.code);
+            }
 
             if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
@@ -136,6 +154,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
             return 'El producto se actualizo correctamente';
 
         } catch (error) {
+
             if (error instanceof MongooseError) throw error.message;
 
             throw error;

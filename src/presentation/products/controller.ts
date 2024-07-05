@@ -78,7 +78,7 @@ export class ProductsController {
 
             new UpdateProduct(this.productsRepository, this.logRepository).execute(updateDto!)
                 .then(message => ResponsesHandler.sendSuccessResponse(res, message))
-                .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode, error.message, error.code));
+                .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode ?? 500, error.message ?? 'Algo malo sucedio...', error.code));
 
         } catch (error) {
             return ErrorsHandler.handleUnknownError(res);
