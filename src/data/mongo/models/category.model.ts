@@ -10,4 +10,9 @@ const categorySchema: Schema<ICategory> = new Schema({
     description: { type: String },
 });
 
+categorySchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+});
+
 export const CategoryModel = mongoose.model<ICategory>('Category', categorySchema);

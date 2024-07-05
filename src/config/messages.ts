@@ -67,17 +67,17 @@ export const authErrors = {
     },
 
     unknownError: {
-        message: 'Ups, algo malo ha pasado',
+        message: 'Ha ocurrido un error inesperado en el proceso de autenticación',
         code: 'unknown-error',
     },
 
     tokenGenerationError: {
-        message: 'Ha ocurrido un error obteniendo el token',
+        message: 'Ha ocurrido un error al generar el token de autenticación',
         code: 'server-error',
     },
 
     sendEmailError: {
-        message: 'Ha ocurrido un error mientras se enviaba el correo',
+        message: 'Ha ocurrido un error al enviar el correo electrónico de verificación',
         code: 'server-error',
     },
 
@@ -102,7 +102,7 @@ export const authErrors = {
     },
 
     invalidCredentials: {
-        message: 'El correo ingresado no es correcto',
+        message: 'El correo electrónico o la contraseña ingresados son incorrectos',
         code: 'invalid-credentials',
     },
 
@@ -131,7 +131,7 @@ export const categoryErrors = {
     },
 
     invalidId: {
-        message: 'La ID proporcionada no es valida',
+        message: 'La ID de categoría proporcionada no es válida',
         code: 'invalid-id',
     },
 
@@ -176,13 +176,13 @@ export const subcategoryErrors = {
     },
 
     invalidCategoryId: {
-        message: 'La ID proporcionada no es valida',
+        message: 'La ID de categoría proporcionada no es válida',
         code: 'invalid-id',
     },
 
     subcategoryAlreadyExist: {
         message: 'La subcategoría ya existe en la base de datos',
-        code: 'category-already-exist',
+        code: 'subcategory-already-exist',
     },
 
     missingId: {
@@ -193,6 +193,94 @@ export const subcategoryErrors = {
     subcategoryNotFound: {
         message: 'La subcategoría no existe en la base de datos',
         code: 'subcategory-not-found',
+    }
+}
+
+export const productsErrors = {
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre del producto',
+        code: 'missing-name',
+    },
+
+    missingDescription: {
+        message: 'No se ha proporcionado la descripción del producto',
+        code: 'missing-description',
+    },
+
+    tooLongDescription: {
+        message: 'La descripción del producto es muy larga, no puede superar los 100 caracteres',
+        code: 'too-long-description',
+    },
+
+    missingPrice: {
+        message: 'No se ha proporcionado el precio del producto',
+        code: 'missing-price',
+    },
+
+    invalidPrice: {
+        message: 'El precio del producto debe ser un número válido mayor a 0',
+        code: 'invalid-price',
+    },
+
+    missingStock: {
+        message: 'No se ha proporcionado el stock del producto',
+        code: 'missing-stock',
+    },
+
+    invalidStock: {
+        message: 'El stock del producto debe ser un número entero válido',
+        code: 'invalid-stock',
+    },
+
+    invalidVariants: {
+        message: 'Las variantes del producto deben ser una lista de objetos válidos',
+        code: 'invalid-variants',
+    },
+
+    missingImages: {
+        message: 'No se ha proporcionado las imágenes del producto',
+        code: 'missing-images',
+    },
+
+    invalidImages: {
+        message: 'Las imágenes del producto deben ser una lista de URLs válidas',
+        code: 'invalid-images',
+    },
+
+    missingCategoryId: {
+        message: 'No se ha proporcionado la categoría a la que pertenece el producto',
+        code: 'missing-category-id',
+    },
+
+    invalidCategoryId: {
+        message: 'La ID de categoría proporcionada para el producto no es válida',
+        code: 'invalid-category-id',
+    },
+
+    missingSubcategoryId: {
+        message: 'No se ha proporcionado la subcategoría a la que pertenece el producto',
+        code: 'missing-subcategory-id',
+    },
+
+    invalidSubcategoryId: {
+        message: 'La ID de subcategoría proporcionada para el producto no es válida',
+        code: 'invalid-subcategory-id',
+    },
+
+    productAlreadyExist: {
+        message: 'El producto ya existe en la base de datos',
+        code: 'product-already-exist',
+    },
+
+    productNotFound: {
+        message: 'El producto no existe en la base de datos',
+        code: 'product-not-found',
+    },
+
+    invalidPriceParameters: {
+        message: 'El maximo precio debe ser mayor al minimo',
+        code: 'invalid-price-parameters',
     }
 }
 
@@ -224,7 +312,7 @@ export const sharedErrors = {
     },
 
     unknownError: {
-        message: 'Ups, algo malo ha pasado',
+        message: 'Ha ocurrido un error inesperado en el servidor',
         code: 'unknown-error',
     },
 
@@ -234,7 +322,7 @@ export const sharedErrors = {
     },
 
     invalidParameters: {
-        message: 'Los parámetros ingresados no son validos',
+        message: 'Los parámetros proporcionados no son válidos',
         code: 'invalid-parameters',
     },
 
@@ -246,6 +334,36 @@ export const sharedErrors = {
     invalidLimit: {
         message: 'El limite debe ser un número entero mayor a 0',
         code: 'invalid-limit',
-    }
+    },
+
+    invalidImg: {
+        message: 'La imagen ingresada no es valida',
+        code: 'invalid-img',
+    },
+
+    invalidImgSize: {
+        message: 'El tamaño de la imagen excede el límite permitido',
+        code: 'invalid-img-size',
+    },
+
+    invalidImgType: {
+        message: 'El tipo de archivo de la imagen no es válido (se permiten solo formatos de imagen)',
+        code: 'invalid-img-type',
+    },
+
+    invalidImgFormat: {
+        message: 'El formato de la imagen no es válido o está corrupto',
+        code: 'invalid-img-format',
+    },
+
+    invalidImgName: {
+        message: 'El nombre de la imagen no es válido',
+        code: 'invalid-img-name',
+    },
+
+    invalidImgExtension: {
+        message: 'La extensión del archivo de la imagen no es válida',
+        code: 'invalid-img-extension',
+    },
 }
 

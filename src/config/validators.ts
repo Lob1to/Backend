@@ -1,4 +1,3 @@
-
 export const validators = {
     email: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
     password: {
@@ -10,5 +9,29 @@ export const validators = {
     description: {
         maxLength: 100,
     },
+}
+
+
+export const interfacesValidators = {
+
+    isProductVariant: (variants: { [key: string]: any }[]): boolean => {
+        if (!Array.isArray(variants)) return false;
+        if (+variants.length === 0) return false;
+
+        const {
+            price,
+            stock,
+            size,
+            color
+        } = variants[0];
+
+        if (!price || typeof price !== 'number') return false;
+        if (!stock || typeof stock !== 'number') return false;
+        if (size && typeof size !== 'string') return false;
+        if (color && typeof color !== 'string') return false;
+
+        return true;
+    }
+
 }
 

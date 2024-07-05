@@ -5,4 +5,7 @@ export * from './categories/create-category.dto';
 export * from './categories/update-category.dto';
 export * from './subcategories/create-subcategory.dto';
 export * from './subcategories/update-subcategory.dto';
+export * from './products/create-product.dto';
+export * from './products/get-products.dto';
+export * from './products/update-product.dto';
 export * from './shared/pagination.dto';

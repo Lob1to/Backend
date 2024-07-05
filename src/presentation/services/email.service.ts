@@ -40,14 +40,12 @@ export class EmailService {
 
         try {
 
-            const sentInformation = await this.transporter.sendMail({
+            await this.transporter.sendMail({
                 to: to,
                 subject: subject,
                 html: htmlBody,
                 attachments: attachements,
             });
-
-            // console.log( sentInformation );
 
             return true;
         } catch (error) {

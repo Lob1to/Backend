@@ -41,9 +41,10 @@ export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
             const { page, limit } = paginationDto;
             const skip = (page - 1) * limit;
 
-            const items = await SubcategoryModel.find().skip(skip).limit(limit);
+            const subcategories = await SubcategoryModel.find().skip(skip).limit(limit);
             const totalItems = await SubcategoryModel.countDocuments();
             const totalPages = Math.ceil(totalItems / limit);
+            const items = subcategories.map(SubcategoryEntity.fromObject);
 
             const returnJson = {
                 next: `/api/subcategories/?page=${page + 1}&limit=${limit}`,
