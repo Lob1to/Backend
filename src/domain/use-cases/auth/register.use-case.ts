@@ -1,12 +1,13 @@
-import { register } from "module";
 import { AuthRepository, CreateLog, LogRepository, LogSeverityLevel, RegisterUserDto, CustomError, SendEmailValidationLink } from "../..";
-import { JwtAdapter } from "../../../config/";
+import { JwtAdapter, authErrors } from "../../../config/";
 
 interface RegisterUserUseCase {
 
     execute(registerUserDto: RegisterUserDto): Promise<{ [key: string]: any }>
 
 }
+
+const { tokenGenerationError, unknownError } = authErrors;
 
 export class RegisterUser implements RegisterUserUseCase {
 
@@ -21,10 +22,10 @@ export class RegisterUser implements RegisterUserUseCase {
 
         try {
             const newUser = await this.authRepository.register(registerUserDto);
-            await this.sendEmail.execute(newUser.email);
+            await this.sendEmail.execute(newUser.email, newUser.name);
 
             const token = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role });
-            if (!token) throw CustomError.internalServer('Ha ocurrido un error obteniendo el token', 'server-error');
+            if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
             const { password, ...userEntity } = newUser;
 
@@ -43,7 +44,7 @@ export class RegisterUser implements RegisterUserUseCase {
                 origin: 'register.use-case',
             });
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
 

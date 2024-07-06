@@ -1,10 +1,9 @@
 import { Router } from "express";
 import { envs } from "../../config";
-import { EmailService } from "../services";
 import { AuthController } from "./controller";
-import { SendEmailValidationLink } from "../../domain/";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
-import { AuthDatasourceImpl, AuthRepositoryImpl, LogRepositoryImpl, MongoLogDatasource } from "../../infrastructure/";
+import { SendEmail, SendEmailValidationLink } from "../../domain/";
+import { SendEmailRepositoryImpl, AuthDatasourceImpl, AuthRepositoryImpl, LogRepositoryImpl, MongoLogDatasource, SendEmailDatasourceImpl } from "../../infrastructure/";
 
 export class AuthRoutes {
 
@@ -12,20 +11,22 @@ export class AuthRoutes {
         const router = Router();
         const authDatasource = new AuthDatasourceImpl();
         const logDatasource = new MongoLogDatasource();
-
-        const authRepository = new AuthRepositoryImpl(authDatasource);
-        const logRepository = new LogRepositoryImpl(logDatasource);
-
-        const emailService = new EmailService(
+        const sendEmailDatasource = new SendEmailDatasourceImpl(
             envs.MAILER_SERVICE,
             envs.MAILER_EMAIL,
             envs.MAILER_SECRET_KEY,
         );
 
+        const authRepository = new AuthRepositoryImpl(authDatasource);
+        const logRepository = new LogRepositoryImpl(logDatasource);
+        const sendEmailRepository = new SendEmailRepositoryImpl(sendEmailDatasource);
+
+        const sendEmailUseCase = new SendEmail(sendEmailRepository);
+
         const sendEmail = new SendEmailValidationLink(
             envs.WEBSERVICE_URL,
-            emailService,
-            logRepository,
+            sendEmailUseCase,
+            logRepository
         );
 
         const controller = new AuthController(
