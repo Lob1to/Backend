@@ -1,3 +1,4 @@
+import { register } from "module";
 import { AuthRepository, CreateLog, LogRepository, LogSeverityLevel, RegisterUserDto, CustomError, SendEmailValidationLink } from "../..";
 import { JwtAdapter } from "../../../config/";
 
@@ -19,7 +20,6 @@ export class RegisterUser implements RegisterUserUseCase {
     async execute(registerUserDto: RegisterUserDto): Promise<{ [key: string]: any }> {
 
         try {
-
             const newUser = await this.authRepository.register(registerUserDto);
             await this.sendEmail.execute(newUser.email);
 

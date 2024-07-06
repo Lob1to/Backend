@@ -1,4 +1,3 @@
-import { MongooseError } from "mongoose";
 import { AuthRepository, CreateLog, CustomError, LogRepository, LogSeverityLevel, UpdateUserDto } from "../..";
 import { authErrors } from "../../../config";
 
@@ -20,6 +19,7 @@ export class UpdateUser implements UpdateUserUseCase {
     async execute(updateUserDto: UpdateUserDto): Promise<string> {
 
         try {
+
             const message = await this.authRepository.updateUser(updateUserDto);
             return message;
 
