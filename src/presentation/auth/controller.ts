@@ -89,7 +89,6 @@ export class AuthController {
             return ResponsesHandler.sendErrorResponse(res, 400, missingId.message, missingId.code);
         }
 
-
         try {
 
             new DeleteUser(this.authRepository, this.logRepository).execute(id)
