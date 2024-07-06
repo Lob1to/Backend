@@ -18,3 +18,4 @@ export * from './products/get-product-by-id.use-case';
 export * from './products/update-product.use-case';
 export * from './products/delete-product.use-case';
 export * from './logs/create-log.use-case';
+export * from './send-email/send-email.use-case';

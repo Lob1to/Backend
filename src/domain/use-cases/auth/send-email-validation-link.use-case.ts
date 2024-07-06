@@ -1,10 +1,10 @@
-import { LogSeverityLevel, CustomError, LogRepository, CreateLog } from "../../";
-import { EmailService } from "../../../presentation/services/email.service";
+import { LogSeverityLevel, CustomError, LogRepository, CreateLog, SendEmailRepository } from "../../";
 import { JwtAdapter, authErrors, htmlBodies } from "../../../config/";
+import { SendEmail } from "../send-email/send-email.use-case";
 
 interface SendEmailValidationLinkUseCase {
 
-    execute(email: string): Promise<boolean>;
+    execute(email: string, user: string): Promise<boolean>;
 
 }
 
@@ -12,11 +12,11 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
 
     constructor(
         private readonly webServiceUrl: string,
-        private readonly emailService: EmailService,
+        private readonly sendEmailUseCase: SendEmail,
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(email: string): Promise<boolean> {
+    async execute(email: string, user: string): Promise<boolean> {
 
         const { tokenGenerationError, sendEmailError } = authErrors;
 
@@ -34,7 +34,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
 
             const html = htmlBodies.validateEmail({
                 link: link,
-                username: 'User',
+                username: user,
                 companyName: 'Nana Anchetas',
                 resendEmailLink: resendEmailLink,
                 privacyPolicyLink: privacyPolicyLink,
@@ -48,7 +48,8 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
                 htmlBody: html,
             }
 
-            const isSent = await this.emailService.sendEmail(options);
+            const isSent = await this.sendEmailUseCase.execute(options);
+
             if (!isSent) throw CustomError.internalServer(sendEmailError.message, sendEmailError.code);
 
             return true;

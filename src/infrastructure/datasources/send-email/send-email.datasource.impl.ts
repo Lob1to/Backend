@@ -1,19 +1,7 @@
-import nodemailer, { Transporter } from 'nodemailer';
+import nodemailer, { Transporter } from "nodemailer";
+import { SendEmailDatasource, SendMailOptions } from "../../../domain";
 
-export interface SendMailOptions {
-    to: string | string[];
-    subject: string;
-    htmlBody: string;
-    attachements?: Attachement[];
-}
-
-export interface Attachement {
-    filename: string;
-    path: string;
-}
-
-
-export class EmailService {
+export class SendEmailDatasourceImpl implements SendEmailDatasource {
 
     private transporter: Transporter;
 
@@ -32,11 +20,9 @@ export class EmailService {
         });
     }
 
-
     async sendEmail(options: SendMailOptions): Promise<boolean> {
 
         const { to, subject, htmlBody, attachements = [] } = options;
-
 
         try {
 
@@ -52,5 +38,11 @@ export class EmailService {
             return false;
         }
 
+
     }
+
+
+
 }
+
+
