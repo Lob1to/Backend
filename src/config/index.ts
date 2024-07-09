@@ -5,5 +5,6 @@ export * from './validators';
 export * from './jwt.adapter';
 export * from './messages';
 export * from './html-bodies';
+export * from './firebase.config';
 
 

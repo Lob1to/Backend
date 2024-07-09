@@ -1,3 +1,4 @@
+import { initializeApp } from "firebase-admin";
 import { envs } from "./config/envs.plugin";
 import { MongoDatabase } from "./data/mongo";
 import { AppRoutes } from "./presentation/routes";
@@ -20,6 +21,7 @@ async function main() {
         port: envs.PORT,
         routes: AppRoutes.routes,
     });
+
     server.start();
 
 }

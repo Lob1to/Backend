@@ -284,6 +284,48 @@ export const productsErrors = {
     }
 }
 
+export const fileUploadErrors = {
+
+    missingImg: {
+        message: 'No se ha proporcionado ninguna imagen',
+        code: 'missing-img',
+    },
+
+    invalidImgSize: {
+        message: 'El tamaño de la imagen excede el límite permitido',
+        code: 'invalid-img-size',
+    },
+
+    invalidImgType: {
+        message: (types: string[]) => `El tipo de imagen no es válido, solo se permite los tipos: ${types}`,
+        code: 'invalid-img-type',
+    },
+
+    invalidImgFormat: {
+        message: 'El formato de la imagen no es válido o está corrupto',
+        code: 'invalid-img-format',
+    },
+
+    invalidImgName: {
+        message: 'El nombre de la imagen no es válido',
+        code: 'invalid-img-name',
+    },
+
+    invalidImgExtension: {
+        message: (fileExtension: string, validExtensions: string[]) => `Extensión invalida: ${fileExtension}, extensiones validas: ${validExtensions}`,
+        code: 'invalid-img-extension',
+    },
+
+    imageNotFound: {
+        message: 'La imagen no existe en la base de datos',
+        code: 'image-not-found',
+    },
+
+
+
+}
+
+
 export const sharedErrors = {
 
     unauthorized: {
@@ -339,31 +381,6 @@ export const sharedErrors = {
     invalidImg: {
         message: 'La imagen ingresada no es valida',
         code: 'invalid-img',
-    },
-
-    invalidImgSize: {
-        message: 'El tamaño de la imagen excede el límite permitido',
-        code: 'invalid-img-size',
-    },
-
-    invalidImgType: {
-        message: 'El tipo de archivo de la imagen no es válido (se permiten solo formatos de imagen)',
-        code: 'invalid-img-type',
-    },
-
-    invalidImgFormat: {
-        message: 'El formato de la imagen no es válido o está corrupto',
-        code: 'invalid-img-format',
-    },
-
-    invalidImgName: {
-        message: 'El nombre de la imagen no es válido',
-        code: 'invalid-img-name',
-    },
-
-    invalidImgExtension: {
-        message: 'La extensión del archivo de la imagen no es válida',
-        code: 'invalid-img-extension',
     },
 }
 

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter, authErrors, sharedErrors } from "../../config";
 import { UserModel } from "../../data/mongo";
-import { CustomError, UserEntity } from "../../domain";
-import { ErrorsHandler, ResponsesHandler } from "../handlers";
+import { UserEntity } from "../../domain";
+import { ResponsesHandler } from "../handlers";
 
 
 
@@ -40,9 +40,9 @@ export class AuthMiddleware {
             }
 
             // TODO: Validar si el usuario esta activo.
+            const { password, ...data } = UserEntity.fromObject(user!);
 
-
-            req.body.user = UserEntity.fromObject(user!);
+            req.body.user = data;
 
             next();
 
