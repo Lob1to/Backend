@@ -25,6 +25,14 @@ export class ErrorsHandler {
                     errorCode: error.errorCode,
                 });
         }
+
+        return res
+            .status(500)
+            .json({
+                success: false,
+                message: authErrors.unknownError.message,
+                errorCode: authErrors.unknownError.code,
+            });
     }
 
 }

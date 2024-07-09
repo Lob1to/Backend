@@ -4,3 +4,5 @@ export * from './categories/categories.datasource.impl';
 export * from './subcategories/subcategories.datasource.impl';
 export * from './products/products.datasource.impl';
 export * from './send-email/send-email.datasource.impl';
+export * from './file-upload/file-upload.datasource.impl';
+export * from './images/get-image.datasource.impl';

@@ -5,3 +5,5 @@ export * from './subcategories.datasource';
 export * from './products.datasource';
 export * from './log.datasource';
 export * from './send-email.datasource';
+export * from './file-upload.datasource';
+export * from './get-image.datasource';

@@ -19,3 +19,6 @@ export * from './products/update-product.use-case';
 export * from './products/delete-product.use-case';
 export * from './logs/create-log.use-case';
 export * from './send-email/send-email.use-case';
+export * from './file-upload/upload-multiple-files.use-case';
+export * from './file-upload/upload-single-file.use-case';
+export * from './images/get-image-url.use-case';
