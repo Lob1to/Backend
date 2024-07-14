@@ -1,8 +1,6 @@
 interface OrderItemEntity {
     id: string;
-    productName: string;
     quantity: number;
-    price: number;
     variant?: string;
 }
 
@@ -24,7 +22,7 @@ interface OrderTotalEntity {
 export class OrderEntity {
     constructor(
         public id: string,
-        public userID: string,
+        public user: string,
         public orderDate: Date,
         public orderStatus: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled',
         public items: OrderItemEntity[],
@@ -39,7 +37,7 @@ export class OrderEntity {
     static fromObject(object: { [key: string]: any }): OrderEntity {
         const {
             id,
-            userID,
+            user,
             orderDate,
             orderStatus,
             items,
@@ -53,7 +51,7 @@ export class OrderEntity {
 
         return new OrderEntity(
             id,
-            userID,
+            user,
             orderDate,
             orderStatus,
             items,

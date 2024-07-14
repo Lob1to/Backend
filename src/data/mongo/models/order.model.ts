@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IOrderItem {
-    id: mongoose.Schema.Types.ObjectId;
+    product: mongoose.Schema.Types.ObjectId;
     quantity: number;
     variant?: string;
 }
@@ -22,7 +22,7 @@ interface IOrderTotal {
 }
 
 interface IOrder extends Document {
-    userId: mongoose.Schema.Types.ObjectId;
+    user: mongoose.Schema.Types.ObjectId;
     orderDate: Date;
     orderStatus: string;
     items: IOrderItem[];
@@ -35,14 +35,14 @@ interface IOrder extends Document {
 }
 
 const orderItemSchema = new Schema<IOrderItem>({
-    id: { type: Schema.Types.ObjectId, ref: 'Product', required: true, virtual: true },
+    product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     quantity: { type: Number, required: true },
-    variant: { type: String },
+    variant: { type: mongoose.Schema.Types.ObjectId, ref: 'Variant' },
 });
 
 const orderSchema: Schema<IOrder> = new Schema({
 
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     orderDate: { type: Date, default: Date.now },
     orderStatus: {
         type: String,
@@ -70,6 +70,16 @@ const orderSchema: Schema<IOrder> = new Schema({
 
 });
 
+orderItemSchema.set('toJSON', {
+    virtuals: true,
+    versionKey: false,
+    transform: function (doc, ret) {
+        // remove these props when object is serialized
+        delete ret._id;
+        delete ret.id;
+    },
+});
+
 orderSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
@@ -79,6 +89,7 @@ orderSchema.set('toJSON', {
         delete ret.id;
     },
 });
+
 
 export const OrderModel = mongoose.model<IOrder>('Order', orderSchema);
 

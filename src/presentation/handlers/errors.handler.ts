@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { CustomError } from "../../domain";
-import { authErrors } from "../../config";
+import { sharedErrors } from "../../config";
 
 export class ErrorsHandler {
 
@@ -9,8 +9,8 @@ export class ErrorsHandler {
             .status(500)
             .json({
                 success: false,
-                message: authErrors.unknownError.message,
-                errorCode: authErrors.unknownError.code,
+                message: sharedErrors.unknownError.message,
+                errorCode: sharedErrors.unknownError.code,
             });
     }
 
@@ -30,8 +30,8 @@ export class ErrorsHandler {
             .status(500)
             .json({
                 success: false,
-                message: authErrors.unknownError.message,
-                errorCode: authErrors.unknownError.code,
+                message: sharedErrors.unknownError.message,
+                errorCode: sharedErrors.unknownError.code,
             });
     }
 

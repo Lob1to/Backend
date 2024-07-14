@@ -1,85 +1,56 @@
-import mongoose from 'mongoose';
-import { MongoDatabase, CategoryModel, ProductModel, SubcategoryModel, OrderModel } from '../';
-import { envs } from '../../../config';
+import { MongoDatabase } from '../init';
+import { CategoryModel, SubcategoryModel, ProductModel, OrderModel } from '../';
 import { categories, subcategories, products, orders } from './seedData';
+import { envs } from '../../../config';
+import mongoose from 'mongoose';
 
-const clearCollections = async (): Promise<void> => {
-    await CategoryModel.deleteMany({});
-    await ProductModel.deleteMany({});
-    await SubcategoryModel.deleteMany({});
-    await OrderModel.deleteMany({});
-};
-
-const insertCategories = async (): Promise<mongoose.Document[]> => {
-    const categoryModels = categories.map(category => new CategoryModel(category));
-    return await CategoryModel.insertMany(categoryModels);
-};
-
-const insertSubcategories = async (categoryModels: mongoose.Document[]): Promise<mongoose.Document[]> => {
-    const subcategoryModels = subcategories.map(subcategory => {
-        const category = categoryModels.find(c => c.get('name') === subcategory.categoryName);
-        if (!category) throw new Error(`Categoria no encontrada para la subcategoria: ${subcategory.name}`);
-        return new SubcategoryModel({ ...subcategory, categoryId: category._id });
-    });
-    return await SubcategoryModel.insertMany(subcategoryModels);
-};
-
-const insertProducts = async (categoryModels: mongoose.Document[], subcategoryModels: mongoose.Document[]): Promise<mongoose.Document[]> => {
-    const productModels = products.map(product => {
-        const category = categoryModels.find(c => c.get('name') === product.categoryName);
-        const subcategory = subcategoryModels.find(s => s.get('name') === product.subcategoryName);
-        if (!category || !subcategory) throw new Error(`Categoria o subcategoria no encontrada para el producto: ${product.name}`);
-        return new ProductModel({
-            ...product,
-            categoryId: category._id,
-            subcategoryId: subcategory._id
-        });
-    });
-    return await ProductModel.insertMany(productModels);
-};
-
-const insertOrders = async (productModels: mongoose.Document[]): Promise<void> => {
-    const orderModels = orders.map(order => {
-        const items = order.items.map(item => {
-            const product = productModels.find(p => p.get('name') === item.productName);
-            if (!product) throw new Error(`Producto no encontrado para el item: ${item.productName}`);
-            return {
-                ...item,
-                productId: product._id
-            };
-        });
-        return new OrderModel({
-            ...order,
-            items
-        });
-    });
-    await OrderModel.insertMany(orderModels);
-};
-
-const seedData = async (): Promise<void> => {
-    console.log('Iniciando inserción de datos de prueba...');
-    console.log('Conectando a la base de datos...');
+async function seedDatabase() {
     try {
-        await MongoDatabase.connect({ dbName: envs.MONGO_DB_NAME, mongoUrl: envs.MONGO_URL });
+        // Connect to MongoDB
+        await MongoDatabase.connect({
+            dbName: envs.MONGO_DB_NAME,
+            mongoUrl: envs.MONGO_URL,
+        });
 
-        console.log('Limpiando colecciones...');
-        await clearCollections();
+        // Clear existing data
+        await Promise.all([
+            CategoryModel.deleteMany({}),
+            SubcategoryModel.deleteMany({}),
+            ProductModel.deleteMany({}),
+            OrderModel.deleteMany({})
+        ]);
 
-        console.log('Insertando categorías...');
-        const categoryModels = await insertCategories();
-        console.log('Insertando subcategorías...');
-        const subcategoryModels = await insertSubcategories(categoryModels);
-        console.log('Insertando productos...');
-        const productModels = await insertProducts(categoryModels, subcategoryModels);
-        console.log('Insertando pedidos...');
-        await insertOrders(productModels);
+        // Seed categories and subcategories
+        const createdCategories = await CategoryModel.insertMany(categories);
+        const createdSubcategories = await SubcategoryModel.insertMany(subcategories.map(sub => ({
+            ...sub,
+            categoryId: createdCategories[Math.floor(Math.random() * createdCategories.length)]._id
+        })));
 
-        console.log('Datos de prueba insertados correctamente');
+        // Seed products with random category and subcategory IDs
+        const createdProducts = await ProductModel.insertMany(products.map(product => ({
+            ...product,
+            categoryId: createdCategories[Math.floor(Math.random() * createdCategories.length)]._id,
+            subcategoryId: createdSubcategories[Math.floor(Math.random() * createdSubcategories.length)]._id
+        })));
+
+        // Seed orders with random product IDs
+        await OrderModel.insertMany(orders.map(order => ({
+            ...order,
+            items: order.items.map(item => ({
+                ...item,
+                product: createdProducts[Math.floor(Math.random() * createdProducts.length)]._id
+            }))
+        })));
+
+        console.log('Database seeded successfully!');
     } catch (error) {
-        console.error('Error al insertar datos de prueba:', error);
+        console.error('Error seeding database:', error);
     } finally {
-        await mongoose.disconnect();
+        // Close the connection
+        await mongoose.connection.close();
     }
-};
+}
 
-seedData();
+// Run the seed function
+seedDatabase();

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { LogRepositoryImpl, MongoLogDatasource, OrderDatasourceImpl, OrderRepositoryImpl } from "../../infrastructure";
 import { OrdersController } from "./controller";
+import { AuthMiddleware } from "../middlewares/auth.middleware";
 
 
 
@@ -18,8 +19,12 @@ export class OrdersRoutes {
         const controller = new OrdersController(ordersRepository, logRepository);
 
 
-        router.post('/create', controller.createOrder);
-        router.get('/', controller.getOrders);
+        router.post('/create', AuthMiddleware.validateJWT, controller.createOrder);
+        router.get('/', AuthMiddleware.validateAdminRoleWithToken, controller.getOrders);
+        router.get('/user/id', AuthMiddleware.validateJWT, controller.getOrdersByUserId);
+        router.get('/:id', AuthMiddleware.validateJWT, controller.getOrderById);
+        router.put('/:id', AuthMiddleware.validateJWT, controller.updateOrder);
+        router.delete('/:id', AuthMiddleware.validateJWT, controller.deleteOrder);
 
         return router;
     }

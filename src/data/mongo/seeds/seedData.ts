@@ -6,12 +6,12 @@ export const categories = [
 ];
 
 export const subcategories = [
-    { name: 'Recipientes', description: 'Recipientes para anchetas', categoryName: 'Decoración' },
-    { name: 'Globos', description: 'Globos decorativos', categoryName: 'Decoración' },
-    { name: 'Chocolates', description: 'Chocolates y bombones', categoryName: 'Comida' },
-    { name: 'Quesos', description: 'Variedad de quesos', categoryName: 'Comida' },
-    { name: 'Vinos', description: 'Vinos y espumantes', categoryName: 'Bebidas' },
-    { name: 'Tarjetas', description: 'Tarjetas con mensajes personalizados', categoryName: 'Mensajes' }
+    { name: 'Recipientes', description: 'Recipientes para anchetas' },
+    { name: 'Globos', description: 'Globos decorativos' },
+    { name: 'Chocolates', description: 'Chocolates y bombones' },
+    { name: 'Quesos', description: 'Variedad de quesos' },
+    { name: 'Vinos', description: 'Vinos y espumantes' },
+    { name: 'Tarjetas', description: 'Tarjetas con mensajes personalizados' }
 ];
 
 export const products = [
@@ -26,8 +26,7 @@ export const products = [
         decorations: [],
         customized: false,
         images: ['canasta-madera.jpg'],
-        categoryName: 'Decoración',
-        subcategoryName: 'Recipientes',
+
     },
     {
         name: 'Globos Feliz Cumpleaños',
@@ -40,8 +39,6 @@ export const products = [
         decorations: [],
         customized: false,
         images: ['globos-feliz-cumpleanos.jpg'],
-        categoryName: 'Decoración',
-        subcategoryName: 'Globos',
     },
     {
         name: 'Chocolates Finos Surtidos',
@@ -60,8 +57,6 @@ export const products = [
         decorations: [{ type: 'Lazo', color: 'Dorado' }],
         customized: false,
         images: ['chocolates-finos-surtidos.jpg'],
-        categoryName: 'Comida',
-        subcategoryName: 'Chocolates',
     },
     {
         name: 'Tabla de Quesos',
@@ -78,8 +73,6 @@ export const products = [
         decorations: [],
         customized: false,
         images: ['tabla-quesos.jpg'],
-        categoryName: 'Comida',
-        subcategoryName: 'Quesos',
     },
     {
         name: 'Vino Tinto Reserva',
@@ -92,8 +85,6 @@ export const products = [
         decorations: [],
         customized: false,
         images: ['vino-tinto.jpg'],
-        categoryName: 'Bebidas',
-        subcategoryName: 'Vinos',
     },
     {
         name: 'Tarjeta de Cumpleaños',
@@ -106,24 +97,19 @@ export const products = [
         decorations: [],
         customized: true,
         images: ['tarjeta-cumpleanos.jpg'],
-        categoryName: 'Mensajes',
-        subcategoryName: 'Tarjetas',
     }
 ];
 
 export const orders = [
+
     {
-        userId: "60d5ecb54f5679001f9b2d1a",
+        userId: "66834337ae2047ebacf3f54f",
         items: [
             {
-                productName: "Canasta de Madera",
                 quantity: 1,
-                price: 32000
             },
             {
-                productName: "Chocolates Finos Surtidos",
                 quantity: 1,
-                price: 62000,
                 variant: "Mediana"
             }
         ],
@@ -146,17 +132,13 @@ export const orders = [
         trackingUrl: "https://tracking.example.com/order123"
     },
     {
-        userId: "60d5ecb54f5679001f9b2d1b",
+        userId: "66834337ae2047ebacf3f54f",
         items: [
             {
-                productName: "Vino Tinto Reserva",
                 quantity: 2,
-                price: 50000
             },
             {
-                productName: "Tabla de Quesos",
                 quantity: 1,
-                price: 75000
             }
         ],
         totalPrice: 175000,

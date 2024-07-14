@@ -15,7 +15,9 @@ export class OrdersController {
 
         try {
 
-            const [error, errorCode, createDto] = CreateOrderDto.create(req.body);
+            const { user, ...order } = req.body;
+
+            const [error, errorCode, createDto] = CreateOrderDto.create({ user: user.id, ...order });
 
             if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 

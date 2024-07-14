@@ -91,9 +91,9 @@ export const interfacesValidators = {
         if (!orderItems || +Object.keys(orderItems).length === 0) return [false, noItems.message, noItems.code];
 
         for (let i = 0; i < Object.keys(orderItems).length; i++) {
-            const { productId, quantity, variant } = orderItems[i];
+            const { product, quantity, variant } = orderItems[i];
 
-            if (!productId || typeof productId !== 'string') return [false, invalidProductId.message, invalidProductId.code];
+            if (!product || typeof product !== 'string') return [false, invalidProductId.message, invalidProductId.code];
             if (!quantity || typeof quantity !== 'number') return [false, invalidQuantity.message, invalidQuantity.code];
             if (quantity < 1) return [false, invalidQuantityValue.message, invalidQuantityValue.code];
             if (variant && typeof variant !== 'string') return [false, invalidVariant.message, invalidVariant.code];

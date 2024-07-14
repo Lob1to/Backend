@@ -429,7 +429,7 @@ export const orderErrors = {
     },
 
     productNotFound: {
-        message: 'El producto no existe en la base de datos',
+        message: (productId: string) => `El producto con ID ${productId} no existe en la base de datos`,
         code: 'product-not-found',
     },
 

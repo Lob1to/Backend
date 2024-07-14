@@ -6,7 +6,6 @@ import { OrderDatasource, OrderEntity, CreateOrderDto, UpdateOrderDto, CustomErr
 // TODO: Implementar codigos de descuento y validarlos
 
 const {
-    ordersNotFound,
     orderNotFound,
     invalidOrderId,
     invalidUserId,
@@ -19,12 +18,37 @@ const {
 
 export class OrderDatasourceImpl implements OrderDatasource {
 
+    private async calculateOrderTotal(items: { [key: string]: any }[]): Promise<number> {
+
+        let total = 0;
+        for (let i = 0; i < items.length; i++) {
+            const product = await ProductModel.findById(items[i].product);
+
+            if (!product) throw CustomError.notFound(productNotFound.message(items[i].product), productNotFound.code);
+
+
+            if (items[i].quantity > product.stock) throw CustomError.badRequest(insufficientStock.message, insufficientStock.code);
+            if (items[i].price > product.price) throw CustomError.internalServer(invalidPrice.message, invalidPrice.code);
+
+            if (items[i].variant) {
+                total += product.price * items[i].quantity * items[i].variant.price;
+            }
+            else {
+                total += product.price * items[i].quantity;
+            }
+        }
+
+        return total;
+
+    }
+
     private async verifyItems(items: { [key: string]: any }[]): Promise<void> {
 
         for (let i = 0; i < items.length; i++) {
+            const id = items[i].product;
 
-            const product = await ProductModel.findById(items[i].productId);
-            if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
+            const product = await ProductModel.findById(id);
+            if (!product) throw CustomError.notFound(productNotFound.message(id), productNotFound.code);
 
             if (items[i].quantity > product.stock) throw CustomError.badRequest(insufficientStock.message, insufficientStock.code);
             if (items[i].price > product.price) throw CustomError.internalServer(invalidPrice.message, invalidPrice.code);
@@ -52,7 +76,9 @@ export class OrderDatasourceImpl implements OrderDatasource {
 
             const orders = await OrderModel.find()
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .populate('user', 'name')
+                .populate('items.product');
 
             const items = orders.map(OrderEntity.fromObject);
 
@@ -82,7 +108,10 @@ export class OrderDatasourceImpl implements OrderDatasource {
         try {
             if (!isValidObjectId(id)) throw CustomError.badRequest(invalidOrderId.message, invalidOrderId.code);
 
-            const order = await OrderModel.findById(id);
+            const order = await OrderModel.findById(id)
+                .populate('user', 'name')
+                .populate('items.product');
+
             if (!order) throw CustomError.notFound(orderNotFound.message, orderNotFound.code);
 
             return OrderEntity.fromObject(order);
@@ -96,10 +125,10 @@ export class OrderDatasourceImpl implements OrderDatasource {
 
     }
 
-    async getOrdersByUserId(userId: string, paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
+    async getOrdersByUserId(user: string, paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
 
         try {
-            await this.verifyUser(userId);
+            await this.verifyUser(user);
 
             const { page, limit } = paginationDto;
 
@@ -107,15 +136,17 @@ export class OrderDatasourceImpl implements OrderDatasource {
 
             const totalPages = Math.ceil(totalItems / limit);
 
-            const orders = await OrderModel.find({ userId })
+            const orders = await OrderModel.find({ user })
+                .populate('user', 'name email')
+                .populate('items.product', 'name price stock')
                 .skip((page - 1) * limit)
                 .limit(limit);
 
             const items = orders.map(OrderEntity.fromObject);
 
             const returnJson = {
-                next: `/api/orders/${userId}/?page=${page + 1}&limit=${limit}`,
-                prev: (page - 1 > 0) ? `/api/orders/${userId}/?page=${(page - 1)}&limit=${limit}` : null,
+                next: `/api/orders/${user}/?page=${page + 1}&limit=${limit}`,
+                prev: (page - 1 > 0) ? `/api/orders/${user}/?page=${(page - 1)}&limit=${limit}` : null,
                 page,
                 limit,
                 totalPages,
@@ -137,23 +168,24 @@ export class OrderDatasourceImpl implements OrderDatasource {
         try {
 
             const {
-                userId,
+                user,
                 items,
                 totalPrice,
                 shippingAddress,
                 paymentMethod,
-                orderTotal,
                 orderStatus,
                 trackingUrl
 
             } = createOrderDto;
 
-            await this.verifyUser(userId);
+            await this.verifyUser(user);
 
             await this.verifyItems(items);
 
+            const orderTotal = await this.calculateOrderTotal(items);
+
             const order = new OrderModel({
-                userId,
+                user,
                 items,
                 totalPrice,
                 shippingAddress,
