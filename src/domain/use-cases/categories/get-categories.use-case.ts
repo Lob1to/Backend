@@ -24,7 +24,7 @@ export class GetCategories implements GetCategoriesUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-category.use-case',
+                origin: 'get-categories.use-case',
             });
 
 

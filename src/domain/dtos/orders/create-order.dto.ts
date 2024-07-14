@@ -13,10 +13,8 @@ const {
 } = orderErrors;
 
 interface OrderItem {
-    productId: string;
-    productName: string;
+    id: string;
     quantity: number;
-    price: number;
     variant?: string;
 }
 

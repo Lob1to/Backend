@@ -13,9 +13,7 @@ export const validators = {
     },
 }
 
-//! TODO: Refactorizacion del codigo de los datasources para que devuelvan los mismos valores siempre y que sea consistente con el resto.
-
-// TODO: Refactorizacion del codigo de las ordenes para que solo tenga que hacer un populate y que se encargue de las validaciones.
+// ! TODO: Refactorizacion del codigo de las ordenes para que solo tenga que hacer un populate y que se encargue de las validaciones.
 
 const {
     notArray,

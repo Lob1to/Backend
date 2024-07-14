@@ -2,7 +2,7 @@ import { CreateLog, CustomError, LogRepository, SubcategoriesRepository, LogSeve
 
 interface DeleteSubcategoryUseCase {
 
-    execute(id: string): Promise<string>;
+    execute(id: string): Promise<SubcategoryEntity>;
 
 }
 
@@ -15,13 +15,13 @@ export class DeleteSubcategory implements DeleteSubcategoryUseCase {
 
     ) { }
 
-    async execute(id: string): Promise<string> {
+    async execute(id: string): Promise<SubcategoryEntity> {
 
         try {
 
-            const message = await this.subCategoriesRepository.deleteSubcategory(id);
+            const subcategory = await this.subCategoriesRepository.deleteSubcategory(id);
 
-            return message;
+            return subcategory;
 
         } catch (error) {
             if (error instanceof CustomError) throw error;
@@ -29,7 +29,7 @@ export class DeleteSubcategory implements DeleteSubcategoryUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-category.use-case',
+                origin: 'delete-subcategory.use-case',
             });
 
 

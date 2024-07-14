@@ -29,7 +29,7 @@ export class GetSubcategories implements GetSubcategoriesUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-category.use-case',
+                origin: 'get-subcategories.use-case',
             });
 
 

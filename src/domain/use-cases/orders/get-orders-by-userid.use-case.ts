@@ -1,10 +1,10 @@
-import { CreateLog, CustomError, LogRepository, OrderRepository } from "../..";
+import { CreateLog, CustomError, LogRepository, OrderRepository, PaginationDto } from "../..";
 import { LogSeverityLevel, OrderEntity } from "../../entities";
 
 
 interface GetOrdersByUserIdUseCase {
 
-    execute(userId: string): Promise<OrderEntity[]>;
+    execute(userId: string, paginationDto: PaginationDto): Promise<{ [key: string]: any } | OrderEntity[]>;
 
 }
 
@@ -15,10 +15,10 @@ export class GetOrdersByUserId implements GetOrdersByUserIdUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    execute(userId: string): Promise<OrderEntity[]> {
+    execute(userId: string, paginationDto: PaginationDto): Promise<{ [key: string]: any } | OrderEntity[]> {
 
         try {
-            const orders = this.orderRepository.getOrdersByUserId(userId);
+            const orders = this.orderRepository.getOrdersByUserId(userId, paginationDto);
             return orders;
 
         } catch (error) {

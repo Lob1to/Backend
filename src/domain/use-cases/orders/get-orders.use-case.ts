@@ -1,9 +1,9 @@
-import { CreateLog, CustomError, LogRepository, OrderRepository } from "../..";
+import { CreateLog, CustomError, LogRepository, OrderRepository, PaginationDto } from "../..";
 import { LogSeverityLevel, OrderEntity } from "../../entities";
 
 interface GetOrdersUseCase {
 
-    execute(): Promise<OrderEntity[]>;
+    execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }>;
 
 }
 
@@ -14,10 +14,11 @@ export class GetOrders implements GetOrdersUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    execute(): Promise<OrderEntity[]> {
+    async execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
 
         try {
-            const orders = this.orderRepository.getOrders();
+            const orders = await this.orderRepository.getOrders(paginationDto);
+
             return orders;
 
         } catch (error) {

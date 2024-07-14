@@ -1,8 +1,8 @@
-import { UpdateUserDto, CategoriesRepository, LogRepository, CreateLog, CustomError, LogSeverityLevel } from "../../";
+import { UpdateUserDto, CategoriesRepository, LogRepository, CreateLog, CustomError, LogSeverityLevel, CategoryEntity } from "../../";
 
 
 interface UpdateCategoryUseCase {
-    execute(updateDto: UpdateUserDto): Promise<string>;
+    execute(updateDto: UpdateUserDto): Promise<CategoryEntity>;
 }
 
 export class UpdateCategory implements UpdateCategoryUseCase {
@@ -13,11 +13,13 @@ export class UpdateCategory implements UpdateCategoryUseCase {
     ) { }
 
 
-    execute(updateDto: UpdateUserDto): Promise<string> {
+    async execute(updateDto: UpdateUserDto): Promise<CategoryEntity> {
 
         try {
 
-            return this.categoriesRepository.updateCategory(updateDto);
+            const category = await this.categoriesRepository.updateCategory(updateDto);
+
+            return category;
 
         } catch (error) {
 
@@ -26,7 +28,7 @@ export class UpdateCategory implements UpdateCategoryUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-category.use-case',
+                origin: 'update-category.use-case',
             });
 
 

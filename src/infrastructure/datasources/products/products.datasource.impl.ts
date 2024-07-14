@@ -120,7 +120,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
     }
 
-    async updateProduct(updateDto: UpdateProductDto): Promise<string> {
+    async updateProduct(updateDto: UpdateProductDto): Promise<ProductEntity> {
 
         const { id, ...updateData } = updateDto;
         const { name, categoryId, subcategoryId } = updateData;
@@ -149,9 +149,10 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
-            await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
+            if (!updatedProduct) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
-            return 'El producto se actualizo correctamente';
+            return ProductEntity.fromObject(updatedProduct);
 
         } catch (error) {
 
@@ -162,7 +163,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
     }
 
-    async deleteProduct(id: string): Promise<string> {
+    async deleteProduct(id: string): Promise<ProductEntity> {
 
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
@@ -173,7 +174,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
             await ProductModel.findByIdAndDelete(id);
 
-            return 'El producto se elimino correctamente';
+            return ProductEntity.fromObject(product);
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;

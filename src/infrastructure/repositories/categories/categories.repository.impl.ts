@@ -16,11 +16,11 @@ export class CategoriesRepositoryImpl implements CategoriesRepository {
         return this.datasource.getAllCategories(paginationDto);
     }
 
-    updateCategory(updateDto: UpdateCategoryDto): Promise<string> {
+    updateCategory(updateDto: UpdateCategoryDto): Promise<CategoryEntity> {
         return this.datasource.updateCategory(updateDto);
     }
 
-    deleteCategory(id: string): Promise<string> {
+    deleteCategory(id: string): Promise<CategoryEntity> {
         return this.datasource.deleteCategory(id);
     }
 

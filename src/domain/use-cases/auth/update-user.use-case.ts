@@ -1,10 +1,10 @@
-import { AuthRepository, CreateLog, CustomError, LogRepository, LogSeverityLevel, UpdateUserDto } from "../..";
+import { AuthRepository, CreateLog, CustomError, LogRepository, LogSeverityLevel, UpdateUserDto, UserEntity } from "../..";
 import { authErrors } from "../../../config";
 
 
 interface UpdateUserUseCase {
 
-    execute(updateUserDto: UpdateUserDto): Promise<string>;
+    execute(updateUserDto: UpdateUserDto): Promise<UserEntity>;
 
 }
 
@@ -16,12 +16,13 @@ export class UpdateUser implements UpdateUserUseCase {
     ) { }
 
 
-    async execute(updateUserDto: UpdateUserDto): Promise<string> {
+    async execute(updateUserDto: UpdateUserDto): Promise<UserEntity> {
 
         try {
 
-            const message = await this.authRepository.updateUser(updateUserDto);
-            return message;
+            const user = await this.authRepository.updateUser(updateUserDto);
+
+            return user;
 
         } catch (error) {
 
@@ -30,7 +31,7 @@ export class UpdateUser implements UpdateUserUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.high,
-                origin: 'UpdateUser.execute'
+                origin: 'update-user.use-case'
             });
 
             throw CustomError.internalServer(authErrors.unknownError.message, authErrors.unknownError.code);

@@ -20,7 +20,7 @@ export class CategoriesController {
         try {
 
             new CreateCategory(this.categoriesRepository, this.logRepository).execute(createDto!)
-                .then(category => ResponsesHandler.sendSuccessResponse(res, 'Category created', category))
+                .then(category => ResponsesHandler.sendSuccessResponse(res, `La categoria ${category.name} ha sido creada`, category))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -38,7 +38,7 @@ export class CategoriesController {
         try {
 
             new GetCategories(this.categoriesRepository, this.logRepository).execute(paginationDto!)
-                .then(data => ResponsesHandler.sendSuccessResponse(res, 'Categories found', data))
+                .then(data => ResponsesHandler.sendSuccessResponse(res, 'Se obtuvieron las categorias', data))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -56,7 +56,7 @@ export class CategoriesController {
         try {
 
             new UpdateCategory(this.categoriesRepository, this.logRepository).execute(updateDto!)
-                .then(category => ResponsesHandler.sendSuccessResponse(res, 'Category updated', category))
+                .then(category => ResponsesHandler.sendSuccessResponse(res, `La categoria ${category.name} ha sido actualizada`, category))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -74,7 +74,7 @@ export class CategoriesController {
         try {
 
             new DeleteCategory(this.categoriesRepository, this.logRepository).execute(id)
-                .then(message => ResponsesHandler.sendSuccessResponse(res, message))
+                .then(category => ResponsesHandler.sendSuccessResponse(res, `La categoria ${category.name} ha sido eliminada`, category))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {

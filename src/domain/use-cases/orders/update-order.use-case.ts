@@ -30,7 +30,7 @@ export class UpdateOrder implements UpdateOrderUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'get-orders.use-case',
+                origin: 'update-order.use-case',
             });
 
 

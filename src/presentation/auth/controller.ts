@@ -38,7 +38,7 @@ export class AuthController {
         try {
             new LoginUser(this.authRepository, this.logRepository)
                 .execute(loginDto!)
-                .then((user) => ResponsesHandler.sendSuccessResponse(res, "Login successful", user))
+                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha ingresado a la cuenta ${user.name} correctamente.`, user))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
         } catch (error) {
 
@@ -54,11 +54,7 @@ export class AuthController {
         try {
             new RegisterUser(this.authRepository, this.logRepository, this.sendEmail)
                 .execute(registerDto!)
-                .then((user) =>
-                    res
-                        .status(200)
-                        .json({ success: true, message: "Register successful", data: user })
-                )
+                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha creado la cuenta ${user.name} correctamente.`, user))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
         } catch (error) {
             return ErrorsHandler.handleUnknownError(res);
@@ -74,7 +70,7 @@ export class AuthController {
 
             new ValidateToken(this.logRepository)
                 .execute(token)
-                .then((_) => ResponsesHandler.sendSuccessResponse(res, "Email validated", null))
+                .then((_) => ResponsesHandler.sendSuccessResponse(res, `Se ha validado el correo correctamente.`, null))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -93,7 +89,7 @@ export class AuthController {
         try {
 
             new DeleteUser(this.authRepository, this.logRepository).execute(id)
-                .then((message) => ResponsesHandler.sendSuccessResponse(res, message, null))
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido eliminado`, user))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -117,7 +113,7 @@ export class AuthController {
 
             new UpdateUser(this.authRepository, this.logRepository)
                 .execute(updateDto!)
-                .then((message) => ResponsesHandler.sendSuccessResponse(res, message, null))
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, user))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {

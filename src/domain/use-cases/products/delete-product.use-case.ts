@@ -1,11 +1,11 @@
-import { LogSeverityLevel } from "../../entities";
+import { LogSeverityLevel, ProductEntity } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { LogRepository, ProductsRepository } from "../../repositories";
 import { CreateLog } from "../logs/create-log.use-case";
 
 interface DeleteProductUseCase {
 
-    execute(id: string): Promise<string>;
+    execute(id: string): Promise<ProductEntity>;
 }
 
 export class DeleteProduct implements DeleteProductUseCase {
@@ -15,13 +15,13 @@ export class DeleteProduct implements DeleteProductUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(id: string): Promise<string> {
+    async execute(id: string): Promise<ProductEntity> {
 
         try {
 
-            const message = await this.productsRepository.deleteProduct(id);
+            const product = await this.productsRepository.deleteProduct(id);
 
-            return message;
+            return product;
 
         } catch (error) {
             if (error instanceof CustomError) throw error;

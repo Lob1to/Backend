@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { OrderRepository, LogRepository, CreateOrderDto, UpdateOrderDto } from "../../domain";
+import { OrderRepository, LogRepository, CreateOrderDto, UpdateOrderDto, PaginationDto } from "../../domain";
 import { CreateOrder, DeleteOrder, GetOrder, GetOrders, GetOrdersByUserId, UpdateOrder } from "../../domain/use-cases/";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 
@@ -34,8 +34,13 @@ export class OrdersController {
     getOrders = (req: Request, res: Response) => {
 
         try {
+            const { page = 1, limit = 10 } = req.query;
 
-            new GetOrders(this.ordersRepository, this.logRepository).execute()
+
+            const [error, errorCode, paginationDto] = PaginationDto.create(+page, +limit);
+            if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+
+            new GetOrders(this.ordersRepository, this.logRepository).execute(paginationDto!)
                 .then(orders => ResponsesHandler.sendSuccessResponse(res, 'Pedidos encontrados con éxito', orders))
                 .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode, error, error.code));
 
@@ -68,10 +73,16 @@ export class OrdersController {
 
         try {
 
+            const { page = 1, limit = 10 } = req.query;
+
+
+            const [error, errorCode, paginationDto] = PaginationDto.create(+page, +limit);
+            if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+
             const userId = req.params.userId;
             if (!userId) return ResponsesHandler.sendErrorResponse(res, 400, 'Debe enviar el id del usuario', 'bad-request');
 
-            new GetOrdersByUserId(this.ordersRepository, this.logRepository).execute(userId)
+            new GetOrdersByUserId(this.ordersRepository, this.logRepository).execute(userId, paginationDto!)
                 .then(orders => ResponsesHandler.sendSuccessResponse(res, 'Pedidos encontrados con éxito', orders))
                 .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode, error, error.code));
 

@@ -20,12 +20,12 @@ export class SubcategoriesRepositoryImpl implements SubcategoriesRepository {
         return this.datasource.getSubcategories(paginationDto);
     }
 
-    updateSubcategory(updateDto: UpdateSubcategoryDto): Promise<string> {
+    updateSubcategory(updateDto: UpdateSubcategoryDto): Promise<SubcategoryEntity> {
 
         return this.datasource.updateSubcategory(updateDto);
     }
 
-    deleteSubcategory(id: string): Promise<string> {
+    deleteSubcategory(id: string): Promise<SubcategoryEntity> {
 
         return this.datasource.deleteSubcategory(id);
     }

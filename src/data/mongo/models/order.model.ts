@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IOrderItem {
-    productId: mongoose.Schema.Types.ObjectId;
+    id: mongoose.Schema.Types.ObjectId;
     quantity: number;
     variant?: string;
 }
@@ -35,7 +35,7 @@ interface IOrder extends Document {
 }
 
 const orderItemSchema = new Schema<IOrderItem>({
-    productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    id: { type: Schema.Types.ObjectId, ref: 'Product', required: true, virtual: true },
     quantity: { type: Number, required: true },
     variant: { type: String },
 });

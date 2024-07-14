@@ -1,7 +1,9 @@
 import { MongooseError, isValidObjectId } from "mongoose";
 import { orderErrors } from "../../../config";
 import { OrderModel, ProductModel, UserModel } from "../../../data/mongo";
-import { OrderDatasource, OrderEntity, CreateOrderDto, UpdateOrderDto, CustomError } from "../../../domain";
+import { OrderDatasource, OrderEntity, CreateOrderDto, UpdateOrderDto, CustomError, PaginationDto } from "../../../domain";
+
+// TODO: Implementar codigos de descuento y validarlos
 
 const {
     ordersNotFound,
@@ -20,6 +22,7 @@ export class OrderDatasourceImpl implements OrderDatasource {
     private async verifyItems(items: { [key: string]: any }[]): Promise<void> {
 
         for (let i = 0; i < items.length; i++) {
+
             const product = await ProductModel.findById(items[i].productId);
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
@@ -29,15 +32,41 @@ export class OrderDatasourceImpl implements OrderDatasource {
         }
     }
 
+    private async verifyUser(userId: string): Promise<void> {
 
-    async getOrders(): Promise<OrderEntity[]> {
+        if (!isValidObjectId(userId)) throw CustomError.badRequest(invalidUserId.message, invalidUserId.code);
+        const user = await UserModel.findById(userId);
+        if (!user) throw CustomError.notFound(userNotFound.message, userNotFound.code);
+
+    }
+
+
+    async getOrders(paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
 
         try {
+            const { page, limit } = paginationDto;
 
-            const orders = await OrderModel.find();
-            if (!orders) throw CustomError.notFound(ordersNotFound.message, ordersNotFound.code);
+            const totalItems = await OrderModel.countDocuments();
 
-            return orders.map(OrderEntity.fromObject);
+            const totalPages = Math.ceil(totalItems / limit);
+
+            const orders = await OrderModel.find()
+                .skip((page - 1) * limit)
+                .limit(limit);
+
+            const items = orders.map(OrderEntity.fromObject);
+
+            const returnJson = {
+                next: `/api/orders/?page=${page + 1}&limit=${limit}`,
+                prev: (page - 1 > 0) ? `/api/orders/?page=${(page - 1)}&limit=${limit}` : null,
+                page,
+                limit,
+                totalPages,
+                totalItems,
+                items,
+            };
+
+            return returnJson;
 
         } catch (error) {
 
@@ -67,15 +96,34 @@ export class OrderDatasourceImpl implements OrderDatasource {
 
     }
 
-    async getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
+    async getOrdersByUserId(userId: string, paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
 
         try {
-            if (!isValidObjectId(userId)) throw CustomError.badRequest(invalidUserId.message, invalidUserId.code);
+            await this.verifyUser(userId);
 
-            const orders = await OrderModel.find({ userId });
-            if (!orders) throw CustomError.notFound(ordersNotFound.message, ordersNotFound.code);
+            const { page, limit } = paginationDto;
 
-            return orders.map(OrderEntity.fromObject);
+            const totalItems = await OrderModel.countDocuments();
+
+            const totalPages = Math.ceil(totalItems / limit);
+
+            const orders = await OrderModel.find({ userId })
+                .skip((page - 1) * limit)
+                .limit(limit);
+
+            const items = orders.map(OrderEntity.fromObject);
+
+            const returnJson = {
+                next: `/api/orders/${userId}/?page=${page + 1}&limit=${limit}`,
+                prev: (page - 1 > 0) ? `/api/orders/${userId}/?page=${(page - 1)}&limit=${limit}` : null,
+                page,
+                limit,
+                totalPages,
+                totalItems,
+                items,
+            };
+
+            return returnJson;
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
@@ -97,12 +145,10 @@ export class OrderDatasourceImpl implements OrderDatasource {
                 orderTotal,
                 orderStatus,
                 trackingUrl
+
             } = createOrderDto;
 
-            if (!isValidObjectId(userId)) throw CustomError.badRequest(invalidUserId.message, invalidUserId.code);
-            const user = await UserModel.findById(userId);
-
-            if (!user) throw CustomError.notFound(userNotFound.message, userNotFound.code);
+            await this.verifyUser(userId);
 
             await this.verifyItems(items);
 
@@ -153,6 +199,18 @@ export class OrderDatasourceImpl implements OrderDatasource {
 
             const order = await OrderModel.findById(id);
             if (!order) throw CustomError.notFound(orderNotFound.message, orderNotFound.code);
+
+            if (updateOrderDto.values.items) {
+
+                await this.verifyItems(updateOrderDto.values.items);
+
+            }
+
+            if (updateOrderDto.values.userId) {
+
+                await this.verifyUser(updateOrderDto.values.userId);
+
+            }
 
             await OrderModel.findByIdAndUpdate(id, { ...updateOrderDto.values });
 

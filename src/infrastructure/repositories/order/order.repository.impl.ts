@@ -1,4 +1,4 @@
-import { CreateOrderDto, OrderDatasource, OrderEntity, OrderRepository, UpdateOrderDto } from "../../../domain";
+import { CreateOrderDto, OrderDatasource, OrderEntity, OrderRepository, PaginationDto, UpdateOrderDto } from "../../../domain";
 
 export class OrderRepositoryImpl implements OrderRepository {
 
@@ -6,16 +6,16 @@ export class OrderRepositoryImpl implements OrderRepository {
         private readonly datasource: OrderDatasource,
     ) { }
 
-    getOrders(): Promise<OrderEntity[]> {
-        return this.datasource.getOrders();
+    getOrders(paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
+        return this.datasource.getOrders(paginationDto);
     }
 
     getOrder(id: string): Promise<OrderEntity> {
         return this.datasource.getOrder(id);
     }
 
-    getOrdersByUserId(userId: string): Promise<OrderEntity[]> {
-        return this.datasource.getOrdersByUserId(userId);
+    getOrdersByUserId(userId: string, paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }> {
+        return this.datasource.getOrdersByUserId(userId, paginationDto);
     }
 
     createOrder(createOrderDto: CreateOrderDto): Promise<OrderEntity> {

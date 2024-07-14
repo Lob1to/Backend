@@ -11,10 +11,8 @@ const {
 const { missingId } = sharedErrors;
 
 interface OrderItem {
-    productID: string;
-    productName: string;
+    id: string;
     quantity: number;
-    price: number;
     variant?: string;
 }
 
@@ -86,11 +84,8 @@ export class UpdateOrderDto {
 
         if (!id) return [missingId.message, missingId.code];
         if (orderStatus && !["pending", "processing", "shipped", "delivered", "cancelled"].includes(orderStatus)) return [invalidOrderStatus.message, invalidOrderStatus.code];
-
         if (totalPrice && isNaN(totalPrice) || totalPrice < 0) return [invalidTotalPrice.message, invalidTotalPrice.code];
-
         if (paymentMethod && !["pse", "creditCard"].includes(paymentMethod)) return [invalidPaymentMethod.message, invalidPaymentMethod.code];
-
         if (items && !Array.isArray(items) && !isValidItem) return [itemErrorMessage, itemErrorCode];
         if (shippingAddress && !isValidShippingAddress) return [shippingAddressErrorMessage, shippingAddressErrorCode];
         if (orderTotal && !isValidOrderTotal) return [orderTotalErrorMessage, orderTotalErrorCode];
