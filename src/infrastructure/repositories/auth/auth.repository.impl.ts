@@ -17,12 +17,12 @@ export class AuthRepositoryImpl implements AuthRepository {
         return this.datasource.register(registerUserDto);
     }
 
-    deleteUser(id: string): Promise<string> {
+    deleteUser(id: string): Promise<UserEntity> {
 
         return this.datasource.deleteUser(id);
     }
 
-    updateUser(updateUserDto: UpdateUserDto): Promise<string> {
+    updateUser(updateUserDto: UpdateUserDto): Promise<UserEntity> {
 
         return this.datasource.updateUser(updateUserDto);
     }

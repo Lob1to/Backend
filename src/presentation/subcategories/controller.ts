@@ -19,7 +19,7 @@ export class SubcategoriesController {
         try {
 
             new CreateSubcategory(this.subcategoriesRepository, this.logRepository).execute(createDto!)
-                .then(category => ResponsesHandler.sendSuccessResponse(res, 'Category created', category))
+                .then(subcategory => ResponsesHandler.sendSuccessResponse(res, `La subcategoria ${subcategory.name} ha sido creada correctamente`, subcategory))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -37,7 +37,7 @@ export class SubcategoriesController {
         try {
 
             new GetSubcategories(this.subcategoriesRepository, this.logRepository).execute(paginationDto!)
-                .then(data => ResponsesHandler.sendSuccessResponse(res, 'Categories found', data))
+                .then(subcategories => ResponsesHandler.sendSuccessResponse(res, `Subcategorias obtenidas correctamente`, subcategories))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -55,7 +55,7 @@ export class SubcategoriesController {
         try {
 
             new UpdateSubcategory(this.subcategoriesRepository, this.logRepository).execute(updateDto!)
-                .then(category => ResponsesHandler.sendSuccessResponse(res, 'Category updated', category))
+                .then(subcategory => ResponsesHandler.sendSuccessResponse(res, `La subcategoria ${subcategory.name} ha sido actualizada correctamente`, subcategory))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -68,12 +68,12 @@ export class SubcategoriesController {
     deleteSubcategory = (req: Request, res: Response) => {
 
         const id = req.params.id;
-        if (!id) return ResponsesHandler.sendErrorResponse(res, 400, 'Id is required', 'bad-request');
+        if (!id) return ResponsesHandler.sendErrorResponse(res, 400, 'El id es requerido', 'bad-request');
 
         try {
 
             new DeleteSubcategory(this.subcategoriesRepository, this.logRepository).execute(id)
-                .then(message => ResponsesHandler.sendSuccessResponse(res, message))
+                .then(subcategory => ResponsesHandler.sendSuccessResponse(res, `La subcategoria ${subcategory.name} ha sido eliminada correctamente`, subcategory))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {

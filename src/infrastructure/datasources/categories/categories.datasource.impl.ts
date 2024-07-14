@@ -23,7 +23,6 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
         } catch (error) {
 
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
@@ -57,14 +56,13 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
 
     }
 
-    async updateCategory(updateDto: UpdateCategoryDto): Promise<string> {
+    async updateCategory(updateDto: UpdateCategoryDto): Promise<CategoryEntity> {
 
         const { id } = updateDto;
 
@@ -75,22 +73,22 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
             const category = await CategoryModel.findById(id);
             if (!category) throw CustomError.badRequest(categoryNotFound.message, categoryNotFound.code);
 
-            await CategoryModel.findByIdAndUpdate(id, updateDto.values, { new: true });
+            const updatedCategory = await CategoryModel.findByIdAndUpdate(id, updateDto.values, { new: true });
+            if (!updatedCategory) throw CustomError.badRequest(categoryNotFound.message, categoryNotFound.code);
 
-            return 'La categoría ha sido actualizada';
+            return CategoryEntity.fromObject(updatedCategory);
 
 
         } catch (error) {
 
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
 
     }
 
-    async deleteCategory(id: string): Promise<string> {
+    async deleteCategory(id: string): Promise<CategoryEntity> {
 
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
@@ -101,11 +99,10 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
 
             await CategoryModel.findByIdAndDelete(id);
 
-            return `La categoría ${category.name} ha sido eliminada`;
+            return CategoryEntity.fromObject(category);
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }

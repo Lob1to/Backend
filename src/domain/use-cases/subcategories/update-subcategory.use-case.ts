@@ -2,7 +2,7 @@ import { UpdateSubcategoryDto, CreateLog, CustomError, LogRepository, Subcategor
 
 interface UpdateSubcategoryUseCase {
 
-    execute(updateDto: UpdateSubcategoryDto): Promise<string>;
+    execute(updateDto: UpdateSubcategoryDto): Promise<SubcategoryEntity>;
 
 }
 
@@ -15,13 +15,13 @@ export class UpdateSubcategory implements UpdateSubcategoryUseCase {
 
     ) { }
 
-    async execute(updateDto: UpdateSubcategoryDto): Promise<string> {
+    async execute(updateDto: UpdateSubcategoryDto): Promise<SubcategoryEntity> {
 
         try {
 
-            const message = await this.subCategoriesRepository.updateSubcategory(updateDto);
+            const subcategory = await this.subCategoriesRepository.updateSubcategory(updateDto);
 
-            return message;
+            return subcategory;
 
         } catch (error) {
             if (error instanceof CustomError) throw error;
@@ -29,7 +29,7 @@ export class UpdateSubcategory implements UpdateSubcategoryUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-category.use-case',
+                origin: 'update-subcategory.use-case',
             });
 
 

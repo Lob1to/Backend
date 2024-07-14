@@ -28,7 +28,6 @@ export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
@@ -60,14 +59,13 @@ export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
 
 
     }
-    async updateSubcategory(updateDto: UpdateSubcategoryDto): Promise<string> {
+    async updateSubcategory(updateDto: UpdateSubcategoryDto): Promise<SubcategoryEntity> {
 
         const { id, categoryId } = updateDto;
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
@@ -78,20 +76,20 @@ export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
             const subcategory = await SubcategoryModel.findById(id);
             if (!subcategory) throw CustomError.notFound(subcategoryNotFound.message, subcategoryNotFound.code);
 
-            await SubcategoryModel.findByIdAndUpdate(id, updateDto.values, { new: true });
+            const updatedSubcategory = await SubcategoryModel.findByIdAndUpdate(id, updateDto.values, { new: true });
+            if (!updatedSubcategory) throw CustomError.notFound(subcategoryNotFound.message, subcategoryNotFound.code);
 
-            return 'La subcategoria se actualizo correctamente';
+            return SubcategoryEntity.fromObject(updatedSubcategory);
 
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
     }
 
-    async deleteSubcategory(id: string): Promise<string> {
+    async deleteSubcategory(id: string): Promise<SubcategoryEntity> {
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
         try {
@@ -101,11 +99,10 @@ export class SubcategoriesDatasourceImpl implements SubcategoriesDatasource {
 
             await SubcategoryModel.findByIdAndDelete(id);
 
-            return 'La subcategoria se elimino correctamente';
+            return SubcategoryEntity.fromObject(subcategory);
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }

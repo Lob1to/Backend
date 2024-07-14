@@ -15,6 +15,10 @@ const subcategorySchema: Schema<ISubcategory> = new Schema({
 subcategorySchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
+    transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+    }
 });
 
 export const SubcategoryModel = mongoose.model<ISubcategory>('Subcategory', subcategorySchema);

@@ -1,12 +1,12 @@
 import { UpdateProductDto } from "../../dtos";
-import { LogSeverityLevel } from "../../entities";
+import { LogSeverityLevel, ProductEntity } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { LogRepository, ProductsRepository } from "../../repositories";
 import { CreateLog } from "../logs/create-log.use-case";
 
 interface UpdateProductUseCase {
 
-    execute(updateDto: UpdateProductDto): Promise<string>;
+    execute(updateDto: UpdateProductDto): Promise<ProductEntity>;
 
 }
 
@@ -17,13 +17,13 @@ export class UpdateProduct implements UpdateProductUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    execute(updateDto: UpdateProductDto): Promise<string> {
+    execute(updateDto: UpdateProductDto): Promise<ProductEntity> {
 
         try {
 
-            const message = this.productsRepository.updateProduct(updateDto);
+            const product = this.productsRepository.updateProduct(updateDto);
 
-            return message;
+            return product;
 
         } catch (error) {
             if (error instanceof CustomError) throw error;

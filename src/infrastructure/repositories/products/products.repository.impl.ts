@@ -19,11 +19,11 @@ export class ProductsRepositoryImpl implements ProductsRepository {
         return this.datasource.getProductById(id);
     }
 
-    updateProduct(updateDto: UpdateProductDto): Promise<string> {
+    updateProduct(updateDto: UpdateProductDto): Promise<ProductEntity> {
         return this.datasource.updateProduct(updateDto);
     }
 
-    deleteProduct(id: string): Promise<string> {
+    deleteProduct(id: string): Promise<ProductEntity> {
         return this.datasource.deleteProduct(id);
     }
 

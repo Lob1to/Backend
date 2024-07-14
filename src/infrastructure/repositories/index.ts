@@ -6,3 +6,4 @@ export * from './products/products.repository.impl';
 export * from './send-email/send-email.repository.impl';
 export * from './file-upload/file-upload.repository.impl';
 export * from './images/get-image.repository.impl';
+export * from './order/order.repository.impl';

@@ -1,0 +1,72 @@
+import { orderErrors, interfacesValidators } from "../../../config";
+
+const {
+    missingUserId,
+    invalidOrderStatus,
+    missingItems,
+    missingTotalPrice,
+    invalidTotalPrice,
+    missingShippingAddress,
+    missingPaymentMethod,
+    invalidPaymentMethod,
+} = orderErrors;
+
+interface OrderItem {
+    product: string;
+    quantity: number;
+    variant?: string;
+}
+
+interface ShippingAddress {
+    phone: string;
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+}
+
+export class CreateOrderDto {
+    private constructor(
+        public user: string,
+        public items: OrderItem[],
+        public totalPrice: number,
+        public shippingAddress: ShippingAddress,
+        public paymentMethod: string,
+        public orderStatus?: string,
+        public couponCode?: string,
+        public trackingUrl?: string,
+    ) { }
+
+    static create(props: { [key: string]: any }): [string?, string?, CreateOrderDto?] {
+        const {
+            user,
+            items,
+            totalPrice,
+            shippingAddress,
+            paymentMethod,
+            orderStatus,
+            trackingUrl,
+        } = props;
+
+        const [isValidItem, itemErrorMessage, itemErrorCode] = interfacesValidators.isValidOrderItems(items);
+        const [isValidAdress, adressErrorMessage, adressErrorCode] = interfacesValidators.isValidShippingAddress(shippingAddress);
+        const [isValidUrl, urlErrorMessage, urlErrorCode] = interfacesValidators.isValidUrl(trackingUrl);
+
+
+        if (!user) return [missingUserId.message, missingUserId.code];
+        if (orderStatus && !["pending", "processing", "shipped", "delivered", "cancelled"].includes(orderStatus)) return [invalidOrderStatus.message, invalidOrderStatus.code];
+        if (!items) return [missingItems.message, missingItems.code];
+        if (!totalPrice) return [missingTotalPrice.message, missingTotalPrice.code];
+        if (isNaN(totalPrice) || totalPrice < 0) return [invalidTotalPrice.message, invalidTotalPrice.code];
+        if (!shippingAddress) return [missingShippingAddress.message, missingShippingAddress.code];
+        if (!paymentMethod) return [missingPaymentMethod.message, missingPaymentMethod.code];
+        if (!["pse", "creditCard"].includes(paymentMethod)) return [invalidPaymentMethod.message, invalidPaymentMethod.code];
+        if (!Array.isArray(items) || !isValidItem) return [itemErrorMessage, itemErrorCode];
+        if (!isValidAdress) return [adressErrorMessage, adressErrorCode];
+        if (trackingUrl && !isValidUrl) return [urlErrorMessage, urlErrorCode];
+
+
+        return [undefined, undefined, new CreateOrderDto(user, items, totalPrice, shippingAddress, paymentMethod, orderStatus, trackingUrl)];
+    }
+}

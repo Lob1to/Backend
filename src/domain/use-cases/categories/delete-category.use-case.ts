@@ -1,8 +1,8 @@
-import { CategoriesRepository, CreateLog, CustomError, LogRepository, LogSeverityLevel } from "../..";
+import { CategoriesRepository, CategoryEntity, CreateLog, CustomError, LogRepository, LogSeverityLevel } from "../..";
 
 interface DeleteCategoryUseCase {
 
-    execute(id: string): Promise<string>;
+    execute(id: string): Promise<CategoryEntity>;
 
 }
 
@@ -15,13 +15,13 @@ export class DeleteCategory implements DeleteCategoryUseCase {
 
     ) { }
 
-    async execute(id: string): Promise<string> {
+    async execute(id: string): Promise<CategoryEntity> {
 
         try {
 
-            const message = await this.categoriesRepository.deleteCategory(id);
+            const category = await this.categoriesRepository.deleteCategory(id);
 
-            return message;
+            return category;
 
         } catch (error) {
 

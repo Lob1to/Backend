@@ -1,5 +1,5 @@
 import { AuthDatasource, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity, CustomError } from "../../../domain";
-import { UserModel } from "../../../data/mongo/models/user.model";
+import { UserModel } from "../../../data/mongo/";
 import { bcryptAdapter, authErrors } from "../../../config";
 import mongoose, { MongooseError } from "mongoose";
 
@@ -29,7 +29,6 @@ export class AuthDatasourceImpl implements AuthDatasource {
         } catch (error) {
 
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
@@ -50,13 +49,12 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }
     }
 
-    async updateUser(updateUserDto: UpdateUserDto): Promise<string> {
+    async updateUser(updateUserDto: UpdateUserDto): Promise<UserEntity> {
 
         try {
             const { id } = updateUserDto;
@@ -67,14 +65,14 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
             if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
 
-            await UserModel.findByIdAndUpdate(id, updateUserDto.values, { new: true });
+            const updatedUser = await UserModel.findByIdAndUpdate(id, updateUserDto.values, { new: true });
+            if (!updatedUser) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
 
-            return 'El usuario ha sido actualizado correctamente';
+            return UserEntity.fromObject(updatedUser);
 
         } catch (error) {
 
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
 
@@ -82,7 +80,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
     }
 
-    async deleteUser(id: string): Promise<string> {
+    async deleteUser(id: string): Promise<UserEntity> {
 
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
@@ -92,12 +90,11 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
             await UserModel.findByIdAndDelete(id);
 
-            return 'El usuario ha sido eliminado correctamente';
+            return UserEntity.fromObject(user);
 
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
-            if (error instanceof CustomError) throw error;
 
             throw error;
         }

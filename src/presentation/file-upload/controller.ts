@@ -20,7 +20,7 @@ export class FileUploadController {
             const userId = req.body.user.id;
 
             new UploadSingleFile(this.fileUploadRepository, this.logRepository).execute(file, userId, type)
-                .then(file => ResponsesHandler.sendSuccessResponse(res, 'File uploaded successfully', file))
+                .then(file => ResponsesHandler.sendSuccessResponse(res, 'Imagen subida correctamente', file))
                 .catch(error => ErrorsHandler.handleErrors(res, error));
 
         } catch (error) {
@@ -38,7 +38,7 @@ export class FileUploadController {
             const userId = req.body.user.id;
 
             new UploadMultipleFiles(this.fileUploadRepository, this.logRepository).execute(files, userId, type)
-                .then(files => ResponsesHandler.sendSuccessResponse(res, 'Files uploaded successfully', files))
+                .then(files => ResponsesHandler.sendSuccessResponse(res, 'Imagenes subidas correctamente', files))
                 .catch(error => ErrorsHandler.handleErrors(res, error));
 
         } catch (error) {

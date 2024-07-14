@@ -77,7 +77,7 @@ export class ProductsController {
             if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
             new UpdateProduct(this.productsRepository, this.logRepository).execute(updateDto!)
-                .then(message => ResponsesHandler.sendSuccessResponse(res, message))
+                .then(product => ResponsesHandler.sendSuccessResponse(res, `El producto con id ${id} fue actualizado exitosamente`, product))
                 .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode ?? 500, error.message ?? 'Algo malo sucedio...', error.code));
 
         } catch (error) {
@@ -93,7 +93,7 @@ export class ProductsController {
             if (!id) return ResponsesHandler.sendErrorResponse(res, 400, missingId.message, missingId.code);
 
             new DeleteProduct(this.productsRepository, this.logRepository).execute(id)
-                .then(message => ResponsesHandler.sendSuccessResponse(res, message))
+                .then(product => ResponsesHandler.sendSuccessResponse(res, `El producto con id ${id} fue eliminado exitosamente`, product))
                 .catch(error => ResponsesHandler.sendErrorResponse(res, error.statusCode, error.message, error.code));
 
         } catch (error) {

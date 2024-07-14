@@ -25,6 +25,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
             if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
             const link = `${this.webServiceUrl}/auth/validate-email/${token}`;
+
             //TODO: Resend email link
             const resendEmailLink = `${this.webServiceUrl}/auth/validate-email/resend-email/`;
 
