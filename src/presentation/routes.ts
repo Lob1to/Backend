@@ -5,6 +5,7 @@ import { SubcategoriesRoutes } from "./subcategories/routes";
 import { ProductsRoutes } from "./products/routes";
 import { FileUploadRoutes } from "./file-upload/routes";
 import { ImagesRoutes } from "./images/router";
+import { OrdersRoutes } from "./orders/routes";
 
 
 
@@ -17,6 +18,7 @@ export class AppRoutes {
         router.use('/api/categories', CategoriesRoutes.routes);
         router.use('/api/subcategories', SubcategoriesRoutes.routes);
         router.use('/api/products', ProductsRoutes.routes);
+        router.use('/api/orders', OrdersRoutes.routes);
         router.use('/api/upload', FileUploadRoutes.routes);
         router.use('/api/images', ImagesRoutes.routes);
 

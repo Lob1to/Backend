@@ -9,3 +9,5 @@ export * from './products/create-product.dto';
 export * from './products/get-products.dto';
 export * from './products/update-product.dto';
 export * from './shared/pagination.dto';
+export * from './orders/create-order.dto';
+export * from './orders/update-order.dto';

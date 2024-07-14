@@ -1,10 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IOrderItem {
-    productID: mongoose.Schema.Types.ObjectId;
-    productName: string;
+    productId: mongoose.Schema.Types.ObjectId;
     quantity: number;
-    price: number;
     variant?: string;
 }
 
@@ -24,7 +22,7 @@ interface IOrderTotal {
 }
 
 interface IOrder extends Document {
-    userID: mongoose.Schema.Types.ObjectId;
+    userId: mongoose.Schema.Types.ObjectId;
     orderDate: Date;
     orderStatus: string;
     items: IOrderItem[];
@@ -37,16 +35,14 @@ interface IOrder extends Document {
 }
 
 const orderItemSchema = new Schema<IOrderItem>({
-    productID: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-    productName: { type: String, required: true },
+    productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
     quantity: { type: Number, required: true },
-    price: { type: Number, required: true },
     variant: { type: String },
 });
 
 const orderSchema: Schema<IOrder> = new Schema({
 
-    userID: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     orderDate: { type: Date, default: Date.now },
     orderStatus: {
         type: String,
@@ -84,6 +80,6 @@ orderSchema.set('toJSON', {
     },
 });
 
-export const Order = mongoose.model<IOrder>('Order', orderSchema);
+export const OrderModel = mongoose.model<IOrder>('Order', orderSchema);
 
 

@@ -326,6 +326,281 @@ export const fileUploadErrors = {
 }
 
 
+export const orderErrors = {
+
+    userNotFound: {
+        message: 'El usuario no existe en la base de datos',
+        code: 'user-not-found',
+    },
+
+    missingUserId: {
+        message: 'No se ha proporcionado el ID del usuario',
+        code: 'missing-user-id',
+    },
+
+    invalidUserId: {
+        message: 'El ID del usuario proporcionado no es válido',
+        code: 'invalid-user-id',
+    },
+
+    invalidOrderId: {
+        message: 'El ID del pedido proporcionado no es válido',
+        code: 'invalid-order-id',
+    },
+
+    invalidOrderStatus: {
+        message: 'El estado del pedido no es válido',
+        code: 'invalid-order-status',
+    },
+
+    missingItems: {
+        message: 'No se ha proporcionado ningún item',
+        code: 'missing-items',
+    },
+
+    invalidItems: {
+        message: 'Los items del pedido deben ser una lista de objetos válidos',
+        code: 'invalid-items',
+    },
+
+    missingTotalPrice: {
+        message: 'No se ha proporcionado el precio total del pedido',
+        code: 'missing-total-price',
+    },
+
+    invalidTotalPrice: {
+        message: 'El precio total del pedido debe ser un número válido mayor a 0',
+        code: 'invalid-total-price',
+    },
+
+    missingShippingAddress: {
+        message: 'No se ha proporcionado la dirección de envío del pedido',
+        code: 'missing-shipping-address',
+    },
+
+    invalidShippingAddress: {
+        message: 'La dirección de envío del pedido debe ser un objeto válido',
+        code: 'invalid-shipping-address',
+    },
+
+    missingPaymentMethod: {
+        message: 'No se ha proporcionado el método de pago del pedido',
+        code: 'missing-payment-method',
+    },
+
+    invalidPaymentMethod: {
+        message: 'El método de pago del pedido debe ser un objeto válido',
+        code: 'invalid-payment-method',
+    },
+
+    invalidCouponCode: {
+        message: 'El código de cupón no es válido',
+        code: 'invalid-coupon-code',
+    },
+
+    invalidOrderTotal: {
+        message: 'El total del pedido debe ser mayor al mínimo',
+        code: 'invalid-order-total',
+    },
+
+    invalidTrackingUrl: {
+        message: 'La URL de seguimiento debe ser una URL válida',
+        code: 'invalid-tracking-url',
+    },
+
+    ordersNotFound: {
+        message: 'Los pedidos no existen en la base de datos',
+        code: 'orders-not-found',
+    },
+
+    orderNotFound: {
+        message: 'El pedido no existe en la base de datos',
+        code: 'order-not-found',
+    },
+
+    orderAlreadyExist: {
+        message: 'El pedido ya existe en la base de datos',
+        code: 'order-already-exist',
+    },
+
+    orderNotBelongToUser: {
+        message: 'El pedido no pertenece al usuario',
+        code: 'order-not-belong-to-user',
+    },
+
+    productNotFound: {
+        message: 'El producto no existe en la base de datos',
+        code: 'product-not-found',
+    },
+
+    insufficientStock: {
+        message: 'No hay stock suficiente para realizar el pedido',
+        code: 'insufficient-stock',
+    },
+
+    invalidPrice: {
+        message: 'El precio del producto es invalido',
+        code: 'invalid-price',
+    },
+
+}
+
+export const interfacesValidatorsErrors = {
+
+    productVariant: {
+
+        notArray: {
+            message: 'El producto debe ser una lista de objetos',
+            code: 'not-array',
+        },
+
+        noVariants: {
+            message: 'No se ha proporcionado ninguna variante',
+            code: 'no-variants',
+        },
+
+        invalidPrice: {
+            message: 'El precio de la variante debe ser un número válido mayor a 0',
+            code: 'invalid-price',
+        },
+
+        invalidStock: {
+            message: 'El stock de la variante debe ser un número válido mayor a 0',
+            code: 'invalid-stock',
+        },
+
+        invalidSize: {
+            message: 'El tamaño de la variante debe ser un número válido mayor a 0',
+            code: 'invalid-size',
+        },
+
+        invalidColor: {
+            message: 'El color de la variante debe ser un número válido mayor a 0',
+            code: 'invalid-color',
+        }
+
+    },
+
+    orderItem: {
+
+        noItems: {
+            message: 'No se ha proporcionado ningún item',
+            code: 'no-items',
+        },
+
+        invalidProductId: {
+            message: 'El ID del producto del item debe ser un número válido mayor a 0',
+            code: 'invalid-product-id',
+        },
+
+        invalidQuantity: {
+            message: 'La cantidad del item debe ser un número válido mayor a 0',
+            code: 'invalid-quantity',
+        },
+
+        invalidQuantityValue: {
+            message: 'La cantidad del item debe ser un número válido mayor a 0',
+            code: 'invalid-quantity-value',
+        },
+
+        invalidVariant: {
+            message: 'La variante del item debe ser un objeto válido',
+            code: 'invalid-variant',
+        }
+
+    },
+
+    shippingAddress: {
+
+        noAdress: {
+            message: 'No se ha proporcionado ninguna dirección',
+            code: 'no-address',
+        },
+
+        invalidPhone: {
+            message: 'El teléfono debe ser un número válido mayor a 0',
+            code: 'invalid-phone',
+        },
+
+        invalidStreet: {
+            message: 'La calle debe ser una cadena de caracteres válida',
+            code: 'invalid-street',
+        },
+
+        invalidCity: {
+            message: 'La ciudad debe ser una cadena de caracteres válida',
+            code: 'invalid-city',
+        },
+
+        invalidState: {
+            message: 'El estado debe ser una cadena de caracteres válida',
+            code: 'invalid-state',
+        },
+
+        invalidPostalCode: {
+            message: 'El código postal debe ser un número válido mayor a 0',
+            code: 'invalid-postal-code',
+        },
+
+        invalidCountry: {
+            message: 'El país debe ser una cadena de caracteres válida',
+            code: 'invalid-country',
+        },
+
+    },
+
+    orderTotal: {
+
+        noOrderTotal: {
+            message: 'No se ha proporcionado el total del pedido',
+            code: 'no-order-total',
+        },
+
+        invalidSubtotal: {
+            message: 'El subtotal debe ser un número válido mayor a 0',
+            code: 'invalid-subtotal',
+        },
+
+        invalidDiscount: {
+            message: 'El descuento debe ser un número válido mayor a 0',
+            code: 'invalid-discount',
+        },
+
+        invalidTotal: {
+            message: 'El total debe ser un número válido mayor a 0',
+            code: 'invalid-total',
+        },
+
+        invalidSubtotalValue: {
+            message: 'El subtotal debe ser un número válido mayor a 0',
+            code: 'invalid-subtotal-value',
+        },
+
+        invalidDiscountValue: {
+            message: 'El descuento debe ser un número válido mayor a 0',
+            code: 'invalid-discount-value',
+        },
+
+        invalidTotalValue: {
+            message: 'El total debe ser un número válido mayor a 0',
+            code: 'invalid-total-value',
+        }
+
+    },
+
+    url: {
+
+        invalidUrl: {
+            message: 'La url debe ser una cadena de caracteres válida',
+            code: 'invalid-url',
+        }
+
+    }
+
+
+
+}
+
 export const sharedErrors = {
 
     unauthorized: {
