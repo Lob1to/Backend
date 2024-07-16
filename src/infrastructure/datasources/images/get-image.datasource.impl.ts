@@ -9,12 +9,15 @@ const { imageNotFound } = fileUploadErrors;
 export class GetImageDatasourceImpl implements GetImageDatasource {
 
 
-    async getImageBuffer(type: string, img: string): Promise<ArrayBuffer> {
+    async getImageBuffer(type: string, img: string, id?: string): Promise<ArrayBuffer> {
+
+        let newId = '';
+        if (id) { newId = `${id}/` };
 
         try {
 
             const storageFB = getStorage();
-            const imageRef = ref(storageFB, `${type}/${img}`);
+            const imageRef = ref(storageFB, `${type}/${newId}${img}`);
 
             const imageBuffer = await getBytes(imageRef);
 

@@ -9,7 +9,7 @@ const { unknownError } = sharedErrors;
 
 interface UploadSingleFileUseCase {
 
-    execute(file: UploadedFile, userId: string, type: string, validExtensions: string[]): Promise<FileEntity>;
+    execute(name: string, file: UploadedFile, userId: string, type: string, validExtensions: string[]): Promise<FileEntity>;
 
 }
 
@@ -21,11 +21,11 @@ export class UploadSingleFile implements UploadSingleFileUseCase {
     ) { }
 
 
-    async execute(file: UploadedFile, userId: string, type: string, validExtensions: string[] = ['jpg', 'jpeg', 'png']): Promise<FileEntity> {
+    async execute(name: string, file: UploadedFile, userId: string, type: string, validExtensions: string[] = ['jpg', 'jpeg', 'png']): Promise<FileEntity> {
 
         try {
 
-            const fileEntity = await this.fileUploadRepository.uploadSingleFile(file, userId, type, validExtensions);
+            const fileEntity = await this.fileUploadRepository.uploadSingleFile(name, file, userId, type, validExtensions);
 
             return fileEntity;
 

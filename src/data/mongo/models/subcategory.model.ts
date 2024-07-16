@@ -1,5 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+
+
 interface ISubcategory extends Document {
     name: string;
     description: string;

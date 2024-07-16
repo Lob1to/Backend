@@ -37,7 +37,8 @@ export class AuthRoutes {
         router.post('/register', controller.register);
         router.post('/login', controller.login);
         router.get('/validate-email/:token', controller.validateEmail);
-        router.put('/update-user/:id', AuthMiddleware.validateJWT, controller.updateUser);
+        router.put('/update-user/', AuthMiddleware.validateJWT, controller.updateUser);
+        router.put('/admin/update-user/:id', AuthMiddleware.validateAdminRoleWithToken, controller.adminUpdateUser);
         router.delete('/admin/delete-user/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteUser);
 
         return router;

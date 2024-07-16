@@ -8,7 +8,7 @@ const { unknownError } = sharedErrors;
 
 interface GetImageUrlUseCase {
 
-    execute(type: string, img: string): Promise<ArrayBuffer>;
+    execute(type: string, img: string, id?: string): Promise<ArrayBuffer>;
 
 }
 
@@ -19,11 +19,11 @@ export class GetImageUrl implements GetImageUrlUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(type: string, img: string): Promise<ArrayBuffer> {
+    async execute(type: string, img: string, id?: string): Promise<ArrayBuffer> {
 
         try {
 
-            const image = await this.getImageRepository.getImageBuffer(type, img);
+            const image = await this.getImageRepository.getImageBuffer(type, img, id);
             if (!image) {
                 throw CustomError.notFound(imageNotFound.message, imageNotFound.code);
             }

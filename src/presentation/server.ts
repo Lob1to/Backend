@@ -26,7 +26,7 @@ export class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(fileUpload({
-            limits: { fileSize: 50 * 1024 * 1024 },
+            limits: { fileSize: 5 * 1024 * 1024 },
         }));
 
         //* Routes

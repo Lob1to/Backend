@@ -34,5 +34,7 @@ export * from './orders/delete-order.use-case';
 
 export * from './file-upload/upload-multiple-files.use-case';
 export * from './file-upload/upload-single-file.use-case';
+export * from './file-upload/upload-product-images.use-case';
+export * from './file-upload/upload-profile-picture.use-case';
 
 export * from './images/get-image-url.use-case';

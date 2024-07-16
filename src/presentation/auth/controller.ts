@@ -98,6 +98,29 @@ export class AuthController {
     };
 
     updateUser = (req: Request, res: Response) => {
+        const id = req.body.user.id;
+
+        if (!id) ResponsesHandler.sendErrorResponse(res, 400, missingId.message, missingId.code);
+
+        const [error, errorCode, updateDto] = UpdateUserDto.create({
+            id: id,
+            ...req.body,
+        });
+
+        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+
+        try {
+
+            new UpdateUser(this.authRepository, this.logRepository)
+                .execute(updateDto!)
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, user))
+                .catch((error) => ErrorsHandler.handleErrors(error, res));
+
+        } catch (error) {
+            return ErrorsHandler.handleUnknownError(res);
+        }
+    };
+    adminUpdateUser = (req: Request, res: Response) => {
         const id = req.params.id;
 
         if (!id) ResponsesHandler.sendErrorResponse(res, 400, missingId.message, missingId.code);

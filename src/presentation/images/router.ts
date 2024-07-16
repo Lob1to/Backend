@@ -23,6 +23,7 @@ export class ImagesRoutes {
         router.use(TypeMiddleware.validTypes(['users', 'products'], 1));
 
         router.get('/:type/:img', controller.getImage);
+        router.get('/:type/:id/:img', controller.getImage);
 
         return router;
     }

@@ -8,9 +8,23 @@ export class FileUploadRepositoryImpl implements FileUploadRepository {
         private readonly datasource: FileUploadDatasource,
     ) { }
 
-    uploadSingleFile(file: any, userId: string, type: string, validExtensions: string[]): Promise<FileEntity> {
+    deleteFile(type: string, img: string, id: string): Promise<void> {
 
-        return this.datasource.uploadSingleFile(file, userId, type, validExtensions);
+        return this.datasource.deleteFile(type, img, id);
+    }
+
+    uploadUserProfilePicture(file: any, id: string, validExtensions: string[]): Promise<FileEntity> {
+
+        return this.datasource.uploadUserProfilePicture(file, id, validExtensions);
+    }
+    uploadProductPictures(files: any[], id: string, validExtensions: string[]): Promise<FileEntity[]> {
+
+        return this.datasource.uploadProductPictures(files, id, validExtensions);
+    }
+
+    uploadSingleFile(name: string, file: any, userId: string, type: string, validExtensions: string[]): Promise<FileEntity> {
+
+        return this.datasource.uploadSingleFile(name, file, userId, type, validExtensions);
     }
     uploadMultipleFiles(files: any[], userId: string, type: string, validExtensions: string[]): Promise<FileEntity[]> {
 
