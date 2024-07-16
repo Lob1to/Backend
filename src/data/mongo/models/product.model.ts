@@ -1,7 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// TODO: Las imagenes deben organizarse en una carpeta con el id del producto y las imagenes se deben llamar por "image1", "image2", etc.
-
 interface IVariant extends Document {
     price: number,
     stock: number,

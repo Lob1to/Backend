@@ -17,7 +17,7 @@ import {
 } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 
-const { missingToken, missingId } = authErrors;
+const { missingToken, missingId, missingEmail } = authErrors;
 
 export class AuthController {
 
@@ -77,6 +77,22 @@ export class AuthController {
             return ErrorsHandler.handleUnknownError(res);
         }
     };
+
+    sendValidationEmail = (req: Request, res: Response) => {
+        const email = req.body.email;
+        if (!email) ResponsesHandler.sendErrorResponse(res, 400, missingEmail.message, missingEmail.code);
+
+        try {
+
+            this.sendEmail.execute(email, '')
+                .then((_) => ResponsesHandler.sendSuccessResponse(res, `Se ha enviado el correo de validación correctamente`, null))
+                .catch((error) => ErrorsHandler.handleErrors(error, res));
+
+        } catch (error) {
+            return ErrorsHandler.handleUnknownError(res);
+        }
+
+    }
 
     deleteUser = (req: Request, res: Response) => {
         const id = req.params.id;
