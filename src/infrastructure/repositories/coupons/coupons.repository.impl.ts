@@ -16,7 +16,7 @@ export class CouponsRepositoryImpl implements CouponsRepository {
         return this.datasource.getCoupons(paginationDto, getCouponsDto);
     }
 
-    getCoupon(id: number): Promise<CouponEntity> {
+    getCoupon(id: string): Promise<CouponEntity> {
         return this.datasource.getCoupon(id);
     }
 
@@ -24,7 +24,7 @@ export class CouponsRepositoryImpl implements CouponsRepository {
         return this.datasource.updateCoupon(updateCouponDto);
     }
 
-    deleteCoupon(id: number): Promise<CouponEntity> {
+    deleteCoupon(id: string): Promise<CouponEntity> {
         return this.datasource.deleteCoupon(id);
     }
 

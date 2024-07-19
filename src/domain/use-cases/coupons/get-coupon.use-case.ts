@@ -1,39 +1,41 @@
-import { CreateCouponDto } from "../../dtos";
 import { CouponEntity, LogSeverityLevel } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { CouponsRepository, LogRepository } from "../../repositories";
 import { CreateLog } from "../logs/create-log.use-case";
 
 
-interface CreateCouponUseCase {
-    execute(createCouponDto: CreateCouponDto): Promise<CouponEntity>;
+interface GetCouponUseCase {
+    execute(id: string): Promise<CouponEntity>;
 }
 
-export class CreateCoupon implements CreateCouponUseCase {
+export class GetCoupon implements GetCouponUseCase {
 
     constructor(
         private readonly couponsRepository: CouponsRepository,
         private readonly logRepository: LogRepository
     ) { }
 
-    async execute(createCouponDto: CreateCouponDto): Promise<CouponEntity> {
+    async execute(id: string): Promise<CouponEntity> {
 
         try {
-            const coupon = await this.couponsRepository.createCoupon(createCouponDto);
+
+            const coupon = await this.couponsRepository.getCoupon(id);
 
             return coupon;
 
         } catch (error) {
+
             if (error instanceof CustomError) throw error;
 
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'create-coupon.use-case',
+                origin: 'get-coupon.use-case',
             });
 
 
             throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+
         }
 
     }

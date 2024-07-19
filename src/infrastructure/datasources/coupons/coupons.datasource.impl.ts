@@ -1,5 +1,5 @@
 import { MongooseError, isValidObjectId } from "mongoose";
-import { couponErrors, productsErrors, sharedErrors } from "../../../config";
+import { couponErrors, sharedErrors } from "../../../config";
 import { CouponModel, ProductModel } from "../../../data/mongo";
 import { CreateCouponDto, CouponEntity, PaginationDto, GetCouponsDto, UpdateCouponDto, CheckCouponDto, CustomError, Status } from "../../../domain";
 import { CouponsDatasource } from "../../../domain/datasources/coupons.datasource";
@@ -7,7 +7,7 @@ import { CouponsDatasource } from "../../../domain/datasources/coupons.datasourc
 const { couponAlreadyExist, couponNotFound, expiredCoupon, inactiveCoupon, minimumPurchaseAmountNotReached, productsNotFound } = couponErrors;
 const { invalidId } = sharedErrors;
 
-abstract class CouponsDatasourceImpl implements CouponsDatasource {
+export class CouponsDatasourceImpl implements CouponsDatasource {
 
     async createCoupon(createCouponDto: CreateCouponDto): Promise<CouponEntity> {
 
@@ -73,7 +73,7 @@ abstract class CouponsDatasourceImpl implements CouponsDatasource {
 
     }
 
-    async getCoupon(id: number): Promise<CouponEntity> {
+    async getCoupon(id: string): Promise<CouponEntity> {
 
         try {
 
@@ -127,7 +127,7 @@ abstract class CouponsDatasourceImpl implements CouponsDatasource {
 
     }
 
-    async deleteCoupon(id: number): Promise<CouponEntity> {
+    async deleteCoupon(id: string): Promise<CouponEntity> {
 
         try {
 

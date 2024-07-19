@@ -32,6 +32,13 @@ export * from './orders/get-orders-by-userid.use-case';
 export * from './orders/update-order.use-case';
 export * from './orders/delete-order.use-case';
 
+export * from './coupons/create-coupon.use-case';
+export * from './coupons/get-coupons.use-case';
+export * from './coupons/get-coupon.use-case';
+export * from './coupons/update-coupon.use-case';
+export * from './coupons/delete-coupon.use-case';
+
+
 export * from './file-upload/upload-multiple-files.use-case';
 export * from './file-upload/upload-single-file.use-case';
 export * from './file-upload/upload-product-images.use-case';

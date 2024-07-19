@@ -8,3 +8,4 @@ export * from './send-email.datasource';
 export * from './file-upload.datasource';
 export * from './get-image.datasource';
 export * from './order.datasource';
+export * from './coupons.datasource';
