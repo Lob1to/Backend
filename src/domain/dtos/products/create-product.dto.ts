@@ -1,4 +1,5 @@
 import { interfacesValidators, productsErrors, validators } from "../../../config";
+import { ProductImage } from "../../entities";
 
 const {
     missingName,
@@ -21,7 +22,7 @@ export class CreateProductDto {
         public description: string,
         public price: number,
         public stock: number,
-        public images: string[],
+        public images: ProductImage[],
         public categoryId: string,
         public subcategoryId: string,
         public variants?: { [key: string]: any }[],
@@ -53,6 +54,7 @@ export class CreateProductDto {
 
         if (!images) return [missingImages.message, missingImages.code];
         if (!Array.isArray(images)) return [invalidImages.message, invalidImages.code];
+        if (!images.every(image => image.url || image.image)) return [invalidImages.message, invalidImages.code];
         if (!categoryId) return [missingCategoryId.message, missingCategoryId.code];
         if (!subcategoryId) return [missingSubcategoryId.message, missingSubcategoryId.code];
 

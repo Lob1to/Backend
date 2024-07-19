@@ -11,3 +11,7 @@ export * from './products/update-product.dto';
 export * from './shared/pagination.dto';
 export * from './orders/create-order.dto';
 export * from './orders/update-order.dto';
+export * from './coupons/get-coupons.dto';
+export * from './coupons/create-coupon.dto';
+export * from './coupons/update-coupon.dto';
+export * from './coupons/check-coupon.dto';

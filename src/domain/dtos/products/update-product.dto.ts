@@ -1,4 +1,5 @@
 import { interfacesValidators, productsErrors, sharedErrors, validators } from "../../../config";
+import { ProductImage } from "../../entities";
 
 const {
     tooLongDescription,
@@ -19,7 +20,7 @@ export class UpdateProductDto {
         public price?: number,
         public stock?: number,
         public variants?: { [key: string]: any }[],
-        public images?: string[],
+        public images?: ProductImage[],
         public categoryId?: string,
         public subcategoryId?: string,
     ) { }
@@ -74,6 +75,7 @@ export class UpdateProductDto {
 
         if (images) {
             if (!Array.isArray(images)) return [invalidImages.message, invalidImages.code];
+            if (images.length > 0 && !images.every(image => image.url || image.image)) return [invalidImages.message, invalidImages.code];
         }
 
         return [undefined, undefined, new UpdateProductDto(id, name, description, price, stock, variants, images, categoryId, subcategoryId)];

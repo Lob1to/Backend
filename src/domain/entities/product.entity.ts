@@ -1,9 +1,6 @@
-
-export interface IVariant {
-    price: number,
-    stock: number,
-    size: string,
-    color: string,
+export interface ProductImage {
+    image: number;
+    url: string;
 }
 
 export class ProductEntity {
@@ -14,8 +11,9 @@ export class ProductEntity {
         public description: string,
         public price: number,
         public stock: number,
-        public variants: IVariant[],
-        public images: string[],
+        public variantTypeId: string[],
+        public variantId: String,
+        public images: ProductImage[],
         public categoryId: string,
         public subcategoryId: string,
     ) { }
@@ -23,7 +21,7 @@ export class ProductEntity {
 
     static fromObject(object: { [key: string]: any }): ProductEntity {
 
-        const { id, name, description, price, stock, variants, images, categoryId, subcategoryId } = object;
+        const { id, name, description, price, stock, variantTypeId, variantId, images, categoryId, subcategoryId } = object;
 
         return new ProductEntity(
             id,
@@ -31,7 +29,8 @@ export class ProductEntity {
             description,
             price,
             stock,
-            variants,
+            variantTypeId,
+            variantId,
             images,
             categoryId,
             subcategoryId,

@@ -445,6 +445,135 @@ export const orderErrors = {
 
 }
 
+export const couponErrors = {
+
+    invalidCouponCode: {
+        message: 'El código de cupón no es válido',
+        code: 'invalid-coupon-code',
+    },
+
+    invalidDiscountType: {
+        message: (discountTypes: string[]) => `El tipo de descuento no es válido, validos: ${discountTypes.join(', ')}`,
+        code: 'invalid-discount-type',
+    },
+
+    invalidDiscountAmount: {
+        message: 'La cantidad de descuento debe ser un número válido mayor a 0',
+        code: 'invalid-discount-amount',
+    },
+
+    invalidMinimumPurchaseAmount: {
+        message: 'El mínimo de compra debe ser un número válido mayor a 0',
+        code: 'invalid-minimum-purchase-amount',
+    },
+
+    invalidEndDate: {
+        message: 'La fecha de finalización del cupón debe ser una fecha superior a la fecha actual',
+        code: 'invalid-end-date',
+    },
+
+    invalidStatus: {
+        message: (statusOptions: string[]) => `El estado del cupón no es válido, solo puede ser: ${statusOptions.join(', ')}`,
+        code: 'invalid-status',
+    },
+
+    missingDiscountType: {
+        message: 'No se ha proporcionado el tipo de descuento',
+        code: 'invalid-discount-type',
+    },
+
+    missingDiscountAmount: {
+        message: 'No se ha proporcionado la cantidad de descuento',
+        code: 'invalid-discount-amount',
+    },
+
+    missingMinimumPurchaseAmount: {
+        message: 'No se ha proporcionado el mínimo de compra',
+        code: 'invalid-minimum-purchase-amount',
+    },
+
+    missingEndDate: {
+        message: 'No se ha proporcionado la fecha de finalización del cupón',
+        code: 'invalid-end-date',
+    },
+
+    missingStatus: {
+        message: 'No se ha proporcionado el estado del cupón',
+        code: 'invalid-status',
+    },
+
+    missingCouponCode: {
+        message: 'No se ha proporcionado el código del cupón',
+        code: 'invalid-coupon-code',
+    },
+
+    missingProductIds: {
+        message: 'No se ha proporcionado ningún ID de producto',
+        code: 'invalid-product-ids',
+    },
+
+    missingPurchaseAmount: {
+        message: 'No se ha proporcionado la cantidad de compra',
+        code: 'invalid-purchase-amount',
+    },
+
+    invalidPurchaseAmount: {
+        message: 'La cantidad de compra debe ser un número válido mayor a 0',
+        code: 'invalid-purchase-amount',
+    },
+
+    productNotFound: {
+        message: (productId: string) => `El producto con ID ${productId} no existe en la base de datos`,
+        code: 'product-not-found',
+    },
+
+    couponNotFound: {
+        message: 'El cupón no existe en la base de datos',
+        code: 'coupon-not-found',
+    },
+
+    couponAlreadyExist: {
+        message: 'El cupón ya existe en la base de datos',
+        code: 'coupon-already-exist',
+    },
+
+    invalidCategoryId: {
+        message: 'El ID de categoría no es válido',
+        code: 'invalid-category-id',
+    },
+
+    invalidProductId: {
+        message: 'El ID de producto no es válido',
+        code: 'invalid-product-ids',
+    },
+
+    invalidSubcategoryId: {
+        message: 'El ID de subcategoría no es válido',
+        code: 'invalid-subcategory-id',
+    },
+
+    expiredCoupon: {
+        message: 'El cupón ha expirado',
+        code: 'expired-coupon',
+    },
+
+    inactiveCoupon: {
+        message: 'El cupón no está activo',
+        code: 'inactive-coupon',
+    },
+
+    minimumPurchaseAmountNotReached: {
+        message: 'La cantidad de compra debe ser mayor o igual al mínimo de compra',
+        code: 'minimum-purchase-amount-not-reached',
+    },
+
+    productsNotFound: {
+        message: 'No se han encontrado productos para el cupón',
+        code: 'products-not-found',
+    },
+
+}
+
 export const interfacesValidatorsErrors = {
 
     productVariant: {
