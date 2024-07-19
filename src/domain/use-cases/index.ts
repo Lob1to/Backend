@@ -37,6 +37,7 @@ export * from './coupons/get-coupons.use-case';
 export * from './coupons/get-coupon.use-case';
 export * from './coupons/update-coupon.use-case';
 export * from './coupons/delete-coupon.use-case';
+export * from './coupons/check-coupon.use-case';
 
 
 export * from './file-upload/upload-multiple-files.use-case';

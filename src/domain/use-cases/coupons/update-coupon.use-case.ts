@@ -20,11 +20,11 @@ export class UpdateCoupon implements UpdateCouponUseCase {
     ) { }
 
 
-    execute(updateCouponDto: UpdateCouponDto): Promise<CouponEntity> {
+    async execute(updateCouponDto: UpdateCouponDto): Promise<CouponEntity> {
 
         try {
 
-            const coupon = this.couponsRepository.updateCoupon(updateCouponDto);
+            const coupon = await this.couponsRepository.updateCoupon(updateCouponDto);
 
             return coupon;
 

@@ -3,7 +3,7 @@ import { envs } from "../../config";
 import { AuthController } from "./controller";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
 import { SendEmail, SendEmailValidationLink } from "../../domain/";
-import { SendEmailRepositoryImpl, AuthDatasourceImpl, AuthRepositoryImpl, LogRepositoryImpl, MongoLogDatasource, SendEmailDatasourceImpl } from "../../infrastructure/";
+import { SendEmailRepositoryImpl, AuthDatasourceImpl, AuthRepositoryImpl, LogRepositoryImpl, MongoLogDatasource, SendEmailDatasourceImpl } from "../../infrastructure";
 
 export class AuthRoutes {
 

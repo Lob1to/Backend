@@ -1,28 +1,27 @@
-import { CouponEntity, LogSeverityLevel } from "../../entities";
+import { CheckCouponDto } from "../../dtos";
+import { LogSeverityLevel } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { CouponsRepository, LogRepository } from "../../repositories";
 import { CreateLog } from "../logs/create-log.use-case";
 
-interface DeleteCouponUseCase {
+interface CheckCouponUseCase {
 
-    execute(id: string): Promise<CouponEntity>;
+    execute(checkCouponDto: CheckCouponDto): Promise<void>;
 
 }
 
-export class DeleteCoupon implements DeleteCouponUseCase {
+export class CheckCoupon implements CheckCouponUseCase {
 
     constructor(
         private readonly couponsRepository: CouponsRepository,
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(id: string): Promise<CouponEntity> {
+
+    async execute(checkCouponDto: CheckCouponDto): Promise<void> {
 
         try {
-
-            const coupon = await this.couponsRepository.deleteCoupon(id);
-            return coupon;
-
+            await this.couponsRepository.checkCoupon(checkCouponDto);
 
         } catch (error) {
             if (error instanceof CustomError) throw error;
@@ -30,7 +29,7 @@ export class DeleteCoupon implements DeleteCouponUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.medium,
-                origin: 'delete-coupon.use-case',
+                origin: 'create-coupon.use-case',
             });
 
 
