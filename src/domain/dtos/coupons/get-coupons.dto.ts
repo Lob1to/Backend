@@ -1,8 +1,8 @@
 import { DiscountType, Status } from "../..";
 import { couponErrors } from "../../../config";
 
-const discountTypes = [DiscountType.fixed, DiscountType.percentage];
-const statusOptions = [Status.active, Status.inactive];
+const discountTypes = ['fixed', 'percentage'];
+const statusOptions = ['active', 'inactive'];
 
 const {
     invalidDiscountAmount,
