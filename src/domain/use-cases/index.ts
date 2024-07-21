@@ -47,4 +47,4 @@ export * from './file-upload/upload-product-image.use-case';
 export * from './file-upload/upload-profile-picture.use-case';
 export * from './file-upload/delete-product-image.use-case';
 
-export * from './images/get-image-url.use-case';
+export * from './images/get-image-buffer.use-case';

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
-import { GetImageUrl, GetImageRepository, LogRepository } from "../../domain";
+import { GetImageBuffer, GetImageRepository, LogRepository } from "../../domain";
 
 export class ImagesController {
 
@@ -20,9 +20,8 @@ export class ImagesController {
             if (!type || !img) return ResponsesHandler.sendErrorResponse(res, 400, 'Debe enviar el tipo y el nombre de la imagen', 'invalid-image-params');
             const extension = img.split('.')[1];
 
-            new GetImageUrl(this.getImageRepository, this.logRepository).execute(type, img, id)
-                .then(arrayBuffer => {
-                    const image = Buffer.from(arrayBuffer).toString('base64');
+            new GetImageBuffer(this.getImageRepository, this.logRepository).execute(type, img, id)
+                .then(image => {
 
                     res.setHeader('Content-Type', `image/${extension}`);
                     res.end(image, 'base64');

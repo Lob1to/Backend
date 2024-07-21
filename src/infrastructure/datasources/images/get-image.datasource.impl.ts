@@ -1,18 +1,17 @@
-import { getStorage, ref, getDownloadURL, StorageError, getBytes } from "firebase/storage";
+import { getStorage, ref, StorageError, getBytes } from "firebase/storage";
 import { CacheAdapter, fileUploadErrors, sharedErrors } from "../../../config";
 import { GetImageDatasource, CustomError } from "../../../domain";
 
 
-const { unknownError } = sharedErrors;
 const { imageNotFound } = fileUploadErrors;
 
 export class GetImageDatasourceImpl implements GetImageDatasource {
 
 
-    async getImageBuffer(type: string, img: string, id?: string): Promise<ArrayBuffer> {
+    async getImageBuffer(type: string, img: string, id?: string): Promise<Buffer> {
 
         const cacheKey = `image_${type}_${id}_${img}`;
-        const cachedImage = CacheAdapter.get<ArrayBuffer>(cacheKey);
+        const cachedImage = CacheAdapter.get<Buffer>(cacheKey);
 
         if (cachedImage) return cachedImage;
 
@@ -24,7 +23,12 @@ export class GetImageDatasourceImpl implements GetImageDatasource {
             const storageFB = getStorage();
             const imageRef = ref(storageFB, `${type}/${newId}${img}`);
 
-            const imageBuffer = await getBytes(imageRef);
+            const arrBuffer = await getBytes(imageRef);
+            const imageBuffer = Buffer.from(arrBuffer);
+
+            // Almacenamiento de la imagen en cache por 1 hora.
+
+            CacheAdapter.set(cacheKey, imageBuffer);
 
             return imageBuffer;
 
@@ -38,7 +42,7 @@ export class GetImageDatasourceImpl implements GetImageDatasource {
                 throw error;
             }
 
-            throw CustomError.internalServer(unknownError.message, unknownError.code);
+            throw error;
 
         }
 
