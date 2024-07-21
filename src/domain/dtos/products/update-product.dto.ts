@@ -1,4 +1,4 @@
-import { interfacesValidators, productsErrors, sharedErrors, validators } from "../../../config";
+import { productsErrors, sharedErrors, validators } from "../../../config";
 import { ProductImage } from "../../entities";
 
 const {
@@ -19,10 +19,11 @@ export class UpdateProductDto {
         public description?: string,
         public price?: number,
         public stock?: number,
-        public variants?: { [key: string]: any }[],
         public images?: ProductImage[],
         public categoryId?: string,
         public subcategoryId?: string,
+        public variantId?: string[],
+        public variantTypeId?: string,
     ) { }
 
     get values() {
@@ -37,6 +38,8 @@ export class UpdateProductDto {
         if (this.images) returnObj.images = this.images;
         if (this.categoryId) returnObj.categoryId = this.categoryId;
         if (this.subcategoryId) returnObj.subcategoryId = this.subcategoryId;
+        if (this.variantId) returnObj.variantId = this.variantId;
+        if (this.variantTypeId) returnObj.variantTypeId = this.variantTypeId;
 
         return returnObj;
 
@@ -50,10 +53,11 @@ export class UpdateProductDto {
             description,
             price,
             stock,
-            variants,
             images,
             categoryId,
             subcategoryId,
+            variantId,
+            variantTypeId,
         } = props;
 
         if (!id) return [missingId.message, missingId.code];
@@ -68,9 +72,13 @@ export class UpdateProductDto {
             if (isNaN(stock) || stock < 0) return [invalidStock.message, invalidStock.code];
         }
 
-        if (variants) {
-            if (!Array.isArray(variants)) return [invalidVariants.message, invalidVariants.code];
-            if (!interfacesValidators.isProductVariant(variants)) return [invalidVariants.message, invalidVariants.code];
+        if (variantId) {
+            if (!Array.isArray(variantId)) return [invalidVariants.message, invalidVariants.code];
+            if (variantId.length > 0 && !variantId.every(variant => typeof variant === 'string')) return [invalidVariants.message, invalidVariants.code];
+        }
+
+        if (variantTypeId) {
+            if (typeof variantTypeId !== 'string') return [invalidVariants.message, invalidVariants.code];
         }
 
         if (images) {
@@ -78,7 +86,7 @@ export class UpdateProductDto {
             if (images.length > 0 && !images.every(image => image.url || image.image)) return [invalidImages.message, invalidImages.code];
         }
 
-        return [undefined, undefined, new UpdateProductDto(id, name, description, price, stock, variants, images, categoryId, subcategoryId)];
+        return [undefined, undefined, new UpdateProductDto(id, name, description, price, stock, images, categoryId, subcategoryId, variantId, variantTypeId)];
 
     }
 

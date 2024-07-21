@@ -21,7 +21,7 @@ export class OrdersRoutes {
 
         router.post('/create', AuthMiddleware.validateJWT, controller.createOrder);
         router.get('/', AuthMiddleware.validateAdminRoleWithToken, controller.getOrders);
-        router.get('/user/id', AuthMiddleware.validateJWT, controller.getOrdersByUserId);
+        router.get('/user/:id', AuthMiddleware.validateJWT, controller.getOrdersByUserId);
         router.get('/:id', AuthMiddleware.validateJWT, controller.getOrderById);
         router.put('/:id', AuthMiddleware.validateJWT, controller.updateOrder);
         router.delete('/:id', AuthMiddleware.validateJWT, controller.deleteOrder);

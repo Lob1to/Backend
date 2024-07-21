@@ -193,7 +193,12 @@ export const subcategoryErrors = {
     subcategoryNotFound: {
         message: 'La subcategoría no existe en la base de datos',
         code: 'subcategory-not-found',
-    }
+    },
+
+    categoryNotFound: {
+        message: 'La categoría no existe en la base de datos',
+        code: 'category-not-found',
+    },
 }
 
 export const productsErrors = {
@@ -286,13 +291,23 @@ export const productsErrors = {
 
 export const fileUploadErrors = {
 
+    missingImgName: {
+        message: 'No se ha proporcionado el nombre de la imagen',
+        code: 'missing-img-name',
+    },
+
+    tooManyFiles: {
+        message: 'No se pueden subir más de 5 imágenes',
+        code: 'too-many-files',
+    },
+
     missingImg: {
         message: 'No se ha proporcionado ninguna imagen',
         code: 'missing-img',
     },
 
     invalidImgSize: {
-        message: 'El tamaño de la imagen excede el límite permitido',
+        message: (maxFileSize: number) => `El tamaño de la imagen excede el límite permitido (${(maxFileSize / 1024) / 1024} MB)`,
         code: 'invalid-img-size',
     },
 
@@ -468,7 +483,7 @@ export const couponErrors = {
     },
 
     invalidEndDate: {
-        message: 'La fecha de finalización del cupón debe ser una fecha superior a la fecha actual',
+        message: 'La fecha de finalización del cupón debe ser una fecha válida',
         code: 'invalid-end-date',
     },
 
@@ -479,42 +494,42 @@ export const couponErrors = {
 
     missingDiscountType: {
         message: 'No se ha proporcionado el tipo de descuento',
-        code: 'invalid-discount-type',
+        code: 'missing-discount-type',
     },
 
     missingDiscountAmount: {
         message: 'No se ha proporcionado la cantidad de descuento',
-        code: 'invalid-discount-amount',
+        code: 'missing-discount-amount',
     },
 
     missingMinimumPurchaseAmount: {
         message: 'No se ha proporcionado el mínimo de compra',
-        code: 'invalid-minimum-purchase-amount',
+        code: 'missing-minimum-purchase-amount',
     },
 
     missingEndDate: {
         message: 'No se ha proporcionado la fecha de finalización del cupón',
-        code: 'invalid-end-date',
+        code: 'missing-end-date',
     },
 
     missingStatus: {
         message: 'No se ha proporcionado el estado del cupón',
-        code: 'invalid-status',
+        code: 'missing-status',
     },
 
     missingCouponCode: {
         message: 'No se ha proporcionado el código del cupón',
-        code: 'invalid-coupon-code',
+        code: 'missing-coupon-code',
     },
 
     missingProductIds: {
         message: 'No se ha proporcionado ningún ID de producto',
-        code: 'invalid-product-ids',
+        code: 'missing-product-ids',
     },
 
     missingPurchaseAmount: {
         message: 'No se ha proporcionado la cantidad de compra',
-        code: 'invalid-purchase-amount',
+        code: 'missing-purchase-amount',
     },
 
     invalidPurchaseAmount: {
@@ -543,7 +558,7 @@ export const couponErrors = {
     },
 
     invalidProductId: {
-        message: 'El ID de producto no es válido',
+        message: 'Uno o más IDs de producto no son válidos',
         code: 'invalid-product-ids',
     },
 
@@ -568,8 +583,18 @@ export const couponErrors = {
     },
 
     productsNotFound: {
-        message: 'No se han encontrado productos para el cupón',
+        message: 'Uno o más productos ingresados no existen en la base de datos',
         code: 'products-not-found',
+    },
+
+    expiredEndDate: {
+        message: 'La fecha de finalización del cupón ha expirado',
+        code: 'expired-end-date',
+    },
+
+    couponNotApplicable: {
+        message: 'El cupón no se aplica a ningún producto',
+        code: 'coupon-not-applicable',
     },
 
 }

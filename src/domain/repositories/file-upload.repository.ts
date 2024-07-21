@@ -30,6 +30,10 @@ export abstract class FileUploadRepository {
         img: string,
         id: string): Promise<void>;
 
+    abstract deleteProductImage(type: string,
+        img: string,
+        id: string): Promise<void>;
+
 }
 
 

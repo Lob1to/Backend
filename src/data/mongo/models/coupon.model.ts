@@ -8,7 +8,7 @@ interface ICoupon extends Document {
     endDate: Date
     status: 'active' | 'inactive'
     applicableCategory?: mongoose.Types.ObjectId
-    applicableSubCategory?: mongoose.Types.ObjectId
+    applicableSubcategory?: mongoose.Types.ObjectId
     applicableProduct?: mongoose.Types.ObjectId
 }
 
@@ -44,9 +44,9 @@ const couponSchema: Schema<ICoupon> = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category'
     },
-    applicableSubCategory: {
+    applicableSubcategory: {
         type: Schema.Types.ObjectId,
-        ref: 'SubCategory'
+        ref: 'Subcategory'
     },
     applicableProduct: {
         type: Schema.Types.ObjectId,

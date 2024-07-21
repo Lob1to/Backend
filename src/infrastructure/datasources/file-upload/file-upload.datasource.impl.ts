@@ -1,10 +1,14 @@
 import { CustomError, FileEntity, FileUploadDatasource } from "../../../domain";
-import { fileUploadErrors, auth, sharedErrors, envs } from "../../../config";
+import { fileUploadErrors, auth, sharedErrors, envs, validators, authErrors, productsErrors } from "../../../config";
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { UploadedFile } from "express-fileupload";
+import { isValidObjectId } from "mongoose";
+import { ProductModel, UserModel } from "../../../data/mongo";
 
-const { invalidImgExtension } = fileUploadErrors;
+const { invalidImgExtension, invalidImgSize } = fileUploadErrors;
+const { userNotFound } = authErrors;
+const { productNotFound } = productsErrors;
 const { unauthorized } = sharedErrors;
 export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
@@ -68,18 +72,45 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     }
 
+    async deleteProductImage(type: string, imgName: string, id: string): Promise<void> {
+
+        try {
+            const product = await ProductModel.findById(id);
+            const imageName = imgName.split('.')[0];
+
+            if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+            await this.checkIfImageExistsAndDelete(type, imageName, ['png', 'jpg', 'jpeg'], id);
+
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    async checkIfImageExistsAndDelete(type: string, name: string, validExtensions: string[], id: string): Promise<void> {
+
+        for (let i = 0; i < validExtensions.length; i++) {
+            const img = `${name}.${validExtensions[i]}`;
+
+            const file = await this.fileExists(type, img, id);
+
+            if (file) await this.deleteFile(type, img, id);
+        }
+
+    }
+
     async uploadUserProfilePicture(file: any, id: string, validExtensions: string[]): Promise<FileEntity> {
 
         const name = 'profile-picture';
         const type = 'users';
-        const extension = file.name.split('.')[1];
 
-        const imgName = `${name}.${extension}`
+        // Elimina todas las fotos de perfil con la extension valida.
+        if (!isValidObjectId(id)) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+        const user = await UserModel.findById(id);
 
-        const fileExists = await this.fileExists(type, imgName, id);
-        if (fileExists) {
-            await this.deleteFile(type, imgName, id);
-        }
+        if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+
+        await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
 
         const profilePicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
 
@@ -93,15 +124,18 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
         let imagesCounter = 1;
         let images: FileEntity[] = [];
 
+        if (!isValidObjectId(id)) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        const product = await ProductModel.findById(id);
+
+        if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
         for (const file of files) {
 
             const name = 'image-' + imagesCounter;
             const type = 'products';
-            const fileExists = await this.fileExists(type, file.name, id);
 
-            if (fileExists) {
-                await this.deleteFile(type, file.name, id);
-            }
+            await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
 
             const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
 
@@ -120,9 +154,13 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
             await this.firebaseSignIn(auth, envs.FIREBASE_AUTH_EMAIL, envs.FIREBASE_AUTH_KEY);
 
             const fileExtension = file.mimetype.split('/').at(1) ?? '';
+            const maxFileSize = validators.image.maxFileSize;
 
             if (!validExtensions.includes(fileExtension)) {
                 throw CustomError.badRequest(invalidImgExtension.message(fileExtension, validExtensions), invalidImgExtension.code);
+            }
+            if ((file.size > maxFileSize)) {
+                throw CustomError.badRequest(invalidImgSize.message(maxFileSize), invalidImgSize.code);
             }
 
             const fileName = `${name}.${fileExtension}`;

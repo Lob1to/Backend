@@ -1,11 +1,14 @@
 import { MongooseError, isValidObjectId } from "mongoose";
-import { couponErrors, sharedErrors } from "../../../config";
-import { CouponModel, ProductModel } from "../../../data/mongo";
-import { CreateCouponDto, CouponEntity, PaginationDto, GetCouponsDto, UpdateCouponDto, CheckCouponDto, CustomError, Status } from "../../../domain";
+import { categoryErrors, couponErrors, productsErrors, sharedErrors, subcategoryErrors } from "../../../config";
+import { CategoryModel, CouponModel, ProductModel } from "../../../data/mongo";
+import { CreateCouponDto, CouponEntity, PaginationDto, GetCouponsDto, UpdateCouponDto, CheckCouponDto, CustomError, Status, ProductEntity } from "../../../domain";
 import { CouponsDatasource } from "../../../domain/datasources/coupons.datasource";
 
-const { couponAlreadyExist, couponNotFound, expiredCoupon, inactiveCoupon, minimumPurchaseAmountNotReached, productsNotFound } = couponErrors;
+const { couponAlreadyExist, couponNotFound, expiredCoupon, inactiveCoupon, minimumPurchaseAmountNotReached, productsNotFound, couponNotApplicable, invalidProductId } = couponErrors;
 const { invalidId } = sharedErrors;
+const { productNotFound } = productsErrors;
+const { categoryNotFound } = categoryErrors;
+const { subcategoryNotFound } = subcategoryErrors;
 
 export class CouponsDatasourceImpl implements CouponsDatasource {
 
@@ -13,9 +16,29 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
 
         try {
 
-            const { couponCode } = createCouponDto;
+            const { couponCode, applicableCategory, applicableProduct, applicableSubcategory: applicableSubCategory } = createCouponDto;
 
-            const coupon = await CouponModel.find({ couponCode });
+
+            if (applicableCategory) {
+                if (!isValidObjectId(applicableCategory)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+
+                const category = await CategoryModel.findById(applicableCategory);
+                if (!category) throw CustomError.badRequest(categoryNotFound.message, invalidId.code);
+            }
+            if (applicableProduct) {
+                if (!isValidObjectId(applicableProduct)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+
+                const product = await ProductModel.findById(applicableProduct);
+                if (!product) throw CustomError.badRequest(productNotFound.message, invalidId.code);
+            }
+            if (applicableSubCategory) {
+                if (!isValidObjectId(applicableSubCategory)) throw CustomError.badRequest(invalidId.message, invalidId.code);
+
+                const subcategory = await CategoryModel.findById(applicableSubCategory);
+                if (!subcategory) throw CustomError.badRequest(subcategoryNotFound.message, invalidId.code);
+            }
+
+            const coupon = await CouponModel.findOne({ couponCode });
 
             if (coupon) throw CustomError.badRequest(couponAlreadyExist.message, couponAlreadyExist.code);
 
@@ -44,11 +67,23 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
 
             const coupons = await CouponModel.find(getCouponsDto.values)
                 .skip((page - 1) * limit)
-                .limit(limit);
+                .limit(limit)
+                .populate({
+                    path: 'applicableCategory',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableProduct',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableSubcategory',
+                    select: 'name'
+                });
 
             const totalItems = await CouponModel.countDocuments(getCouponsDto.values);
-            const totalPages = totalItems / limit;
-            const items = CouponEntity.fromObject(coupons);
+            const totalPages = Math.ceil(totalItems / limit);
+            const items = coupons.map(CouponEntity.fromObject);
 
             const queryString = getCouponsDto.values ? `&${Object.entries(getCouponsDto.values).map(([key, value]) => {
                 return `${key}=${value}`;
@@ -81,7 +116,19 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
 
             if (!isId) throw CustomError.badRequest(invalidId.message, invalidId.code);
 
-            const coupon = await CouponModel.findById(id);
+            const coupon = await CouponModel.findById(id)
+                .populate({
+                    path: 'applicableCategory',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableProduct',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableSubcategory',
+                    select: 'name'
+                });
 
             if (!coupon) throw CustomError.notFound(couponNotFound.message, couponNotFound.code);
 
@@ -109,7 +156,20 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
             const coupon = await CouponModel.findById(id);
             if (!coupon) throw CustomError.notFound(couponNotFound.message, couponNotFound.code);
 
-            const updatedCoupon = await CouponModel.findByIdAndUpdate(id, updateCouponDto.values, { new: true });
+            const updatedCoupon = await CouponModel.findByIdAndUpdate(id, updateCouponDto.values, { new: true })
+                .populate({
+                    path: 'applicableCategory',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableProduct',
+                    select: 'name'
+                })
+                .populate({
+                    path: 'applicableSubcategory',
+                    select: 'name'
+                });
+
             if (!updatedCoupon) throw CustomError.notFound(couponNotFound.message, couponNotFound.code);
 
             const couponEntity = CouponEntity.fromObject(updatedCoupon);
@@ -168,14 +228,27 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
 
             if (coupon.minimumPurchaseAmount && purchaseAmount < coupon.minimumPurchaseAmount) throw CustomError.badRequest(minimumPurchaseAmountNotReached.message, minimumPurchaseAmountNotReached.code);
 
-            const products = await ProductModel.find({ _id: { $in: productIds } });
-            if (!products) throw CustomError.badRequest(productsNotFound.message, productsNotFound.code);
+            productIds.every(productId => {
+                const isId = isValidObjectId(productId);
+                if (!isId) throw CustomError.badRequest(invalidProductId.message, invalidProductId.code);
+            });
+
+            const products = [];
+
+            for (let i = 0; i < productIds.length; i++) {
+                const product = await ProductModel.findById(productIds[i]);
+                if (product) {
+                    products.push(ProductEntity.fromObject(product));
+                }
+            }
+
+            if (products.length === 0) throw CustomError.badRequest(productsNotFound.message, productsNotFound.code);
 
             const isValid = products.every(product => {
                 if (coupon.applicableCategory && coupon.applicableCategory.toString() !== product.categoryId.toString()) {
                     return false;
                 }
-                if (coupon.applicableSubCategory && coupon.applicableSubCategory.toString() !== product.subcategoryId.toString()) {
+                if (coupon.applicableSubcategory && coupon.applicableSubcategory.toString() !== product.subcategoryId.toString()) {
                     return false;
                 }
                 if (coupon.applicableProduct && !product.variantId.includes(coupon.applicableProduct.toString())) {
@@ -184,6 +257,8 @@ export class CouponsDatasourceImpl implements CouponsDatasource {
 
                 return true;
             });
+
+            if (!isValid) throw CustomError.badRequest(couponNotApplicable.message, couponNotApplicable.code);
 
 
 

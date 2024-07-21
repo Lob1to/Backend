@@ -30,6 +30,10 @@ export abstract class FileUploadDatasource {
         img: string,
         id: string): Promise<void>;
 
+    abstract deleteProductImage(type: string,
+        img: string,
+        id: string): Promise<void>;
+
 }
 
 

@@ -19,7 +19,7 @@ export class CouponEntity {
         public endDate: Date,
         public status: Status,
         public applicableCategory?: string,
-        public applicableSubCategory?: string,
+        public applicableSubcategory?: string,
         public applicableProduct?: string,
     ) { }
 
@@ -34,7 +34,7 @@ export class CouponEntity {
             endDate,
             status,
             applicableCategory,
-            applicableSubCategory,
+            applicableSubcategory,
             applicableProduct,
         } = obj;
 
@@ -47,7 +47,7 @@ export class CouponEntity {
             endDate,
             status,
             applicableCategory,
-            applicableSubCategory,
+            applicableSubcategory,
             applicableProduct,
         )
 

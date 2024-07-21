@@ -62,7 +62,7 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
                 origin: 'send-email-validation-link.use-case',
             });
 
-            return false;
+            throw error;
 
         }
 

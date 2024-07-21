@@ -28,12 +28,12 @@ export class FileUploadRoutes {
         const controller = new FileUploadController(fileUploadRepository, productsRepository, authRepository, logRepository);
 
         router.use(AuthMiddleware.validateJWT);
-        router.use(FileUploadMiddleware.containFiles);
 
-        router.post('/single/:type', [TypeMiddleware.validTypes(['users', 'products'])], controller.uploadSingleFile);
-        router.post('/profile-picture', controller.uploadUserProfilePicture);
-        router.post('/product-pictures/:id', controller.uploadProductPictures);
-        router.post('/multiple/:type', [TypeMiddleware.validTypes(['users', 'products'])], controller.uploadMultipleFiles);
+        router.post('/single/:type/:id', [TypeMiddleware.validTypes(['users', 'products']), FileUploadMiddleware.containFiles], controller.uploadSingleFile);
+        router.post('/profile-picture', [FileUploadMiddleware.containFiles], controller.uploadUserProfilePicture);
+        router.post('/product-pictures/:id', [FileUploadMiddleware.containFiles], controller.uploadProductPictures);
+        router.delete('/products/:id/delete/:img', controller.deleteProductImage);
+        // router.post('/multiple/:type', [TypeMiddleware.validTypes(['users', 'products'])], controller.uploadMultipleFiles);
 
         return router;
 

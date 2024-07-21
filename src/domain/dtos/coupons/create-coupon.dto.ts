@@ -22,6 +22,8 @@ const {
     missingEndDate,
     missingMinimumPurchaseAmount,
     missingStatus,
+    missingCouponCode,
+    expiredEndDate
 
 } = couponErrors;
 
@@ -36,19 +38,21 @@ export class CreateCouponDto {
         public endDate: Date,
         public status: Status,
         public applicableCategory?: string,
-        public applicableSubCategory?: string,
+        public applicableSubcategory?: string,
         public applicableProduct?: string,
 
     ) { }
 
     static create(props: { [key: string]: any }): [string?, string?, CreateCouponDto?] {
 
-        const { couponCode, discountType, discountAmount, minimumPurchaseAmount, endDate, status, applicableCategory, applicableSubCategory, applicableProduct } = props;
+        const { couponCode, discountType, discountAmount, minimumPurchaseAmount, endDate, status, applicableCategory, applicableSubcategory, applicableProduct } = props;
 
         const isDiscountType = discountTypes.includes(discountType);
-        const isStatus = statusOptions.includes(status);
+        const isStatus = (status: string) => statusOptions.includes(status);
+        const parsedEndDate = new Date(endDate);
 
-        if (!couponCode) return [invalidCouponCode.message, invalidCouponCode.code];
+        if (!couponCode) return [missingCouponCode.message, missingCouponCode.code];
+        if (couponCode.length < 5) return [invalidCouponCode.message, invalidCouponCode.code];
 
         if (!discountType) return [missingDiscountType.message, missingDiscountType.code];
         if (discountType && !isDiscountType) return [invalidDiscountType.message(discountTypes), invalidDiscountType.code];
@@ -60,22 +64,22 @@ export class CreateCouponDto {
         if (minimumPurchaseAmount < 0) return [invalidMinimumPurchaseAmount.message, invalidMinimumPurchaseAmount.code];
 
         if (!endDate) return [missingEndDate.message, missingEndDate.code];
-        if (endDate < new Date()) return [invalidEndDate.message, invalidEndDate.code];
+        if (isNaN(parsedEndDate.getFullYear())) return [invalidEndDate.message, invalidEndDate.code];
+        if (parsedEndDate < new Date()) return [expiredEndDate.message, expiredEndDate.code];
 
-        if (!status) return [missingStatus.message, missingStatus.code];
-        if (status && !isStatus) return [invalidStatus.message(statusOptions), invalidStatus.code];
+        if (status && !isStatus(status)) return [invalidStatus.message(statusOptions), invalidStatus.code];
 
-        if (!applicableCategory && !applicableSubCategory && !applicableProduct) return ['missing-applicable-items', 'Debe especificar al menos un item aplicable'];
+        if (!applicableCategory && !applicableSubcategory && !applicableProduct) return ['missing-applicable-items', 'Debe especificar al menos un item aplicable'];
 
         return [undefined, undefined, new CreateCouponDto(
-            couponCode,
+            couponCode.toUpperCase(),
             discountType,
             discountAmount,
             minimumPurchaseAmount,
-            endDate,
+            parsedEndDate,
             status,
             applicableCategory,
-            applicableSubCategory,
+            applicableSubcategory,
             applicableProduct
         )];
 

@@ -81,7 +81,7 @@ export class OrdersController {
             const [error, errorCode, paginationDto] = PaginationDto.create(+page, +limit);
             if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
-            const userId = req.params.userId;
+            const userId = req.params.id;
             if (!userId) return ResponsesHandler.sendErrorResponse(res, 400, 'Debe enviar el id del usuario', 'bad-request');
 
             new GetOrdersByUserId(this.ordersRepository, this.logRepository).execute(userId, paginationDto!)

@@ -13,6 +13,11 @@ interface UploadProductImagesUseCase {
 
 }
 
+interface ImageOptions {
+    image: number,
+    url: string,
+}
+
 const { unknownError } = sharedErrors;
 
 export class UploadProductImages implements UploadProductImagesUseCase {
@@ -28,10 +33,18 @@ export class UploadProductImages implements UploadProductImagesUseCase {
         try {
 
             const filesUploaded = await this.fileUploadRepository.uploadProductPictures(files, id, validExtensions);
+            let images: ImageOptions[] = [];
+
+            for (let i = 0; i < filesUploaded.length; i++) {
+                images.push({
+                    image: i + 1,
+                    url: filesUploaded[i].imageUrl,
+                });
+            }
 
             const [error, errorCode, updateDto] = UpdateProductDto.create({
                 id,
-                images: filesUploaded.map(file => file.imageUrl)
+                images: images,
             });
 
             if (error) throw CustomError.badRequest(error, errorCode!);

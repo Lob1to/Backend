@@ -27,8 +27,6 @@ export class UploadProfilePicture implements UploadProfilePictureUseCase {
 
         try {
 
-            let isUpdated = false;
-
             const fileUploaded = await this.fileUploadRepository.uploadUserProfilePicture(file, userId, validExtensions);
 
             const [error, errorCode, updateDto] = UpdateUserDto.create({
@@ -40,10 +38,10 @@ export class UploadProfilePicture implements UploadProfilePictureUseCase {
 
 
             new UpdateUser(this.authRepository, this.logRepository).execute(updateDto!)
-                .then(updatedUser => isUpdated = !!updatedUser)
+                .then(updatedUser => {
+                    if (!updatedUser) throw Error('El usuario no se ha actualizado');
+                })
                 .catch(error => Error(error));
-
-            if (!isUpdated) throw Error('El usuario no se ha actualizado');
 
             return fileUploaded;
 

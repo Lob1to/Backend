@@ -8,6 +8,10 @@ export class FileUploadRepositoryImpl implements FileUploadRepository {
         private readonly datasource: FileUploadDatasource,
     ) { }
 
+    deleteProductImage(type: string, img: string, id: string): Promise<void> {
+        return this.datasource.deleteProductImage(type, img, id);
+    }
+
     deleteFile(type: string, img: string, id: string): Promise<void> {
 
         return this.datasource.deleteFile(type, img, id);

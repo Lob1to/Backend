@@ -1,4 +1,4 @@
-import { interfacesValidators, productsErrors, validators } from "../../../config";
+import { productsErrors, validators } from "../../../config";
 import { ProductImage } from "../../entities";
 
 const {
@@ -10,7 +10,6 @@ const {
     missingStock,
     invalidStock,
     invalidVariants,
-    missingImages,
     invalidImages,
     missingCategoryId,
     missingSubcategoryId
@@ -25,7 +24,8 @@ export class CreateProductDto {
         public images: ProductImage[],
         public categoryId: string,
         public subcategoryId: string,
-        public variants?: { [key: string]: any }[],
+        public variantId?: string[],
+        public variantTypeId?: string,
     ) { }
 
     static create(props: { [key: string]: any }): [string?, string?, CreateProductDto?] {
@@ -38,7 +38,8 @@ export class CreateProductDto {
             images,
             categoryId,
             subcategoryId,
-            variants,
+            variantId,
+            variantTypeId
         } = props;
 
         if (!name) return [missingName.message, missingName.code];
@@ -49,16 +50,17 @@ export class CreateProductDto {
         if (!stock) return [missingStock.message, missingStock.code];
         if (isNaN(stock) || stock < 0) return [invalidStock.message, invalidStock.code];
 
-        if (variants && !Array.isArray(variants)) return [invalidVariants.message, invalidVariants.code];
-        if (variants && variants.length !== 0 && !interfacesValidators.isProductVariant(variants)) return [invalidVariants.message, invalidVariants.code];
 
-        if (!images) return [missingImages.message, missingImages.code];
-        if (!Array.isArray(images)) return [invalidImages.message, invalidImages.code];
-        if (!images.every(image => image.url || image.image)) return [invalidImages.message, invalidImages.code];
+        if (images && !Array.isArray(images)) return [invalidImages.message, invalidImages.code];
+        if (images && !images.every((image: { [key: string]: any }) => image.url || image.image)) return [invalidImages.message, invalidImages.code];
         if (!categoryId) return [missingCategoryId.message, missingCategoryId.code];
         if (!subcategoryId) return [missingSubcategoryId.message, missingSubcategoryId.code];
 
-        return [undefined, undefined, new CreateProductDto(name, description, price, stock, images, categoryId, subcategoryId, variants ?? [])];
+        if (variantId && !Array.isArray(variantId)) return [invalidVariants.message, invalidVariants.code];
+        if (variantId && variantId.length !== 0) return [invalidVariants.message, invalidVariants.code];
+        if (variantTypeId && typeof variantTypeId === 'string') return [invalidVariants.message, invalidVariants.code];
+
+        return [undefined, undefined, new CreateProductDto(name, description, price, stock, images, categoryId, subcategoryId, variantId, variantTypeId)];
 
     }
 
