@@ -1,5 +1,5 @@
 import { getStorage, ref, getDownloadURL, StorageError, getBytes } from "firebase/storage";
-import { fileUploadErrors, sharedErrors } from "../../../config";
+import { CacheAdapter, fileUploadErrors, sharedErrors } from "../../../config";
 import { GetImageDatasource, CustomError } from "../../../domain";
 
 
@@ -10,6 +10,11 @@ export class GetImageDatasourceImpl implements GetImageDatasource {
 
 
     async getImageBuffer(type: string, img: string, id?: string): Promise<ArrayBuffer> {
+
+        const cacheKey = `image_${type}_${id}_${img}`;
+        const cachedImage = CacheAdapter.get<ArrayBuffer>(cacheKey);
+
+        if (cachedImage) return cachedImage;
 
         let newId = '';
         if (id) { newId = `${id}/` };

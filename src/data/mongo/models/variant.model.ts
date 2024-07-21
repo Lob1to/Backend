@@ -3,9 +3,6 @@ import mongoose, { Schema } from "mongoose";
 interface IVariant extends Document {
     price: number,
     stock: number,
-    size: string;
-    color: string;
-    image: string;
     variantType: mongoose.Schema.Types.ObjectId;
 }
 const variantSchema: Schema<IVariant> = new Schema({
@@ -13,22 +10,12 @@ const variantSchema: Schema<IVariant> = new Schema({
         type: Number,
         required: true
     },
+
     stock: {
         type: Number,
         required: true
     },
-    size: {
-        default: 'N/A',
-        type: String
-    },
-    color: {
-        default: 'N/A',
-        type: String
-    },
-    image: {
-        type: String,
-        default: 'N/A'
-    },
+
     variantType: {
         type: mongoose.Schema.Types.ObjectId, ref: 'VariantType', required: true,
     },

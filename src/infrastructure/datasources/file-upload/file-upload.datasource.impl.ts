@@ -1,16 +1,22 @@
 import { CustomError, FileEntity, FileUploadDatasource } from "../../../domain";
-import { fileUploadErrors, auth, sharedErrors, envs, validators, authErrors, productsErrors } from "../../../config";
+import { UploadQueue, FileValidator, CacheAdapter, fileUploadErrors, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor } from "../../../config";
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { UploadedFile } from "express-fileupload";
 import { isValidObjectId } from "mongoose";
 import { ProductModel, UserModel } from "../../../data/mongo";
 
-const { invalidImgExtension, invalidImgSize } = fileUploadErrors;
 const { userNotFound } = authErrors;
 const { productNotFound } = productsErrors;
 const { unauthorized } = sharedErrors;
+
 export class FileUploadDatasourceImpl implements FileUploadDatasource {
+
+    private uploadQueue: UploadQueue;
+
+    constructor() {
+        this.uploadQueue = new UploadQueue();
+    }
 
     async firebaseSignIn(auth: Auth, email: string, password: string): Promise<void> {
 
@@ -163,59 +169,89 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     async uploadSingleFile(name: string, file: UploadedFile, id: string, type: string, validExtensions: string[] = ['jpg, jpeg, png']): Promise<FileEntity> {
 
+        return new Promise((resolve, reject) => {
+
+            this.uploadQueue.addToQueue(async () => {
+
+                try {
+
+                    const fileEntity = await this.performUpload(name, file, id, type, validExtensions);
+                    resolve(fileEntity);
+
+                } catch (error) {
+
+                    reject(error);
+
+                }
+            });
+        });
+
+
+    }
+
+    private async performUpload(name: string, file: UploadedFile, id: string, type: string, validExtensions: string[]): Promise<FileEntity> {
         try {
+            // Verificar si la imagen esta en caché
+            const cacheKey = `${type}/${id}/${name}`;
+            const cachedFile = CacheAdapter.get<FileEntity>(cacheKey);
+
+            if (cachedFile) return cachedFile;
+
+            // Si no esta en cache la imagén, sigue con el proceso de subir la imagen
+
             const storageFB = getStorage();
             await this.firebaseSignIn(auth, envs.FIREBASE_AUTH_EMAIL, envs.FIREBASE_AUTH_KEY);
 
-            const fileExtension = file.mimetype.split('/').at(1) ?? '';
             const maxFileSize = validators.image.maxFileSize;
 
-            if (!validExtensions.includes(fileExtension)) {
-                throw CustomError.badRequest(invalidImgExtension.message(fileExtension, validExtensions), invalidImgExtension.code);
-            }
-            if ((file.size > maxFileSize)) {
-                throw CustomError.badRequest(invalidImgSize.message(maxFileSize), invalidImgSize.code);
-            }
+            FileValidator.validateFile(file, validExtensions, maxFileSize);
 
-            const fileName = `${name}.${fileExtension}`;
+            const fileName = `${name}.webp`;
             const filePath = `${type}/${id}/${fileName}`;
             const storageRef = ref(storageFB, filePath);
 
-            const metadata = {
-                contentType: fileExtension,
-            };
+            const fileBuffer = Buffer.from(file.data);
+            const compressedBuffer = await ImageCompressor.compressToWebp(fileBuffer)
 
-            await uploadBytesResumable(storageRef, file.data, metadata);
+            const uploadTask = uploadBytesResumable(storageRef, compressedBuffer);
+
+            await new Promise((resolve, reject) => {
+
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        // TODO: Implementar el progreso en tiempo real usando websockets
+                    },
+                    (error) => reject(error),
+                    () => resolve(null)
+                );
+            });
 
             const fileEntity = FileEntity.fromObject({
                 name: fileName,
                 path: filePath,
                 imageUrl: `${envs.WEBSERVICE_URL}/images/${filePath}`,
-                extension: fileExtension,
+                extension: 'webp',
                 size: file.size,
             });
+
+            CacheAdapter.set(cacheKey, fileEntity); // Se almacena la imagen en el caché por 1 hora.
 
             return fileEntity;
 
         } catch (error) {
             throw error;
         }
-
-
     }
 
     async uploadMultipleFiles(files: UploadedFile[], id: string, type: string, validExtensions: string[] = ['jpg, jpeg, png']): Promise<FileEntity[]> {
 
-        let counter = 1;
+        const uploadPromises = files.map((file, index) => {
+            const name = `image-${index + 1}`;
+            return this.uploadSingleFile(name, file, id, type, validExtensions);
+        });
 
-        const fileEntities = await Promise.all(
-            files.map((file) => {
-                const name = `image-${counter}`;
-                counter++;
-
-                return this.uploadSingleFile(name, file, id, type, validExtensions)
-            })
-        );
+        const fileEntities = await Promise.all(uploadPromises);
 
         return fileEntities;
 
