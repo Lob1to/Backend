@@ -132,18 +132,32 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
         for (const file of files) {
 
-            const name = 'image-' + imagesCounter;
-            const type = 'products';
-
-            await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
-
-            const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
+            const productPicture = await this.uploadProductPicture(file, id, imagesCounter, validExtensions);
 
             imagesCounter++;
             images.push(productPicture);
         }
 
         return images;
+
+    }
+
+    async uploadProductPicture(file: any, id: string, imgNumber: number, validExtensions: string[]): Promise<FileEntity> {
+
+        const name = 'image-' + imgNumber;
+        const type = 'products';
+
+        if (!isValidObjectId(id)) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        const product = await ProductModel.findById(id);
+
+        if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
+
+        const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
+
+        return FileEntity.fromObject(productPicture);
 
     }
 

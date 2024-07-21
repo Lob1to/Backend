@@ -26,6 +26,11 @@ export class FileUploadRepositoryImpl implements FileUploadRepository {
         return this.datasource.uploadProductPictures(files, id, validExtensions);
     }
 
+    uploadProductPicture(file: any, id: string, imgNumber: number, validExtensions: string[]): Promise<FileEntity> {
+
+        return this.datasource.uploadProductPicture(file, id, imgNumber, validExtensions);
+    }
+
     uploadSingleFile(name: string, file: any, userId: string, type: string, validExtensions: string[]): Promise<FileEntity> {
 
         return this.datasource.uploadSingleFile(name, file, userId, type, validExtensions);

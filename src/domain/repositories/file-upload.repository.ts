@@ -13,6 +13,12 @@ export abstract class FileUploadRepository {
         id: string,
         validExtensions: string[]): Promise<FileEntity[]>
 
+    abstract uploadProductPicture(
+        file: any,
+        id: string,
+        imgNumber: number,
+        validExtensions: string[]): Promise<FileEntity>
+
     abstract uploadSingleFile(
         name: string,
         file: any,

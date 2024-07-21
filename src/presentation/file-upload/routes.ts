@@ -31,7 +31,7 @@ export class FileUploadRoutes {
 
         router.post('/single/:type/:id', [TypeMiddleware.validTypes(['users', 'products']), FileUploadMiddleware.containFiles], controller.uploadSingleFile);
         router.post('/profile-picture', [FileUploadMiddleware.containFiles], controller.uploadUserProfilePicture);
-        router.post('/product-pictures/:id', [FileUploadMiddleware.containFiles], controller.uploadProductPictures);
+        router.post('/product-picture/:id/:img', [FileUploadMiddleware.containFiles], controller.uploadProductPicture);
         router.delete('/products/:id/delete/:img', controller.deleteProductImage);
         // router.post('/multiple/:type', [TypeMiddleware.validTypes(['users', 'products'])], controller.uploadMultipleFiles);
 

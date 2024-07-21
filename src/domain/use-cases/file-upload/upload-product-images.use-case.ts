@@ -4,18 +4,12 @@ import { FileUploadRepository, LogRepository, ProductsRepository } from "../../r
 import { CustomError } from "../../errors/custom-error";
 import { CreateLog } from "../logs/create-log.use-case";
 import { sharedErrors } from "../../../config";
-import { UpdateProductDto } from "../../dtos";
-import { UpdateProduct } from "../products/update-product.use-case";
+import { UploadProductImage } from "./upload-product-image.use-case";
 
 interface UploadProductImagesUseCase {
 
     execute(files: UploadedFile[], id: string, validExtensions: string[]): Promise<FileEntity[]>;
 
-}
-
-interface ImageOptions {
-    image: number,
-    url: string,
 }
 
 const { unknownError } = sharedErrors;
@@ -31,27 +25,14 @@ export class UploadProductImages implements UploadProductImagesUseCase {
     async execute(files: UploadedFile[], id: string, validExtensions: string[] = ['jpg', 'jpeg', 'png']): Promise<FileEntity[]> {
 
         try {
+            let filesUploaded: FileEntity[] = [];
 
-            const filesUploaded = await this.fileUploadRepository.uploadProductPictures(files, id, validExtensions);
-            let images: ImageOptions[] = [];
+            for (let i = 0; i < files.length; i++) {
 
-            for (let i = 0; i < filesUploaded.length; i++) {
-                images.push({
-                    image: i + 1,
-                    url: filesUploaded[i].imageUrl,
-                });
+                const fileUploaded = await new UploadProductImage(this.fileUploadRepository, this.productsRepository, this.logRepository).execute(files[i], id, i + 1, validExtensions);
+
+                filesUploaded.push(fileUploaded);
             }
-
-            const [error, errorCode, updateDto] = UpdateProductDto.create({
-                id,
-                images: images,
-            });
-
-            if (error) throw CustomError.badRequest(error, errorCode!);
-
-            const updatedProduct = await new UpdateProduct(this.productsRepository, this.logRepository).execute(updateDto!);
-
-            if (!updatedProduct) throw Error('El producto no se ha actualizado');
 
             return filesUploaded;
 

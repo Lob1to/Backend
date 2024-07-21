@@ -43,6 +43,7 @@ export * from './coupons/check-coupon.use-case';
 export * from './file-upload/upload-multiple-files.use-case';
 export * from './file-upload/upload-single-file.use-case';
 export * from './file-upload/upload-product-images.use-case';
+export * from './file-upload/upload-product-image.use-case';
 export * from './file-upload/upload-profile-picture.use-case';
 export * from './file-upload/delete-product-image.use-case';
 

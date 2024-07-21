@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import { UploadProfilePicture, UploadSingleFile, UploadMultipleFiles, FileUploadRepository, LogRepository, UploadProductImages, CustomError, ProductsRepository, AuthRepository, DeleteProductImage } from "../../domain";
+import { UploadProfilePicture, UploadSingleFile, UploadMultipleFiles, FileUploadRepository, LogRepository, UploadProductImages, CustomError, ProductsRepository, AuthRepository, DeleteProductImage, UploadProductImage } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 import { fileUploadErrors, sharedErrors } from "../../config";
 
-const { missingImgName, tooManyFiles } = fileUploadErrors;
+const { missingImgName, tooManyFiles, invalidImgName } = fileUploadErrors;
 const { missingId, invalidId } = sharedErrors;
 
 export class FileUploadController {
@@ -34,16 +34,17 @@ export class FileUploadController {
 
     }
 
-    uploadProductPictures = (req: Request, res: Response) => {
+    uploadProductPicture = (req: Request, res: Response) => {
 
         try {
 
-            const files = req.body.files as UploadedFile[];
-            if (files.length > 5) return ResponsesHandler.sendErrorResponse(res, 400, tooManyFiles.message, tooManyFiles.code);
+            const file = req.body.files[0] as UploadedFile;
             const productId = req.params.id;
+            const imgNumber = +req.params.img;
+            if (isNaN(imgNumber)) return ResponsesHandler.sendErrorResponse(res, 400, invalidImgName.message, invalidImgName.code);
 
-            new UploadProductImages(this.fileUploadRepository, this.productsRepository, this.logRepository).execute(files, productId)
-                .then(files => ResponsesHandler.sendSuccessResponse(res, `Imagenes del producto con ID: ${productId} subidas correctamente`, files)
+            new UploadProductImage(this.fileUploadRepository, this.productsRepository, this.logRepository).execute(file, productId, imgNumber)
+                .then(file => ResponsesHandler.sendSuccessResponse(res, `Imagen número ${imgNumber} del producto con ID: ${productId} subida correctamente`, file)
                 )
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
