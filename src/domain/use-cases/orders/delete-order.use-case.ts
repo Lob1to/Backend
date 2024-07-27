@@ -1,4 +1,5 @@
 import { CreateLog, CustomError } from "../..";
+import { sharedErrors } from "../../../config";
 import { LogSeverityLevel, OrderEntity } from "../../entities";
 import { OrderRepository, LogRepository } from "../../repositories";
 
@@ -7,6 +8,8 @@ interface DeleteOrderUseCase {
     execute(id: string): Promise<OrderEntity>
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class DeleteOrder implements DeleteOrderUseCase {
 
@@ -34,7 +37,7 @@ export class DeleteOrder implements DeleteOrderUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
     }

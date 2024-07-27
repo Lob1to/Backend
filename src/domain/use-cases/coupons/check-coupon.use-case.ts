@@ -1,3 +1,4 @@
+import { sharedErrors } from "../../../config";
 import { CheckCouponDto } from "../../dtos";
 import { LogSeverityLevel } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
@@ -9,6 +10,8 @@ interface CheckCouponUseCase {
     execute(checkCouponDto: CheckCouponDto): Promise<void>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class CheckCoupon implements CheckCouponUseCase {
 
@@ -33,7 +36,7 @@ export class CheckCoupon implements CheckCouponUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
     }

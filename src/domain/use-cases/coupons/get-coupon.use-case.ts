@@ -1,3 +1,4 @@
+import { sharedErrors } from "../../../config";
 import { CouponEntity, LogSeverityLevel } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { CouponsRepository, LogRepository } from "../../repositories";
@@ -7,6 +8,8 @@ import { CreateLog } from "../logs/create-log.use-case";
 interface GetCouponUseCase {
     execute(id: string): Promise<CouponEntity>;
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetCoupon implements GetCouponUseCase {
 
@@ -34,7 +37,7 @@ export class GetCoupon implements GetCouponUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
 

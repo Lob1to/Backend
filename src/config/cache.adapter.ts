@@ -16,6 +16,11 @@ export class CacheAdapter {
         return this.cache.del(key);
     }
 
+    static delByPattern(pattern: string): void {
+        const keys = this.cache.keys().filter(key => key.startsWith(pattern));
+        keys.forEach(key => this.cache.del(key));
+    }
+
     static flush(): void {
         this.cache.flushAll();
     }

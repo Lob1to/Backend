@@ -1,3 +1,4 @@
+import { sharedErrors } from "../../../config";
 import { GetCouponsDto, PaginationDto } from "../../dtos";
 import { CouponEntity, LogSeverityLevel } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
@@ -8,6 +9,8 @@ import { CreateLog } from "../logs/create-log.use-case";
 interface GetCouponsUseCase {
     execute(paginationDto: PaginationDto, getCouponsDto: GetCouponsDto): Promise<{ [key: string]: any | CouponEntity[] }>;
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetCoupons implements GetCouponsUseCase {
 
@@ -35,7 +38,7 @@ export class GetCoupons implements GetCouponsUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
 

@@ -1,4 +1,5 @@
 import { CategoriesRepository, CategoryEntity, CreateCategoryDto, CreateLog, CustomError, LogRepository, LogSeverityLevel } from "../../";
+import { sharedErrors } from "../../../config";
 
 
 interface CreateCategoryUseCase {
@@ -6,6 +7,8 @@ interface CreateCategoryUseCase {
     execute(createDto: CreateCategoryDto): Promise<CategoryEntity>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class CreateCategory implements CreateCategoryUseCase {
 
@@ -33,7 +36,7 @@ export class CreateCategory implements CreateCategoryUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
 

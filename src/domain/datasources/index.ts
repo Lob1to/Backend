@@ -9,3 +9,5 @@ export * from './file-upload.datasource';
 export * from './get-image.datasource';
 export * from './order.datasource';
 export * from './coupons.datasource';
+export * from './variant-types.datasource';
+export * from './variants.datasource';

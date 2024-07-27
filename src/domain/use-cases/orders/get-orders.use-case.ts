@@ -1,4 +1,5 @@
 import { CreateLog, CustomError, LogRepository, OrderRepository, PaginationDto } from "../..";
+import { sharedErrors } from "../../../config";
 import { LogSeverityLevel, OrderEntity } from "../../entities";
 
 interface GetOrdersUseCase {
@@ -6,6 +7,8 @@ interface GetOrdersUseCase {
     execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | OrderEntity[] }>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetOrders implements GetOrdersUseCase {
 
@@ -32,7 +35,7 @@ export class GetOrders implements GetOrdersUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
 

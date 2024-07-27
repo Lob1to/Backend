@@ -15,6 +15,18 @@ export * from './subcategories/get-subcategories.use-case';
 export * from './subcategories/update-subcategory.use-case';
 export * from './subcategories/delete-subcategory.use-case';
 
+export * from './variant-types/create-variant-type.use-case';
+export * from './variant-types/get-variant-type.use-case';
+export * from './variant-types/get-variant-types.use-case';
+export * from './variant-types/update-variant-type.use-case';
+export * from './variant-types/delete-variant-type.use-case';
+
+export * from './variants/create-variant.use-case';
+export * from './variants/get-variant.use-case';
+export * from './variants/get-variants.use-case';
+export * from './variants/update-variant.use-case';
+export * from './variants/delete-variant.use-case';
+
 export * from './products/create-product.use-case';
 export * from './products/get-products.use-case';
 export * from './products/get-product-by-id.use-case';

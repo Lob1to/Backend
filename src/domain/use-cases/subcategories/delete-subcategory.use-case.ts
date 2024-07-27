@@ -1,10 +1,13 @@
 import { CreateLog, CustomError, LogRepository, SubcategoriesRepository, LogSeverityLevel, SubcategoryEntity } from "../../";
+import { sharedErrors } from "../../../config";
 
 interface DeleteSubcategoryUseCase {
 
     execute(id: string): Promise<SubcategoryEntity>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class DeleteSubcategory implements DeleteSubcategoryUseCase {
 
@@ -33,7 +36,7 @@ export class DeleteSubcategory implements DeleteSubcategoryUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
 

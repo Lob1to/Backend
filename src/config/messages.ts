@@ -201,6 +201,80 @@ export const subcategoryErrors = {
     },
 }
 
+export const variantTypesErrors = {
+
+    variantTypeAlreadyExist: {
+        message: 'El tipo de variante ya existe en la base de datos',
+        code: 'variant-type-already-exist',
+    },
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre del tipo de variante',
+        code: 'missing-name',
+    },
+
+    missingType: {
+        message: 'No se ha proporcionado el tipo de variante',
+        code: 'missing-type',
+    },
+
+    invalidName: {
+        message: 'El nombre del tipo de variante no es válido',
+        code: 'invalid-name',
+    },
+
+    invalidType: {
+        message: 'El tipo de variante no es válido',
+        code: 'invalid-type',
+    },
+
+    variantTypeNotFound: {
+        message: 'El tipo de variante no existe en la base de datos',
+        code: 'variant-type-not-found',
+    }
+
+}
+
+export const variantsErrors = {
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre de la variante',
+        code: 'missing-name',
+    },
+
+    missingStock: {
+        message: 'No se ha proporcionado el stock de la variante',
+        code: 'missing-stock',
+    },
+
+    missingVariantType: {
+        message: 'No se ha proporcionado el tipo de variante de la variante',
+        code: 'missing-variant-type',
+    },
+
+    invalidStock: {
+        message: 'El stock de la variante no es válido',
+        code: 'invalid-stock',
+    },
+
+    variantAlreadyExist: {
+        message: 'La variante ya existe en la base de datos',
+        code: 'variant-already-exist',
+    },
+
+    variantNotFound: {
+        message: 'La variante no existe en la base de datos',
+        code: 'variant-not-found',
+    },
+
+    invalidVariantTypeId: {
+        message: 'La ID del tipo de variante proporcionada no es válida',
+        code: 'invalid-variant-type-id',
+    }
+
+
+}
+
 export const productsErrors = {
 
     missingName: {

@@ -1,5 +1,5 @@
 import { CustomError, FileEntity, FileUploadDatasource } from "../../../domain";
-import { UploadQueue, FileValidator, CacheAdapter, fileUploadErrors, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor } from "../../../config";
+import { UploadQueue, FileValidator, CacheAdapter, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor, fileUploadErrors } from "../../../config";
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { UploadedFile } from "express-fileupload";
@@ -7,6 +7,7 @@ import { isValidObjectId } from "mongoose";
 import { ProductModel, UserModel } from "../../../data/mongo";
 
 const { userNotFound } = authErrors;
+const { invalidImgName } = fileUploadErrors;
 const { productNotFound } = productsErrors;
 const { unauthorized } = sharedErrors;
 
@@ -49,7 +50,6 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
             return !!image;
 
         } catch (error) {
-
             return false;
         }
 
@@ -78,14 +78,17 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     }
 
-    async deleteProductImage(type: string, imgName: string, id: string): Promise<void> {
+    async deleteProductImage(type: string = 'products', imgName: string, id: string): Promise<void> {
 
         try {
             const product = await ProductModel.findById(id);
             const imageName = imgName.split('.')[0];
 
             if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
-            await this.checkIfImageExistsAndDelete(type, imageName, ['png', 'jpg', 'jpeg'], id);
+            await this.checkIfImageExistsAndDelete(type, imageName, id);
+
+            CacheAdapter.delByPattern(`products_list_`);
+
 
         } catch (error) {
             throw error;
@@ -93,14 +96,13 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     }
 
-    async checkIfImageExistsAndDelete(type: string, name: string, validExtensions: string[], id: string): Promise<void> {
+    async checkIfImageExistsAndDelete(type: string, name: string, id: string): Promise<void> {
+        const img = `${name}.webp`;
 
-        for (let i = 0; i < validExtensions.length; i++) {
-            const img = `${name}.${validExtensions[i]}`;
+        const fileExists = await this.fileExists(type, img, id);
 
-            const file = await this.fileExists(type, img, id);
-
-            if (file) await this.deleteFile(type, img, id);
+        if (fileExists) {
+            await this.deleteFile(type, img, id);
         }
 
     }
@@ -116,7 +118,7 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
         if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
 
-        await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
+        await this.checkIfImageExistsAndDelete(type, name, id);
 
         const profilePicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
 
@@ -152,6 +154,7 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
         const name = 'image-' + imgNumber;
         const type = 'products';
+        if (imgNumber > 5) throw CustomError.badRequest(invalidImgName.message, invalidImgName.code);
 
         if (!isValidObjectId(id)) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
 
@@ -159,7 +162,7 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
         if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
 
-        await this.checkIfImageExistsAndDelete(type, name, validExtensions, id);
+        await this.checkIfImageExistsAndDelete(type, name, id);
 
         const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
 
@@ -174,12 +177,10 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
             this.uploadQueue.addToQueue(async () => {
 
                 try {
-
                     const fileEntity = await this.performUpload(name, file, id, type, validExtensions);
                     resolve(fileEntity);
 
                 } catch (error) {
-
                     reject(error);
 
                 }
@@ -191,11 +192,6 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     private async performUpload(name: string, file: UploadedFile, id: string, type: string, validExtensions: string[]): Promise<FileEntity> {
         try {
-            // Verificar si la imagen esta en caché
-            const cacheKey = `${type}/${id}/${name}`;
-            const cachedFile = CacheAdapter.get<FileEntity>(cacheKey);
-
-            if (cachedFile) return cachedFile;
 
             // Si no esta en cache la imagén, sigue con el proceso de subir la imagen
 
@@ -235,7 +231,10 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
                 size: file.size,
             });
 
-            CacheAdapter.set(cacheKey, fileEntity); // Se almacena la imagen en el caché por 1 hora.
+            const imageCacheKey = `image_${type}_${id}_${fileName}`;
+
+            CacheAdapter.del(imageCacheKey)
+            CacheAdapter.delByPattern(`${type}_`);
 
             return fileEntity;
 

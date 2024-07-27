@@ -29,6 +29,6 @@ variantTypeSchema.set('toJSON', {
     }
 });
 
-export const VariantType = mongoose.model<IVariantType>('VariantType', variantTypeSchema);
+export const VariantTypeModel = mongoose.model<IVariantType>('VariantType', variantTypeSchema);
 
 

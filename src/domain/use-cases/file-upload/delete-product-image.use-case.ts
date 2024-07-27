@@ -28,13 +28,12 @@ export class DeleteProductImage implements DeleteProductImageUseCase {
             if (!imgName.split('.')[0].includes('image-')) throw CustomError.badRequest(invalidImgName.message, invalidImgName.code);
 
             const imageNumber = imgName.split('.')[0].split('-')[1];
-            const imageExtension = imgName.split('.')[1];
 
             await this.fileUploadRepository.deleteProductImage(type, imgName, productId);
 
             const image: { [key: string]: any } = {
                 image: imageNumber,
-                url: `${envs.WEBSERVICE_URL}/images/${type}/${productId}/${imgName}.${imageExtension}`,
+                url: `${envs.WEBSERVICE_URL}/images/${type}/${productId}/${imgName}`,
             };
 
             const product = await new GetProductById(this.productsRepository, this.logRepository).execute(productId);
@@ -48,7 +47,6 @@ export class DeleteProductImage implements DeleteProductImageUseCase {
                 }
             }
 
-            newImages.push(image);
             newImages.sort((a, b) => a.image - b.image);
 
             const [error, errorCode, updateDto] = UpdateProductDto.create({

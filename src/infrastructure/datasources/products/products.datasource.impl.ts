@@ -1,7 +1,7 @@
 import mongoose, { MongooseError } from "mongoose";
 import { ProductEntity, ProductsDatasource, CreateProductDto, PaginationDto, GetProductsDto, UpdateProductDto, CustomError } from "../../../domain";
 import { CategoryModel, ProductModel, SubcategoryModel } from "../../../data/mongo";
-import { categoryErrors, productsErrors, sharedErrors, subcategoryErrors } from "../../../config";
+import { CacheAdapter, categoryErrors, productsErrors, sharedErrors, subcategoryErrors } from "../../../config";
 
 const { productAlreadyExist, productNotFound, invalidPriceParameters, invalidCategoryId, invalidSubcategoryId } = productsErrors;
 const { categoryNotFound } = categoryErrors;
@@ -40,15 +40,22 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
 
     }
+
     async getProducts(paginationDto: PaginationDto, getProductsDto: GetProductsDto): Promise<{ [key: string]: any | ProductEntity[] }> {
+
+        const cacheKey = `products_list_${JSON.stringify(paginationDto)}_${JSON.stringify(getProductsDto.values)}`;
+        const cachedProducts = CacheAdapter.get(cacheKey);
+
+        if (cachedProducts) {
+            return cachedProducts;
+        }
 
         const { page, limit } = paginationDto;
         const { categoryId, subcategoryId } = getProductsDto;
         const { maxPrice, minPrice, ...getProductsDtoValues } = getProductsDto.values;
 
 
-        let query: { [key: string]: any } = {};
-        query = { ...getProductsDtoValues };
+        let query: { [key: string]: any } = { ...getProductsDtoValues };
 
         if (categoryId) {
             if (!mongoose.Types.ObjectId.isValid(categoryId)) throw CustomError.badRequest(invalidId.message, invalidId.code);
@@ -83,7 +90,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
                 return `${key}=${value}`;
             })}` : '';
 
-            const returnJson = {
+            const result = {
                 next: `/api/products/?page=${page + 1}&limit=${limit}${querystring}`,
                 prev: (page - 1 > 0) ? `/api/categories/?page=${(page - 1)}&limit=${limit}${querystring}` : null,
                 page,
@@ -93,7 +100,11 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
                 items,
             };
 
-            return returnJson;
+            // Almacenar en cache el producto.
+
+            CacheAdapter.set(cacheKey, result);
+
+            return result;
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
@@ -110,7 +121,9 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
             const product = await ProductModel.findById(id);
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
-            return ProductEntity.fromObject(product);
+            const productEntity = ProductEntity.fromObject(product)
+
+            return productEntity;
 
         } catch (error) {
             if (error instanceof MongooseError) throw error.message;
@@ -151,6 +164,8 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
             const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
             if (!updatedProduct) throw CustomError.notFound(productNotFound.message, productNotFound.code);
+
+            CacheAdapter.delByPattern('products_list_');
 
             return ProductEntity.fromObject(updatedProduct);
 
