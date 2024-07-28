@@ -1,119 +1,183 @@
+export const users = [
+    {
+        name: "John Doe",
+        email: "john@example.com",
+        emailValidated: true,
+        password: "hashedpassword123",
+        role: "USER_ROLE",
+        img: "john.jpg"
+    },
+    {
+        name: "Admin User",
+        email: "admin@example.com",
+        emailValidated: true,
+        password: "hashedpassword456",
+        role: "ADMIN_ROLE",
+        img: "admin.jpg"
+    },
+    {
+        name: "Jane Smith",
+        email: "jane@example.com",
+        emailValidated: true,
+        password: "hashedpassword789",
+        role: "USER_ROLE",
+        img: "jane.jpg"
+    },
+    {
+        name: "Bob Johnson",
+        email: "bob@example.com",
+        emailValidated: false,
+        password: "hashedpassword101",
+        role: "USER_ROLE",
+        img: "bob.jpg"
+    }
+];
+
 export const categories = [
-    { name: 'Decoración', description: 'Elementos decorativos para anchetas' },
-    { name: 'Comida', description: 'Elementos comestibles para anchetas' },
-    { name: 'Bebidas', description: 'Bebidas para anchetas' },
-    { name: 'Mensajes', description: 'Tarjetas y mensajes personalizados' }
+    { name: "Decoración", description: "Elementos decorativos para anchetas" },
+    { name: "Comida", description: "Elementos comestibles para anchetas" },
+    { name: "Bebidas", description: "Bebidas para anchetas" },
+    { name: "Mensajes", description: "Tarjetas y mensajes personalizados" },
+    { name: "Flores", description: "Arreglos florales para anchetas" },
+    { name: "Regalos", description: "Artículos de regalo para anchetas" },
+    { name: "Dulces", description: "Dulces y golosinas para anchetas" },
+    { name: "Accesorios", description: "Accesorios decorativos para anchetas" }
 ];
 
 export const subcategories = [
-    { name: 'Recipientes', description: 'Recipientes para anchetas' },
-    { name: 'Globos', description: 'Globos decorativos' },
-    { name: 'Chocolates', description: 'Chocolates y bombones' },
-    { name: 'Quesos', description: 'Variedad de quesos' },
-    { name: 'Vinos', description: 'Vinos y espumantes' },
-    { name: 'Tarjetas', description: 'Tarjetas con mensajes personalizados' }
+    { name: "Recipientes", description: "Recipientes para anchetas" },
+    { name: "Globos", description: "Globos decorativos" },
+    { name: "Chocolates", description: "Chocolates y bombones" },
+    { name: "Quesos", description: "Variedad de quesos" },
+    { name: "Vinos", description: "Vinos y espumantes" },
+    { name: "Tarjetas", description: "Tarjetas con mensajes personalizados" },
+    { name: "Rosas", description: "Rosas de diferentes colores" },
+    { name: "Peluches", description: "Peluches de diferentes tamaños" },
+    { name: "Gourmet", description: "Productos gourmet selectos" },
+    { name: "Frutas", description: "Frutas frescas y secas" },
+    { name: "Cintas", description: "Cintas decorativas" },
+    { name: "Licores", description: "Licores premium" }
+];
+
+export const variantTypes = [
+    { name: "Size", type: "string" },
+    { name: "Color", type: "string" },
+    { name: "Material", type: "string" },
+    { name: "Flavor", type: "string" },
+    { name: "Weight", type: "number" },
+    { name: "Quantity", type: "number" }
 ];
 
 export const products = [
     {
-        name: 'Canasta de Madera',
-        description: 'Canasta de madera natural para anchetas',
+        name: "Canasta de Madera",
+        description: "Canasta de madera natural para anchetas",
         price: 32000,
         stock: 10,
-        variants: [],
-        container: { type: 'Canasta', material: 'Madera', color: 'Natural', size: 'Mediana' },
-        contents: [],
-        decorations: [],
-        customized: false,
-        images: ['canasta-madera.jpg'],
-
+        images: [{ image: 1, url: "canasta-madera.jpg" }]
     },
     {
-        name: 'Globos Feliz Cumpleaños',
+        name: "Globos Feliz Cumpleaños",
         description: 'Globos decorativos con mensaje "Feliz Cumpleaños"',
         price: 25000,
         stock: 20,
-        variants: [],
-        container: { type: 'Paquete', material: 'Plástico', color: 'Transparente', size: 'Pequeño' },
-        contents: [{ type: 'Globos', item: 'Globos Feliz Cumpleaños', quantity: 5 }],
-        decorations: [],
-        customized: false,
-        images: ['globos-feliz-cumpleanos.jpg'],
+        images: [{ image: 1, url: "globos-feliz-cumpleanos.jpg" }]
     },
     {
-        name: 'Chocolates Finos Surtidos',
-        description: 'Caja de chocolates finos surtidos',
+        name: "Chocolates Finos Surtidos",
+        description: "Caja de chocolates finos surtidos",
         price: 62000,
         stock: 15,
-        variants: [
-            { price: 62000, stock: 10, size: 'Mediana', color: 'Marrón' },
-            { price: 75000, stock: 5, size: 'Grande', color: 'Marrón' },
-        ],
-        container: { type: 'Caja', material: 'Cartón', color: 'Marrón', size: 'Mediana' },
-        contents: [
-            { type: 'Chocolates', item: 'Trufas de Chocolate', quantity: 8 },
-            { type: 'Chocolates', item: 'Bombones Rellenos', quantity: 10 },
-        ],
-        decorations: [{ type: 'Lazo', color: 'Dorado' }],
-        customized: false,
-        images: ['chocolates-finos-surtidos.jpg'],
+        images: [{ image: 1, url: "chocolates-finos-surtidos.jpg" }]
     },
     {
-        name: 'Tabla de Quesos',
-        description: 'Tabla con variedad de quesos finos',
-        price: 75000,
-        stock: 8,
-        variants: [],
-        container: { type: 'Tabla', material: 'Madera', color: 'Natural', size: 'Grande' },
-        contents: [
-            { type: 'Queso', item: 'Queso Brie', quantity: 1 },
-            { type: 'Queso', item: 'Queso Cheddar', quantity: 1 },
-            { type: 'Queso', item: 'Queso Azul', quantity: 1 },
-        ],
-        decorations: [],
-        customized: false,
-        images: ['tabla-quesos.jpg'],
-    },
-    {
-        name: 'Vino Tinto Reserva',
-        description: 'Botella de vino tinto reserva',
-        price: 50000,
+        name: "Vino Tinto Reserva",
+        description: "Botella de vino tinto reserva",
+        price: 85000,
         stock: 25,
-        variants: [],
-        container: { type: 'Botella', material: 'Vidrio', color: 'Verde', size: 'Estándar' },
-        contents: [{ type: 'Vino', item: 'Vino Tinto Reserva', quantity: 1 }],
-        decorations: [],
-        customized: false,
-        images: ['vino-tinto.jpg'],
+        images: [{ image: 1, url: "vino-tinto-reserva.jpg" }]
     },
     {
-        name: 'Tarjeta de Cumpleaños',
-        description: 'Tarjeta con mensaje personalizado de cumpleaños',
-        price: 12000,
+        name: "Ramo de Rosas Rojas",
+        description: "Hermoso ramo de 12 rosas rojas",
+        price: 70000,
         stock: 30,
-        variants: [],
-        container: { type: 'Sobre', material: 'Papel', color: 'Blanco', size: 'Pequeño' },
-        contents: [{ type: 'Tarjeta', item: 'Tarjeta de Cumpleaños', quantity: 1 }],
-        decorations: [],
-        customized: true,
-        images: ['tarjeta-cumpleanos.jpg'],
+        images: [{ image: 1, url: "ramo-rosas-rojas.jpg" }]
+    },
+    {
+        name: "Peluche Oso Grande",
+        description: "Peluche de oso grande y suave",
+        price: 55000,
+        stock: 18,
+        images: [{ image: 1, url: "peluche-oso-grande.jpg" }]
+    },
+    {
+        name: "Caja Gourmet Deluxe",
+        description: "Caja con selección de productos gourmet",
+        price: 120000,
+        stock: 12,
+        images: [{ image: 1, url: "caja-gourmet-deluxe.jpg" }]
+    },
+    {
+        name: "Tarjeta Personalizada",
+        description: "Tarjeta con mensaje personalizado",
+        price: 15000,
+        stock: 50,
+        images: [{ image: 1, url: "tarjeta-personalizada.jpg" }]
+    }
+];
+
+export const variants = [
+    { price: 32000, stock: 10 },
+    { price: 25000, stock: 20 },
+    { price: 62000, stock: 15 },
+    { price: 85000, stock: 25 },
+    { price: 70000, stock: 30 },
+    { price: 55000, stock: 18 },
+    { price: 120000, stock: 12 },
+    { price: 15000, stock: 50 }
+];
+
+export const coupons = [
+    {
+        couponCode: "SUMMER10",
+        discountType: "percentage",
+        discountAmount: 10,
+        minimumPurchaseAmount: 50000,
+        endDate: new Date("2023-12-31"),
+        status: "active"
+    },
+    {
+        couponCode: "WELCOME20",
+        discountType: "fixed",
+        discountAmount: 20000,
+        minimumPurchaseAmount: 100000,
+        endDate: new Date("2023-12-31"),
+        status: "active"
+    },
+    {
+        couponCode: "FLASH25",
+        discountType: "percentage",
+        discountAmount: 25,
+        minimumPurchaseAmount: 150000,
+        endDate: new Date("2023-08-31"),
+        status: "active"
+    },
+    {
+        couponCode: "FREESHIP",
+        discountType: "fixed",
+        discountAmount: 15000,
+        minimumPurchaseAmount: 80000,
+        endDate: new Date("2023-12-31"),
+        status: "active"
     }
 ];
 
 export const orders = [
-
     {
-        userId: "66834337ae2047ebacf3f54f",
-        items: [
-            {
-                quantity: 1,
-            },
-            {
-                quantity: 1,
-                variant: "Mediana"
-            }
-        ],
-        totalPrice: 94000,
+        orderStatus: "pending",
+        items: [{ quantity: 1 }, { quantity: 2 }],
+        totalPrice: 119000,
         shippingAddress: {
             phone: "+573001234567",
             street: "Calle 123 #45-67",
@@ -124,24 +188,16 @@ export const orders = [
         },
         paymentMethod: "creditCard",
         orderTotal: {
-            subtotal: 94000,
+            subtotal: 119000,
             discount: 0,
-            total: 94000
+            total: 119000
         },
-        orderStatus: "pending",
         trackingUrl: "https://tracking.example.com/order123"
     },
     {
-        userId: "66834337ae2047ebacf3f54f",
-        items: [
-            {
-                quantity: 2,
-            },
-            {
-                quantity: 1,
-            }
-        ],
-        totalPrice: 175000,
+        orderStatus: "processing",
+        items: [{ quantity: 1 }, { quantity: 1 }],
+        totalPrice: 87000,
         shippingAddress: {
             phone: "+573009876543",
             street: "Carrera 45 #67-89",
@@ -152,11 +208,30 @@ export const orders = [
         },
         paymentMethod: "pse",
         orderTotal: {
-            subtotal: 175000,
-            discount: 10000,
-            total: 165000
+            subtotal: 87000,
+            discount: 8700,
+            total: 78300
         },
-        orderStatus: "processing",
         trackingUrl: "https://tracking.example.com/order456"
+    },
+    {
+        orderStatus: "shipped",
+        items: [{ quantity: 1 }, { quantity: 1 }, { quantity: 1 }],
+        totalPrice: 167000,
+        shippingAddress: {
+            phone: "+573005555555",
+            street: "Avenida 78 #90-12",
+            city: "Cali",
+            state: "Valle del Cauca",
+            postalCode: "760001",
+            country: "Colombia"
+        },
+        paymentMethod: "creditCard",
+        orderTotal: {
+            subtotal: 167000,
+            discount: 16700,
+            total: 150300
+        },
+        trackingUrl: "https://tracking.example.com/order789"
     }
 ];
