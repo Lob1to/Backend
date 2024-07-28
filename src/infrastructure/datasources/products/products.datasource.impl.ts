@@ -79,7 +79,18 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
                 .skip((page - 1) * limit)
                 .limit(limit)
                 .populate('categoryId')
-                .populate('subcategoryId');
+                .populate('subcategoryId')
+                .populate({
+                    path: 'variantId',
+                    model: 'Variant',
+                    select: 'id price stock variantType',
+                    populate: {
+                        path: 'variantType',
+                        model: 'VariantType',
+                        select: 'id name'
+                    }
+                })
+                .populate('variantTypeId', 'id name');
 
             const items = products.map(ProductEntity.fromObject);
 
