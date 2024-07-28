@@ -1,12 +1,11 @@
-import { variantsErrors, sharedErrors } from "../../../config";
+import { variantsErrors } from "../../../config";
 
-const { invalidStock } = variantsErrors;
-const { noFieldToUpdate } = sharedErrors;
+const { invalidStock, invalidPrice } = variantsErrors;
 
 export class GetVariantsDto {
 
     private constructor(
-        public name?: string,
+        public price?: number,
         public stock?: number,
         public variantType?: string,
     ) { }
@@ -14,10 +13,9 @@ export class GetVariantsDto {
     get values() {
         const returnObj: { [key: string]: any } = {};
 
-        if (this.name) returnObj.name = this.name;
+        if (this.price) returnObj.name = this.price;
         if (this.stock) returnObj.stock = this.stock;
         if (this.variantType) returnObj.variantType = this.variantType;
-        if (Object.keys(returnObj).length === 0) return [noFieldToUpdate.message, noFieldToUpdate.code];
 
         return returnObj;
 
@@ -25,11 +23,12 @@ export class GetVariantsDto {
 
     static create(props: { [key: string]: any }): [string?, string?, GetVariantsDto?] {
 
-        const { name, stock, variantType } = props;
+        const { price, stock, variantType } = props;
 
+        if (price && price < 0) return [invalidPrice.message, invalidPrice.code];
         if (stock && stock < 0) return [invalidStock.message, invalidStock.code];
 
-        return [undefined, undefined, new GetVariantsDto(name, stock, variantType)];
+        return [undefined, undefined, new GetVariantsDto(price, stock, variantType)];
 
     }
 

@@ -237,9 +237,9 @@ export const variantTypesErrors = {
 
 export const variantsErrors = {
 
-    missingName: {
-        message: 'No se ha proporcionado el nombre de la variante',
-        code: 'missing-name',
+    missingPrice: {
+        message: 'No se ha proporcionado el precio de la variante',
+        code: 'missing-price',
     },
 
     missingStock: {
@@ -255,6 +255,11 @@ export const variantsErrors = {
     invalidStock: {
         message: 'El stock de la variante no es válido',
         code: 'invalid-stock',
+    },
+
+    invalidPrice: {
+        message: 'El precio de la variante no es válido',
+        code: 'invalid-price',
     },
 
     variantAlreadyExist: {

@@ -16,7 +16,6 @@ export class UpdateVariantTypeDto {
 
         if (this.name) returnObj.name = this.name;
         if (this.type) returnObj.type = this.type;
-        if (Object.keys(returnObj).length === 0) return [noFieldToUpdate.message, noFieldToUpdate.code];
 
         return returnObj;
     }
@@ -27,6 +26,7 @@ export class UpdateVariantTypeDto {
 
         if (name && typeof name !== 'string') return [invalidName.message, invalidName.code];
         if (type && typeof type !== 'string') return [invalidType.message, invalidType.code];
+        if (!name && !type) return [noFieldToUpdate.message, noFieldToUpdate.code];
 
         return [undefined, undefined, new UpdateVariantTypeDto(id, name, type)];
 

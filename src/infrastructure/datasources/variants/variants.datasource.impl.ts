@@ -4,7 +4,7 @@ import { VariantsDatasource } from "../../../domain/datasources/";
 import { VariantModel, VariantTypeModel } from "../../../data/mongo";
 import { sharedErrors, variantTypesErrors, variantsErrors } from "../../../config";
 
-const { variantAlreadyExist, invalidVariantTypeId, variantNotFound } = variantsErrors;
+const { invalidVariantTypeId, variantNotFound } = variantsErrors;
 const { variantTypeNotFound } = variantTypesErrors;
 const { invalidId } = sharedErrors;
 
@@ -12,17 +12,16 @@ export class VariantsDatasourceImpl implements VariantsDatasource {
 
     async createVariant(createVariantDto: CreateVariantDto): Promise<VariantEntity> {
         try {
-            const { name, variantType } = createVariantDto;
+            const { variantType } = createVariantDto;
 
             if (variantType && !isValidObjectId(variantType)) throw CustomError.badRequest(invalidVariantTypeId.message, invalidVariantTypeId.code);
 
             const variantTypeExists = !!await VariantTypeModel.findById(variantType);
             if (!variantTypeExists) throw CustomError.badRequest(variantTypeNotFound.message, variantTypeNotFound.code);
 
-            const variant = await VariantModel.findOne({ name });
-            if (variant) throw CustomError.badRequest(variantAlreadyExist.message, variantAlreadyExist.code);
 
-            const createdVariant = await VariantModel.create(createVariantDto);
+            const createdVariant = new VariantModel(createVariantDto);
+            await createdVariant.save();
 
             const variantEntity = VariantEntity.fromObject(createdVariant);
             return variantEntity;
@@ -39,7 +38,7 @@ export class VariantsDatasourceImpl implements VariantsDatasource {
         try {
 
             const { page, limit } = paginationDto;
-            const { values } = getVariantsDto;
+            const values = getVariantsDto.values;
 
             const query = { ...values };
 
@@ -108,8 +107,8 @@ export class VariantsDatasourceImpl implements VariantsDatasource {
             if (!isValidObjectId(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
             if (variantType && !isValidObjectId(variantType)) throw CustomError.badRequest(invalidVariantTypeId.message, invalidVariantTypeId.code);
 
-            const variantTypeExists = !!await VariantTypeModel.findById(variantType);
-            if (!variantTypeExists) throw CustomError.badRequest(variantTypeNotFound.message, variantTypeNotFound.code);
+            const variantTypeExists = await VariantTypeModel.findById(variantType);
+            if (variantType && !variantTypeExists) throw CustomError.badRequest(variantTypeNotFound.message, variantTypeNotFound.code);
 
             const oldVariant = await VariantModel.findById(id);
             if (!oldVariant) throw CustomError.notFound(variantNotFound.message, variantNotFound.code);

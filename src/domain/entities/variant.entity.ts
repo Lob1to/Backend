@@ -3,16 +3,16 @@ export class VariantEntity {
 
     constructor(
         public id: string,
-        public name: string,
+        public price: number,
         public stock: number,
         public variantType: string,
     ) { }
 
     static fromObject(obj: { [key: string]: any }): VariantEntity {
 
-        const { id, name, stock, variantType } = obj;
+        const { id, price, stock, variantType } = obj;
 
-        return new VariantEntity(id, name, stock, variantType);
+        return new VariantEntity(id, price, stock, variantType);
 
     }
 

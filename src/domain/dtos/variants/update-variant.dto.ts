@@ -1,6 +1,6 @@
 import { sharedErrors, variantsErrors } from "../../../config";
 
-const { invalidStock } = variantsErrors;
+const { invalidStock, invalidPrice } = variantsErrors;
 const { noFieldToUpdate } = sharedErrors;
 
 export class UpdateVariantDto {
@@ -8,7 +8,7 @@ export class UpdateVariantDto {
     private constructor(
 
         public id: string,
-        public name?: string,
+        public price?: number,
         public stock?: number,
         public variantType?: string,
 
@@ -17,10 +17,9 @@ export class UpdateVariantDto {
     get values() {
         const returnObj: { [key: string]: any } = {};
 
-        if (this.name) returnObj.name = this.name;
+        if (this.price) returnObj.price = this.price;
         if (this.stock) returnObj.stock = this.stock;
         if (this.variantType) returnObj.variantType = this.variantType;
-        if (Object.keys(returnObj).length === 0) return [noFieldToUpdate.message, noFieldToUpdate.code];
 
         return returnObj;
 
@@ -28,11 +27,13 @@ export class UpdateVariantDto {
 
     static create(props: { [key: string]: any }): [string?, string?, UpdateVariantDto?] {
 
-        const { id, name, stock, variantType } = props;
+        const { id, price, stock, variantType } = props;
 
+        if (price && price < 0) return [invalidPrice.message, invalidPrice.code];
         if (stock && stock < 0) return [invalidStock.message, invalidStock.code];
+        if (!price && !stock && !variantType) return [noFieldToUpdate.message, noFieldToUpdate.code];
 
-        return [undefined, undefined, new UpdateVariantDto(id, name, stock, variantType)];
+        return [undefined, undefined, new UpdateVariantDto(id, price, stock, variantType)];
 
     }
 
