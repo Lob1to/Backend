@@ -26,6 +26,9 @@ export class ValidateToken implements ValidateTokenUseCase {
             const { email } = payload as { email: string };
             if (!email) throw CustomError.unauthorized(invalidTokenData.message, invalidTokenData.code);
 
+            const { tokenType } = payload as { tokenType: string };
+            if (tokenType !== 'validation-token') throw CustomError.unauthorized(invalidTokenData.message, invalidTokenData.code);
+
             const user = await UserModel.findOne({ email });
             if (!user) throw CustomError.internalServer(userNotFound.message, userNotFound.code);
 

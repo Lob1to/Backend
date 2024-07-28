@@ -87,7 +87,7 @@ export const authErrors = {
     },
 
     invalidToken: {
-        message: 'El token ingresado no es valido',
+        message: 'El token proporcionado no es valido',
         code: 'invalid-token',
     },
 

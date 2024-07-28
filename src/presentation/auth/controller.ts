@@ -16,6 +16,7 @@ import {
 
 } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
+import { RefreshToken } from "../../domain/use-cases/auth/refresh-token.use-case";
 
 const { missingToken, missingId, missingEmail, invalidEmail } = authErrors;
 
@@ -106,7 +107,7 @@ export class AuthController {
         try {
 
             new DeleteUser(this.authRepository, this.logRepository).execute(id)
-                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido eliminado`, user))
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido eliminado`, { user }))
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
@@ -130,13 +131,14 @@ export class AuthController {
 
             new UpdateUser(this.authRepository, this.logRepository)
                 .execute(updateDto!)
-                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, user))
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, { user }))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
             return ErrorsHandler.handleUnknownError(res);
         }
     };
+
     adminUpdateUser = (req: Request, res: Response) => {
         const id = req.params.id;
 
@@ -153,11 +155,28 @@ export class AuthController {
 
             new UpdateUser(this.authRepository, this.logRepository)
                 .execute(updateDto!)
-                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, user))
+                .then(({ password, ...user }) => ResponsesHandler.sendSuccessResponse(res, `El usuario ${user.name} ha sido actualizado`, { user }))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {
             return ErrorsHandler.handleUnknownError(res);
         }
-    };
+    }
+
+    refreshToken = (req: Request, res: Response) => {
+
+        try {
+            const { token } = req.body;
+
+            if (!token) return ResponsesHandler.sendErrorResponse(res, 400, missingToken.message, missingToken.code);
+
+            new RefreshToken(this.authRepository, this.logRepository).execute(token)
+                .then((token) => ResponsesHandler.sendSuccessResponse(res, `Se ha refrescado el token correctamente`, { token }))
+                .catch((error) => ErrorsHandler.handleErrors(error, res));
+
+        } catch (error) {
+            return ErrorsHandler.handleUnknownError(res);
+        }
+
+    }
 }
