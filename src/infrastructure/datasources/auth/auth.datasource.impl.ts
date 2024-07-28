@@ -1,6 +1,6 @@
 import { AuthDatasource, LoginUserDto, RegisterUserDto, UpdateUserDto, UserEntity, CustomError } from "../../../domain";
 import { UserModel } from "../../../data/mongo/";
-import { authErrors, BcryptAdapter } from "../../../config";
+import { authErrors, BcryptAdapter, JwtAdapter } from "../../../config";
 import mongoose, { MongooseError } from "mongoose";
 
 const {
@@ -9,6 +9,8 @@ const {
     emailAlreadyInUse,
     invalidId,
     userNotFound,
+    invalidToken,
+    tokenGenerationError
 } = authErrors;
 
 export class AuthDatasourceImpl implements AuthDatasource {
@@ -98,6 +100,22 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
             throw error;
         }
+    }
+
+    async refreshToken(refreshToken: string): Promise<string> {
+
+        const payload = await JwtAdapter.validateToken<{ id: string, role: string[], tokenType: string }>(refreshToken);
+        if (!payload) throw CustomError.badRequest(invalidToken.message, invalidToken.code);
+
+        if (payload.tokenType !== 'refresh-token') throw CustomError.badRequest(invalidToken.message, invalidToken.code);
+
+        const user = await UserModel.findById(payload.id);
+        if (!user) throw CustomError.unauthorized(userNotFound.message, userNotFound.code);
+
+        const newAccessToken: string = await JwtAdapter.generateToken({ id: payload.id, role: payload.role, tokenType: 'access-token' }) as string;
+        if (!newAccessToken) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
+
+        return newAccessToken;
     }
 
 }

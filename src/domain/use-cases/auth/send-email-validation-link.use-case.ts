@@ -21,7 +21,8 @@ export class SendEmailValidationLink implements SendEmailValidationLinkUseCase {
         const { tokenGenerationError, sendEmailError } = authErrors;
 
         try {
-            const token = await JwtAdapter.generateToken({ email });
+            const tokenType: string = 'validation-token'
+            const token = await JwtAdapter.generateToken({ email, tokenType });
             if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
             const link = `${this.webServiceUrl}/auth/validate-email/${token}`;

@@ -27,6 +27,10 @@ export class AuthRepositoryImpl implements AuthRepository {
         return this.datasource.updateUser(updateUserDto);
     }
 
+    refreshToken(refreshToken: string): Promise<string> {
+
+        return this.datasource.refreshToken(refreshToken);
+    }
 
 }
 

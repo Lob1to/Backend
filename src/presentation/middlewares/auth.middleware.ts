@@ -28,10 +28,12 @@ export class AuthMiddleware {
 
         try {
 
-            const payload = await JwtAdapter.validateToken<{ id: string }>(token);
+            const payload = await JwtAdapter.validateToken<{ id: string, role: string[], tokenType: string }>(token);
             if (!payload) {
                 return ResponsesHandler.sendErrorResponse(res, 401, invalidToken.message, invalidToken.code);
             }
+
+            if (payload.tokenType !== 'access-token') return ResponsesHandler.sendErrorResponse(res, 401, invalidToken.message, invalidToken.code);
 
             const user = await UserModel.findById(payload!.id);
 
@@ -71,10 +73,12 @@ export class AuthMiddleware {
 
         try {
 
-            const payload = await JwtAdapter.validateToken<{ id: string }>(token);
+            const payload = await JwtAdapter.validateToken<{ id: string, role: string[], tokenType: string }>(token);
             if (!payload) {
                 return ResponsesHandler.sendErrorResponse(res, 401, invalidToken.message, invalidToken.code);
             }
+
+            if (payload.tokenType !== 'access-token') return ResponsesHandler.sendErrorResponse(res, 401, unauthorized.message, unauthorized.code);
 
             const user = await UserModel.findById(payload!.id);
 
