@@ -19,7 +19,7 @@ export class SubcategoriesRoutes {
         const controller = new SubcategoriesController(subcategoriesRepository, logRepository);
 
         router.post('/admin/create', AuthMiddleware.validateAdminRoleWithToken, controller.createSubcategory);
-        router.get('/', AuthMiddleware.validateJWT, controller.getSubcategories);
+        router.get('/', controller.getSubcategories);
         router.put('/admin/update/:id', AuthMiddleware.validateAdminRoleWithToken, controller.updateSubcategory);
         router.delete('/admin/delete/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteSubcategory);
 

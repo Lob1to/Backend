@@ -19,8 +19,8 @@ export class VariantTypesRoutes {
         const controller = new VariantTypesController(variantTypesRepository, logRepository);
 
         router.post('/admin/create', AuthMiddleware.validateAdminRoleWithToken, controller.createVariantType);
-        router.get('/', AuthMiddleware.validateJWT, controller.getVariantTypes);
-        router.get('/:id', AuthMiddleware.validateJWT, controller.getVariantType);
+        router.get('/', controller.getVariantTypes);
+        router.get('/:id', controller.getVariantType);
         router.put('/admin/update/:id', AuthMiddleware.validateAdminRoleWithToken, controller.updateVariantType);
         router.delete('/admin/delete/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteVariantType);
 

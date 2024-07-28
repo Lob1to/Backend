@@ -19,8 +19,8 @@ export class ProductsRoutes {
         const controller = new ProductsController(productsRepository, logRepository);
 
         router.post('/admin/create', AuthMiddleware.validateAdminRoleWithToken, controller.createProduct);
-        router.get('/', AuthMiddleware.validateJWT, controller.getProducts);
-        router.get('/:id', AuthMiddleware.validateJWT, controller.getProductById);
+        router.get('/', controller.getProducts);
+        router.get('/:id', controller.getProductById);
         router.put('/admin/update/:id', AuthMiddleware.validateAdminRoleWithToken, controller.updateProduct);
         router.delete('/admin/delete/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteProduct);
 

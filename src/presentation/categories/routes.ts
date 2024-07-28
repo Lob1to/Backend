@@ -19,7 +19,7 @@ export class CategoriesRoutes {
         const controller = new CategoriesController(categoriesRepository, logRepository);
 
         router.post('/admin/create', AuthMiddleware.validateAdminRoleWithToken, controller.createCategory);
-        router.get('/', AuthMiddleware.validateJWT, controller.getAllCategories);
+        router.get('/', controller.getAllCategories);
         router.put('/admin/update/:id', AuthMiddleware.validateAdminRoleWithToken, controller.updateCategory);
         router.delete('/admin/delete/:id', AuthMiddleware.validateAdminRoleWithToken, controller.deleteCategory);
 
