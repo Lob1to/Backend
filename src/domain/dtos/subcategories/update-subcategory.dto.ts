@@ -22,7 +22,7 @@ export class UpdateSubcategoryDto {
         if (this.name) returnObj.name = this.name;
         if (this.description) returnObj.description = this.description;
         if (this.categoryId) returnObj.categoryId = this.categoryId;
-        if (!returnObj.name && !returnObj.description) throw CustomError.badRequest(noFieldToUpdate.message, noFieldToUpdate.code);
+        if (!returnObj.name && !returnObj.description && !returnObj.categoryId) throw CustomError.badRequest(noFieldToUpdate.message, noFieldToUpdate.code);
 
         return returnObj;
 

@@ -1,10 +1,13 @@
 import { UpdateSubcategoryDto, CreateLog, CustomError, LogRepository, SubcategoriesRepository, LogSeverityLevel, SubcategoryEntity } from "../../";
+import { sharedErrors } from "../../../config";
 
 interface UpdateSubcategoryUseCase {
 
     execute(updateDto: UpdateSubcategoryDto): Promise<SubcategoryEntity>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class UpdateSubcategory implements UpdateSubcategoryUseCase {
 
@@ -33,7 +36,7 @@ export class UpdateSubcategory implements UpdateSubcategoryUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
 

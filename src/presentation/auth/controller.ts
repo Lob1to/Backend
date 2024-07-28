@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { authErrors } from "../../config";
+import { authErrors, validators } from "../../config";
 
 import {
     AuthRepository,
@@ -17,7 +17,7 @@ import {
 } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 
-const { missingToken, missingId, missingEmail } = authErrors;
+const { missingToken, missingId, missingEmail, invalidEmail } = authErrors;
 
 export class AuthController {
 
@@ -33,12 +33,12 @@ export class AuthController {
 
     login = (req: Request, res: Response) => {
         const [error, errorCode, loginDto] = LoginUserDto.create(req.body);
-        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+        if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
         try {
             new LoginUser(this.authRepository, this.logRepository)
                 .execute(loginDto!)
-                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha ingresado a la cuenta ${user.name} correctamente.`, user))
+                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha ingresado a la cuenta correctamente.`, user))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
         } catch (error) {
 
@@ -49,12 +49,12 @@ export class AuthController {
     register = (req: Request, res: Response) => {
         const [error, errorCode, registerDto] = RegisterUserDto.create(req.body);
 
-        if (error) ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
+        if (error) return ResponsesHandler.sendErrorResponse(res, 400, error, errorCode ?? 'bad-request');
 
         try {
             new RegisterUser(this.authRepository, this.logRepository, this.sendEmail)
                 .execute(registerDto!)
-                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha creado la cuenta ${user.name} correctamente.`, user))
+                .then((user) => ResponsesHandler.sendSuccessResponse(res, `Se ha creado la cuenta correctamente.`, user))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
         } catch (error) {
             return ErrorsHandler.handleUnknownError(res);
@@ -64,7 +64,7 @@ export class AuthController {
     validateEmail = (req: Request, res: Response) => {
         const token = req.params.token;
 
-        if (!token) ResponsesHandler.sendErrorResponse(res, 400, missingToken.message, missingToken.code);
+        if (!token) return ResponsesHandler.sendErrorResponse(res, 400, missingToken.message, missingToken.code);
 
         try {
 
@@ -80,7 +80,8 @@ export class AuthController {
 
     sendValidationEmail = (req: Request, res: Response) => {
         const email = req.body.email;
-        if (!email) ResponsesHandler.sendErrorResponse(res, 400, missingEmail.message, missingEmail.code);
+        if (!email) return ResponsesHandler.sendErrorResponse(res, 400, missingEmail.message, missingEmail.code);
+        if (!validators.email.test(email)) return ResponsesHandler.sendErrorResponse(res, 400, invalidEmail.message, invalidEmail.code)
 
         try {
 

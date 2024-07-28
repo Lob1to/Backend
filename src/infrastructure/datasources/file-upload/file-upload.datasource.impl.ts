@@ -1,12 +1,23 @@
 import { CustomError, FileEntity, FileUploadDatasource } from "../../../domain";
-import { fileUploadErrors, auth, sharedErrors, envs } from "../../../config";
+import { UploadQueue, FileValidator, CacheAdapter, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor, fileUploadErrors } from "../../../config";
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { UploadedFile } from "express-fileupload";
+import { isValidObjectId } from "mongoose";
+import { ProductModel, UserModel } from "../../../data/mongo";
 
-const { invalidImgExtension } = fileUploadErrors;
+const { userNotFound } = authErrors;
+const { invalidImgName } = fileUploadErrors;
+const { productNotFound } = productsErrors;
 const { unauthorized } = sharedErrors;
+
 export class FileUploadDatasourceImpl implements FileUploadDatasource {
+
+    private uploadQueue: UploadQueue;
+
+    constructor() {
+        this.uploadQueue = new UploadQueue();
+    }
 
     async firebaseSignIn(auth: Auth, email: string, password: string): Promise<void> {
 
@@ -39,7 +50,6 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
             return !!image;
 
         } catch (error) {
-
             return false;
         }
 
@@ -68,18 +78,47 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     }
 
+    async deleteProductImage(type: string = 'products', imgName: string, id: string): Promise<void> {
+
+        try {
+            const product = await ProductModel.findById(id);
+            const imageName = imgName.split('.')[0];
+
+            if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+            await this.checkIfImageExistsAndDelete(type, imageName, id);
+
+            CacheAdapter.delByPattern(`products_list_`);
+
+
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    async checkIfImageExistsAndDelete(type: string, name: string, id: string): Promise<void> {
+        const img = `${name}.webp`;
+
+        const fileExists = await this.fileExists(type, img, id);
+
+        if (fileExists) {
+            await this.deleteFile(type, img, id);
+        }
+
+    }
+
     async uploadUserProfilePicture(file: any, id: string, validExtensions: string[]): Promise<FileEntity> {
 
         const name = 'profile-picture';
         const type = 'users';
-        const extension = file.name.split('.')[1];
 
-        const imgName = `${name}.${extension}`
+        // Elimina todas las fotos de perfil con la extension valida.
+        if (!isValidObjectId(id)) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+        const user = await UserModel.findById(id);
 
-        const fileExists = await this.fileExists(type, imgName, id);
-        if (fileExists) {
-            await this.deleteFile(type, imgName, id);
-        }
+        if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+
+        await this.checkIfImageExistsAndDelete(type, name, id);
 
         const profilePicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
 
@@ -93,17 +132,15 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
         let imagesCounter = 1;
         let images: FileEntity[] = [];
 
+        if (!isValidObjectId(id)) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        const product = await ProductModel.findById(id);
+
+        if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
         for (const file of files) {
 
-            const name = 'image-' + imagesCounter;
-            const type = 'products';
-            const fileExists = await this.fileExists(type, file.name, id);
-
-            if (fileExists) {
-                await this.deleteFile(type, file.name, id);
-            }
-
-            const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
+            const productPicture = await this.uploadProductPicture(file, id, imagesCounter, validExtensions);
 
             imagesCounter++;
             images.push(productPicture);
@@ -113,57 +150,107 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
     }
 
+    async uploadProductPicture(file: any, id: string, imgNumber: number, validExtensions: string[]): Promise<FileEntity> {
+
+        const name = 'image-' + imgNumber;
+        const type = 'products';
+        if (imgNumber > 5) throw CustomError.badRequest(invalidImgName.message, invalidImgName.code);
+
+        if (!isValidObjectId(id)) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        const product = await ProductModel.findById(id);
+
+        if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        await this.checkIfImageExistsAndDelete(type, name, id);
+
+        const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
+
+        return FileEntity.fromObject(productPicture);
+
+    }
+
     async uploadSingleFile(name: string, file: UploadedFile, id: string, type: string, validExtensions: string[] = ['jpg, jpeg, png']): Promise<FileEntity> {
 
+        return new Promise((resolve, reject) => {
+
+            this.uploadQueue.addToQueue(async () => {
+
+                try {
+                    const fileEntity = await this.performUpload(name, file, id, type, validExtensions);
+                    resolve(fileEntity);
+
+                } catch (error) {
+                    reject(error);
+
+                }
+            });
+        });
+
+
+    }
+
+    private async performUpload(name: string, file: UploadedFile, id: string, type: string, validExtensions: string[]): Promise<FileEntity> {
         try {
+
+            // Si no esta en cache la imagén, sigue con el proceso de subir la imagen
+
             const storageFB = getStorage();
             await this.firebaseSignIn(auth, envs.FIREBASE_AUTH_EMAIL, envs.FIREBASE_AUTH_KEY);
 
-            const fileExtension = file.mimetype.split('/').at(1) ?? '';
+            const maxFileSize = validators.image.maxFileSize;
 
-            if (!validExtensions.includes(fileExtension)) {
-                throw CustomError.badRequest(invalidImgExtension.message(fileExtension, validExtensions), invalidImgExtension.code);
-            }
+            FileValidator.validateFile(file, validExtensions, maxFileSize);
 
-            const fileName = `${name}.${fileExtension}`;
+            const fileName = `${name}.webp`;
             const filePath = `${type}/${id}/${fileName}`;
             const storageRef = ref(storageFB, filePath);
 
-            const metadata = {
-                contentType: fileExtension,
-            };
+            const fileBuffer = Buffer.from(file.data);
+            const compressedBuffer = await ImageCompressor.compressToWebp(fileBuffer)
 
-            await uploadBytesResumable(storageRef, file.data, metadata);
+            const uploadTask = uploadBytesResumable(storageRef, compressedBuffer);
+
+            await new Promise((resolve, reject) => {
+
+                uploadTask.on(
+                    'state_changed',
+                    (snapshot) => {
+                        // TODO: Implementar el progreso en tiempo real usando websockets
+                    },
+                    (error) => reject(error),
+                    () => resolve(null)
+                );
+            });
 
             const fileEntity = FileEntity.fromObject({
                 name: fileName,
                 path: filePath,
                 imageUrl: `${envs.WEBSERVICE_URL}/images/${filePath}`,
-                extension: fileExtension,
+                extension: 'webp',
                 size: file.size,
             });
+
+            const imageCacheKey = `image_${type}_${id}_${fileName}`;
+
+            CacheAdapter.del(imageCacheKey)
+            CacheAdapter.delByPattern(`${type}_`);
 
             return fileEntity;
 
         } catch (error) {
             throw error;
         }
-
-
     }
 
     async uploadMultipleFiles(files: UploadedFile[], id: string, type: string, validExtensions: string[] = ['jpg, jpeg, png']): Promise<FileEntity[]> {
 
-        let counter = 1;
+        const uploadPromises = files.map((file, index) => {
+            const name = `image-${index + 1}`;
+            return this.uploadSingleFile(name, file, id, type, validExtensions);
+        });
 
-        const fileEntities = await Promise.all(
-            files.map((file) => {
-                const name = `image-${counter}`;
-                counter++;
-
-                return this.uploadSingleFile(name, file, id, type, validExtensions)
-            })
-        );
+        const fileEntities = await Promise.all(uploadPromises);
 
         return fileEntities;
 

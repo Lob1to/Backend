@@ -6,6 +6,9 @@ import { ProductsRoutes } from "./products/routes";
 import { FileUploadRoutes } from "./file-upload/routes";
 import { ImagesRoutes } from "./images/router";
 import { OrdersRoutes } from "./orders/routes";
+import { CouponsRoutes } from "./coupons/router";
+import { VariantTypesRoutes } from "./variant-types/router";
+import { VariantsRoutes } from "./variants/router";
 
 
 
@@ -17,8 +20,11 @@ export class AppRoutes {
         router.use('/api/auth', AuthRoutes.routes);
         router.use('/api/categories', CategoriesRoutes.routes);
         router.use('/api/subcategories', SubcategoriesRoutes.routes);
+        router.use('/api/variant-types', VariantTypesRoutes.routes);
+        router.use('/api/variants', VariantsRoutes.routes);
         router.use('/api/products', ProductsRoutes.routes);
         router.use('/api/orders', OrdersRoutes.routes);
+        router.use('/api/coupons', CouponsRoutes.routes);
         router.use('/api/upload', FileUploadRoutes.routes);
         router.use('/api/images', ImagesRoutes.routes);
 

@@ -7,3 +7,6 @@ export * from './models/subcategory.model';
 export * from './models/user.model';
 export * from './models/log.model';
 export * from './models/order.model';
+export * from './models/coupon.model';
+export * from './models/variant.model';
+export * from './models/variant-type.model';

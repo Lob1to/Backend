@@ -1,3 +1,4 @@
+import { sharedErrors } from "../../../config";
 import { LogSeverityLevel, ProductEntity } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { LogRepository, ProductsRepository } from "../../repositories";
@@ -8,6 +9,8 @@ interface GetProductByIdUseCase {
     execute(id: string): Promise<ProductEntity>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetProductById implements GetProductByIdUseCase {
 
@@ -34,7 +37,7 @@ export class GetProductById implements GetProductByIdUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
     }

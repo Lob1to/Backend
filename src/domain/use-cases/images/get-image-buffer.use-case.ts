@@ -6,29 +6,29 @@ import { GetImageRepository, LogRepository } from "../../repositories";
 const { imageNotFound } = fileUploadErrors;
 const { unknownError } = sharedErrors;
 
-interface GetImageUrlUseCase {
+interface GetImageBufferUseCase {
 
-    execute(type: string, img: string, id?: string): Promise<ArrayBuffer>;
+    execute(type: string, img: string, id?: string): Promise<Buffer>;
 
 }
 
-export class GetImageUrl implements GetImageUrlUseCase {
+export class GetImageBuffer implements GetImageBufferUseCase {
 
     constructor(
         private readonly getImageRepository: GetImageRepository,
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(type: string, img: string, id?: string): Promise<ArrayBuffer> {
+    async execute(type: string, img: string, id?: string): Promise<Buffer> {
 
         try {
 
-            const image = await this.getImageRepository.getImageBuffer(type, img, id);
-            if (!image) {
+            const imageBuffer = await this.getImageRepository.getImageBuffer(type, img, id);
+            if (!imageBuffer) {
                 throw CustomError.notFound(imageNotFound.message, imageNotFound.code);
             }
 
-            return image;
+            return imageBuffer;
 
         } catch (error) {
 
@@ -37,7 +37,7 @@ export class GetImageUrl implements GetImageUrlUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.high,
-                origin: 'get-image-url.use-case',
+                origin: 'get-image-buffer.use-case',
             });
 
 

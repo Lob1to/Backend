@@ -1,10 +1,13 @@
 import { CategoriesRepository, CategoryEntity, CreateLog, CustomError, LogRepository, LogSeverityLevel } from "../..";
+import { sharedErrors } from "../../../config";
 
 interface DeleteCategoryUseCase {
 
     execute(id: string): Promise<CategoryEntity>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class DeleteCategory implements DeleteCategoryUseCase {
 
@@ -34,7 +37,7 @@ export class DeleteCategory implements DeleteCategoryUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
 
         }
     }

@@ -1,14 +1,14 @@
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 
 
-export const bcryptAdapter = {
+export class BcryptAdapter {
 
-    hash: (password: string) => {
+    static hash = (password: string) => {
         const salt = genSaltSync();
         return hashSync(password, salt)
-    },
+    }
 
-    compare: (password: string, hashed: string) => {
+    static compare = (password: string, hashed: string) => {
         return compareSync(password, hashed);
     }
 

@@ -13,6 +13,12 @@ export abstract class FileUploadDatasource {
         id: string,
         validExtensions: string[]): Promise<FileEntity[]>
 
+    abstract uploadProductPicture(
+        file: any,
+        id: string,
+        imgNumber: number,
+        validExtensions: string[]): Promise<FileEntity>
+
     abstract uploadSingleFile(
         name: string,
         file: any,
@@ -27,6 +33,10 @@ export abstract class FileUploadDatasource {
         validExtensions: string[]): Promise<FileEntity[]>;
 
     abstract deleteFile(type: string,
+        img: string,
+        id: string): Promise<void>;
+
+    abstract deleteProductImage(type: string,
         img: string,
         id: string): Promise<void>;
 

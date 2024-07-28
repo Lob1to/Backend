@@ -193,7 +193,91 @@ export const subcategoryErrors = {
     subcategoryNotFound: {
         message: 'La subcategoría no existe en la base de datos',
         code: 'subcategory-not-found',
+    },
+
+    categoryNotFound: {
+        message: 'La categoría no existe en la base de datos',
+        code: 'category-not-found',
+    },
+}
+
+export const variantTypesErrors = {
+
+    variantTypeAlreadyExist: {
+        message: 'El tipo de variante ya existe en la base de datos',
+        code: 'variant-type-already-exist',
+    },
+
+    missingName: {
+        message: 'No se ha proporcionado el nombre del tipo de variante',
+        code: 'missing-name',
+    },
+
+    missingType: {
+        message: 'No se ha proporcionado el tipo de variante',
+        code: 'missing-type',
+    },
+
+    invalidName: {
+        message: 'El nombre del tipo de variante no es válido',
+        code: 'invalid-name',
+    },
+
+    invalidType: {
+        message: 'El tipo de variante no es válido',
+        code: 'invalid-type',
+    },
+
+    variantTypeNotFound: {
+        message: 'El tipo de variante no existe en la base de datos',
+        code: 'variant-type-not-found',
     }
+
+}
+
+export const variantsErrors = {
+
+    missingPrice: {
+        message: 'No se ha proporcionado el precio de la variante',
+        code: 'missing-price',
+    },
+
+    missingStock: {
+        message: 'No se ha proporcionado el stock de la variante',
+        code: 'missing-stock',
+    },
+
+    missingVariantType: {
+        message: 'No se ha proporcionado el tipo de variante de la variante',
+        code: 'missing-variant-type',
+    },
+
+    invalidStock: {
+        message: 'El stock de la variante no es válido',
+        code: 'invalid-stock',
+    },
+
+    invalidPrice: {
+        message: 'El precio de la variante no es válido',
+        code: 'invalid-price',
+    },
+
+    variantAlreadyExist: {
+        message: 'La variante ya existe en la base de datos',
+        code: 'variant-already-exist',
+    },
+
+    variantNotFound: {
+        message: 'La variante no existe en la base de datos',
+        code: 'variant-not-found',
+    },
+
+    invalidVariantTypeId: {
+        message: 'La ID del tipo de variante proporcionada no es válida',
+        code: 'invalid-variant-type-id',
+    }
+
+
 }
 
 export const productsErrors = {
@@ -286,13 +370,23 @@ export const productsErrors = {
 
 export const fileUploadErrors = {
 
+    missingImgName: {
+        message: 'No se ha proporcionado el nombre de la imagen',
+        code: 'missing-img-name',
+    },
+
+    tooManyFiles: {
+        message: 'No se pueden subir más de 5 imágenes',
+        code: 'too-many-files',
+    },
+
     missingImg: {
         message: 'No se ha proporcionado ninguna imagen',
         code: 'missing-img',
     },
 
     invalidImgSize: {
-        message: 'El tamaño de la imagen excede el límite permitido',
+        message: (maxFileSize: number) => `El tamaño de la imagen excede el límite permitido (${(maxFileSize / 1024) / 1024} MB)`,
         code: 'invalid-img-size',
     },
 
@@ -441,6 +535,145 @@ export const orderErrors = {
     invalidPrice: {
         message: 'El precio del producto es invalido',
         code: 'invalid-price',
+    },
+
+}
+
+export const couponErrors = {
+
+    invalidCouponCode: {
+        message: 'El código de cupón no es válido',
+        code: 'invalid-coupon-code',
+    },
+
+    invalidDiscountType: {
+        message: (discountTypes: string[]) => `El tipo de descuento no es válido, validos: ${discountTypes.join(', ')}`,
+        code: 'invalid-discount-type',
+    },
+
+    invalidDiscountAmount: {
+        message: 'La cantidad de descuento debe ser un número válido mayor a 0',
+        code: 'invalid-discount-amount',
+    },
+
+    invalidMinimumPurchaseAmount: {
+        message: 'El mínimo de compra debe ser un número válido mayor a 0',
+        code: 'invalid-minimum-purchase-amount',
+    },
+
+    invalidEndDate: {
+        message: 'La fecha de finalización del cupón debe ser una fecha válida',
+        code: 'invalid-end-date',
+    },
+
+    invalidStatus: {
+        message: (statusOptions: string[]) => `El estado del cupón no es válido, solo puede ser: ${statusOptions.join(', ')}`,
+        code: 'invalid-status',
+    },
+
+    missingDiscountType: {
+        message: 'No se ha proporcionado el tipo de descuento',
+        code: 'missing-discount-type',
+    },
+
+    missingDiscountAmount: {
+        message: 'No se ha proporcionado la cantidad de descuento',
+        code: 'missing-discount-amount',
+    },
+
+    missingMinimumPurchaseAmount: {
+        message: 'No se ha proporcionado el mínimo de compra',
+        code: 'missing-minimum-purchase-amount',
+    },
+
+    missingEndDate: {
+        message: 'No se ha proporcionado la fecha de finalización del cupón',
+        code: 'missing-end-date',
+    },
+
+    missingStatus: {
+        message: 'No se ha proporcionado el estado del cupón',
+        code: 'missing-status',
+    },
+
+    missingCouponCode: {
+        message: 'No se ha proporcionado el código del cupón',
+        code: 'missing-coupon-code',
+    },
+
+    missingProductIds: {
+        message: 'No se ha proporcionado ningún ID de producto',
+        code: 'missing-product-ids',
+    },
+
+    missingPurchaseAmount: {
+        message: 'No se ha proporcionado la cantidad de compra',
+        code: 'missing-purchase-amount',
+    },
+
+    invalidPurchaseAmount: {
+        message: 'La cantidad de compra debe ser un número válido mayor a 0',
+        code: 'invalid-purchase-amount',
+    },
+
+    productNotFound: {
+        message: (productId: string) => `El producto con ID ${productId} no existe en la base de datos`,
+        code: 'product-not-found',
+    },
+
+    couponNotFound: {
+        message: 'El cupón no existe en la base de datos',
+        code: 'coupon-not-found',
+    },
+
+    couponAlreadyExist: {
+        message: 'El cupón ya existe en la base de datos',
+        code: 'coupon-already-exist',
+    },
+
+    invalidCategoryId: {
+        message: 'El ID de categoría no es válido',
+        code: 'invalid-category-id',
+    },
+
+    invalidProductId: {
+        message: 'Uno o más IDs de producto no son válidos',
+        code: 'invalid-product-ids',
+    },
+
+    invalidSubcategoryId: {
+        message: 'El ID de subcategoría no es válido',
+        code: 'invalid-subcategory-id',
+    },
+
+    expiredCoupon: {
+        message: 'El cupón ha expirado',
+        code: 'expired-coupon',
+    },
+
+    inactiveCoupon: {
+        message: 'El cupón no está activo',
+        code: 'inactive-coupon',
+    },
+
+    minimumPurchaseAmountNotReached: {
+        message: 'La cantidad de compra debe ser mayor o igual al mínimo de compra',
+        code: 'minimum-purchase-amount-not-reached',
+    },
+
+    productsNotFound: {
+        message: 'Uno o más productos ingresados no existen en la base de datos',
+        code: 'products-not-found',
+    },
+
+    expiredEndDate: {
+        message: 'La fecha de finalización del cupón ha expirado',
+        code: 'expired-end-date',
+    },
+
+    couponNotApplicable: {
+        message: 'El cupón no se aplica a ningún producto',
+        code: 'coupon-not-applicable',
     },
 
 }

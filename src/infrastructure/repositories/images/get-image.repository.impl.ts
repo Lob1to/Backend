@@ -6,7 +6,7 @@ export class GetImageRepositoryImpl implements GetImageRepository {
         private readonly datasource: GetImageDatasource,
     ) { }
 
-    getImageBuffer(type: string, img: string, id?: string): Promise<ArrayBuffer> {
+    getImageBuffer(type: string, img: string, id?: string): Promise<Buffer> {
         return this.datasource.getImageBuffer(type, img, id);
     }
 

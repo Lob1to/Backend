@@ -7,3 +7,6 @@ export * from './send-email.repository';
 export * from './file-upload.repository';
 export * from './get-image.repository';
 export * from './order.repository';
+export * from './coupons.repository';
+export * from './variant-type.repository';
+export * from './variants.repository';

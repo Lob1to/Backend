@@ -1,8 +1,11 @@
 import { CategoriesRepository, CategoryEntity, CreateLog, CustomError, LogRepository, LogSeverityLevel, PaginationDto } from "../..";
+import { sharedErrors } from "../../../config";
 
 interface GetCategoriesUseCase {
     execute(paginationDto: PaginationDto): Promise<{ [key: string]: any | CategoryEntity[] }>;
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetCategories implements GetCategoriesUseCase {
 
@@ -28,7 +31,7 @@ export class GetCategories implements GetCategoriesUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
     }
 

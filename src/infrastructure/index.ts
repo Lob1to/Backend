@@ -1,5 +1,5 @@
 
 
-export * from './repositories/';
+export * from './repositories';
 
-export * from './datasources/';
+export * from './datasources';

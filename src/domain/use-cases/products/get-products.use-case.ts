@@ -1,3 +1,4 @@
+import { sharedErrors } from "../../../config";
 import { GetProductsDto, PaginationDto } from "../../dtos";
 import { LogSeverityLevel, ProductEntity } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
@@ -9,6 +10,8 @@ interface GetProductsUseCase {
     execute(getProductsDto: GetProductsDto, paginationDto: PaginationDto): Promise<{ [key: string]: any | ProductEntity[] }>;
 
 }
+
+const { unknownError } = sharedErrors;
 
 export class GetProducts implements GetProductsUseCase {
 
@@ -36,7 +39,7 @@ export class GetProducts implements GetProductsUseCase {
             });
 
 
-            throw CustomError.internalServer('Ups, algo malo ha pasado', 'unknown-error');
+            throw CustomError.internalServer(unknownError.message, unknownError.code);
         }
 
     }

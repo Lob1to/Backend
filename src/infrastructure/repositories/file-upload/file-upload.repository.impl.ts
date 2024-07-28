@@ -8,6 +8,10 @@ export class FileUploadRepositoryImpl implements FileUploadRepository {
         private readonly datasource: FileUploadDatasource,
     ) { }
 
+    deleteProductImage(type: string, img: string, id: string): Promise<void> {
+        return this.datasource.deleteProductImage(type, img, id);
+    }
+
     deleteFile(type: string, img: string, id: string): Promise<void> {
 
         return this.datasource.deleteFile(type, img, id);
@@ -20,6 +24,11 @@ export class FileUploadRepositoryImpl implements FileUploadRepository {
     uploadProductPictures(files: any[], id: string, validExtensions: string[]): Promise<FileEntity[]> {
 
         return this.datasource.uploadProductPictures(files, id, validExtensions);
+    }
+
+    uploadProductPicture(file: any, id: string, imgNumber: number, validExtensions: string[]): Promise<FileEntity> {
+
+        return this.datasource.uploadProductPicture(file, id, imgNumber, validExtensions);
     }
 
     uploadSingleFile(name: string, file: any, userId: string, type: string, validExtensions: string[]): Promise<FileEntity> {

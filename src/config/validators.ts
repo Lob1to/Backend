@@ -11,6 +11,9 @@ export const validators = {
     description: {
         maxLength: 100,
     },
+    image: {
+        maxFileSize: 1 * 1024 * 1024,
+    }
 }
 
 // ! TODO: Refactorizacion del codigo de las ordenes para que solo tenga que hacer un populate y que se encargue de las validaciones.

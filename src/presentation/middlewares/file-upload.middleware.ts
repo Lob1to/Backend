@@ -12,6 +12,7 @@ export class FileUploadMiddleware {
         if (!req.files || Object.keys(req.files).length === 0) {
             return ResponsesHandler.sendErrorResponse(res, 400, missingImg.message, missingImg.code);
         }
+
         if (!Array.isArray(req.files.file)) {
             req.body.files = [req.files.file];
         } else {
