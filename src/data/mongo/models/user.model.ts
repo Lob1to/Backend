@@ -30,7 +30,10 @@ const userSchema = new mongoose.Schema({
     img: {
         type: String,
         default: '',
+    },
 
+    refreshToken: {
+        type: String
     }
 
 
