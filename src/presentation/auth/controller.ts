@@ -17,6 +17,7 @@ import {
 } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 import { RefreshToken } from "../../domain/use-cases/auth/refresh-token.use-case";
+import { SignOut } from "../../domain/use-cases/auth/sign-out.use-case";
 
 const { missingToken, missingId, missingEmail, invalidEmail } = authErrors;
 
@@ -61,6 +62,24 @@ export class AuthController {
             return ErrorsHandler.handleUnknownError(res);
         }
     };
+
+    signOut = (req: Request, res: Response) => {
+
+        const userId = req.body.user.id;
+
+        if (!userId) return ResponsesHandler.sendErrorResponse(res, 500, missingId.message, missingId.code);
+
+        try {
+
+            new SignOut(this.authRepository, this.logRepository).execute(userId)
+                .then((_) => ResponsesHandler.sendSuccessResponse(res, `Se ha cerrado la sesión correctamente`))
+                .catch((error) => ErrorsHandler.handleErrors(error, res));
+
+        } catch (error) {
+            return ErrorsHandler.handleUnknownError(res);
+        }
+
+    }
 
     validateEmail = (req: Request, res: Response) => {
         const token = req.params.token;

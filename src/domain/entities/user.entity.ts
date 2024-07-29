@@ -26,11 +26,12 @@ export class UserEntity {
         public password: string,
         public role: string[],
         public img?: string[],
+        public refreshToken?: string
     ) { }
 
     static fromObject(object: { [key: string]: any }): UserEntity {
 
-        const { id, _id, name, email, emailValidated, password, role, img } = object;
+        const { id, _id, name, email, emailValidated, password, role, img, refreshToken } = object;
         const { missingId, missingName, missingEmail, missingEmailValidated, missingPassword, missingRole } = authErrors;
 
         if (!id || !_id) {
@@ -46,7 +47,7 @@ export class UserEntity {
 
         if (!role) throw CustomError.badRequest(missingRole.message, missingRole.code);
 
-        return new UserEntity(id, name, email, emailValidated, password, role, img);
+        return new UserEntity(id, name, email, emailValidated, password, role, img, refreshToken);
 
 
     }
