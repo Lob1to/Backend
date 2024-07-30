@@ -18,7 +18,7 @@ async function main() {
     });
 
     const server = new Server({
-        port: envs.PORT,
+        port: envs.PORT || 4000,
         routes: AppRoutes.routes,
     });
 
