@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
 import fileUpload from 'express-fileupload';
+import path from 'path';
 
 interface Options {
     port: number;
@@ -37,7 +38,11 @@ export class Server {
 
         //* Spa
 
-        this.app.use(express.static('public'));
+        //* SPA /^\/(?!api).*/  <== Únicamente si no empieza con la palabra api
+        this.app.get('*', (req, res) => {
+            const indexPath = path.join(__dirname + `../../../public/index.html`);
+            res.sendFile(indexPath);
+        });
 
         //* Start server
 
