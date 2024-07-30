@@ -40,8 +40,9 @@ export class Server {
 
         //* SPA /^\/(?!api).*/  <== Únicamente si no empieza con la palabra api
         this.app.get('*', (req, res) => {
-            const indexPath = path.join(__dirname + `../../../public/index.html`);
-            res.sendFile(indexPath);
+            res.json({
+                message: 'Hello World'
+            });
         });
 
         //* Start server
