@@ -1,4 +1,3 @@
-import { initializeApp } from "firebase-admin";
 import { envs } from "./config/envs.plugin";
 import { MongoDatabase } from "./data/mongo";
 import { AppRoutes } from "./presentation/routes";

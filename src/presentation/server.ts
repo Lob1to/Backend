@@ -35,6 +35,10 @@ export class Server {
 
         this.app.use(this.routes);
 
+        //* Spa
+
+        this.app.use(express.static('public'));
+
         //* Start server
 
         this.app.listen(this.port, () => {
