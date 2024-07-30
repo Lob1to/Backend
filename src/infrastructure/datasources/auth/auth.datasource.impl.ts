@@ -26,7 +26,13 @@ export class AuthDatasourceImpl implements AuthDatasource {
             const isPasswordMatch = BcryptAdapter.compare(loginUserDto.password, user.password);
             if (!isPasswordMatch) throw CustomError.unauthorized(incorrectPassword.message, incorrectPassword.code);
 
-            return UserEntity.fromObject(user);
+            const refreshToken = await JwtAdapter.generateToken({ id: user.id, role: user.role, tokenType: 'refresh-token' }, '1y') as string;
+            if (!refreshToken) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
+
+            user.refreshToken = refreshToken;
+            const updatedUser = await user.save();
+
+            return UserEntity.fromObject(updatedUser);
 
         } catch (error) {
 
@@ -44,6 +50,9 @@ export class AuthDatasourceImpl implements AuthDatasource {
         try {
             const user = new UserModel(registerUserDto);
             user.password = BcryptAdapter.hash(user.password);
+            const refreshToken = await JwtAdapter.generateToken({ id: user.id, role: user.role, tokenType: 'refresh-token' }, '1y') as string;
+            if (!refreshToken) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
+            user.refreshToken = refreshToken;
 
             await user.save();
 
@@ -54,6 +63,24 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
             throw error;
         }
+    }
+
+    async signOut(userId: string): Promise<void> {
+
+        try {
+
+            const user = await UserModel.findById(userId);
+            if (!user) throw CustomError.badRequest(userNotFound.message, userNotFound.code);
+
+            user.refreshToken = undefined;
+            await user.save();
+
+        } catch (error) {
+            if (error instanceof MongooseError) throw error.message;
+
+            throw error;
+        }
+
     }
 
     async updateUser(updateUserDto: UpdateUserDto): Promise<UserEntity> {

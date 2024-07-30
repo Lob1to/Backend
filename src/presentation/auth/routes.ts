@@ -39,6 +39,7 @@ export class AuthRoutes {
         router.post('/login', controller.login);
         router.get('/validate-email/:token', controller.validateEmail);
         router.post('/send-validation/', controller.sendValidationEmail);
+        router.post('/signout/', AuthMiddleware.validateJWT, controller.signOut);
         router.put('/update-user/', AuthMiddleware.validateJWT, controller.updateUser);
         router.post('/refresh-token/', controller.refreshToken);
         router.put('/admin/update-user/:id', AuthMiddleware.validateAdminRoleWithToken, controller.adminUpdateUser);

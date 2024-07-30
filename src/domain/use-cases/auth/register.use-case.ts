@@ -27,15 +27,11 @@ export class RegisterUser implements RegisterUserUseCase {
             const token = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role, tokenType: 'access-token' });
             if (!token) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
 
-            const refreshToken = await JwtAdapter.generateToken({ id: newUser.id, role: newUser.role, tokenType: 'refresh-token' }, '1y')
-            if (!refreshToken) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
-
             const { password, ...userEntity } = newUser;
 
             return {
                 user: userEntity,
                 token: token,
-                refreshToken: refreshToken,
             };
 
         } catch (error) {
