@@ -81,8 +81,8 @@ export const authErrors = {
         code: 'user-not-found',
     },
     invalidCredentials: {
-        message: 'El correo o la contraseña no son correctos. ¿Quieres intentarlo de nuevo?',
-        code: 'invalid-credentials',
+        message: 'No se ha encontrado una cuenta con ese correo. ¿Quieres intentarlo de nuevo?',
+        code: 'invalid-email',
     },
     invalidId: {
         message: 'El identificador proporcionado no es válido',
