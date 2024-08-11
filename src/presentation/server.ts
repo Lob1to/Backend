@@ -1,6 +1,5 @@
 import express, { Router } from 'express';
 import fileUpload from 'express-fileupload';
-import path from 'path';
 
 interface Options {
     port: number;

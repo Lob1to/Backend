@@ -1,6 +1,7 @@
 
 node_modules
-/mongo/
+mongo/
+dist/
 .env
 package-lock.json
 .vscode

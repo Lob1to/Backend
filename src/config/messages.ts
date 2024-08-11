@@ -1,894 +1,705 @@
 
 export const authErrors = {
-
     missingEmail: {
-        message: 'No se ha proporcionado un correo electrónico',
+        message: 'Por favor, ingresa tu correo electrónico',
         code: 'missing-email',
     },
-
     invalidEmail: {
-        message: 'El correo ingresado no es valido',
+        message: 'El correo electrónico no parece ser válido. ¿Podrías revisarlo?',
         code: 'invalid-email',
     },
-
     missingPassword: {
-        message: 'No se ha proporcionado una contraseña',
+        message: 'No olvides ingresar tu contraseña',
         code: 'missing-password',
     },
-
     shortPassword: {
-        message: 'La contraseña es muy corta',
+        message: 'Tu contraseña es un poco corta. ¿Podrías hacerla más larga?',
         code: 'short-password',
     },
-
     longPassword: {
-        message: 'La contraseña es muy larga',
+        message: 'Tu contraseña es demasiado larga. ¿Podrías acortarla un poco?',
         code: 'long-password',
     },
-
     missingName: {
-        message: 'No se ha proporcionado el nombre',
+        message: 'Por favor, dinos tu nombre',
         code: 'missing-name',
     },
-
     invalidPassword: {
-        message: 'La contraseña ingresada debe tener por lo menos 1 letra mayúscula, 1 letra minúscula y 1 número',
+        message: 'Tu contraseña debe incluir al menos una mayúscula, una minúscula y un número',
         code: 'invalid-password',
     },
-
     incorrectPassword: {
-        message: 'La contraseña ingresada no es correcta',
+        message: 'La contraseña no es correcta. ¿Quieres intentarlo de nuevo?',
         code: 'incorrect-password',
     },
-
     noFieldToUpdate: {
-        message: 'No se puede actualizar un usuario si no se proporciona ningún parámetro',
+        message: 'No se ha seleccionado ningún campo para actualizar',
         code: 'no-field-to-update',
     },
-
     missingId: {
-        message: 'No se ha proporcionado una ID',
+        message: 'Falta un identificador necesario',
         code: 'missing-id',
     },
-
     invalidImg: {
-        message: 'La imagen ingresada no es valida',
+        message: 'La imagen no es válida. ¿Podrías intentar con otra?',
         code: 'invalid-img',
     },
-
     missingEmailValidated: {
-        message: 'No se ha proporcionado el estado de validación del email',
+        message: 'Falta confirmar tu correo electrónico',
         code: 'missing-email-validated',
     },
-
     missingRole: {
-        message: 'No se ha proporcionado el rol del usuario',
+        message: 'No se ha especificado tu tipo de cuenta',
         code: 'missing-role',
     },
-
     unknownError: {
-        message: 'Ha ocurrido un error inesperado en el proceso de autenticación',
+        message: 'Ups, algo salió mal. Por favor, inténtalo de nuevo más tarde',
         code: 'unknown-error',
     },
-
     tokenGenerationError: {
-        message: 'Ha ocurrido un error al generar el token de autenticación',
-        code: 'server-error',
+        message: 'Hubo un problema al iniciar tu sesión. ¿Podrías intentarlo de nuevo?',
+        code: 'token-generation-error',
     },
-
     sendEmailError: {
-        message: 'Ha ocurrido un error al enviar el correo electrónico de verificación',
-        code: 'server-error',
+        message: 'No pudimos enviar el correo de verificación. ¿Podrías intentarlo más tarde?',
+        code: 'send-email-error',
     },
-
     emailAlreadyInUse: {
-        message: 'El correo ya existe en la base de datos',
+        message: 'Este correo ya está registrado. ¿Quieres iniciar sesión?',
         code: 'email-already-in-use',
     },
-
     invalidToken: {
-        message: 'El token proporcionado no es valido',
+        message: 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo',
         code: 'invalid-token',
     },
-
     invalidTokenData: {
-        message: 'El token ingresado no tiene los datos correctos',
+        message: 'Hay un problema con tu sesión. Por favor, inicia sesión de nuevo',
         code: 'invalid-token-data',
     },
-
     userNotFound: {
-        message: 'El usuario no existe en la base de datos',
+        message: 'No encontramos tu cuenta. ¿Quieres crear una nueva?',
         code: 'user-not-found',
     },
-
     invalidCredentials: {
-        message: 'El correo electrónico o la contraseña ingresados son incorrectos',
+        message: 'El correo o la contraseña no son correctos. ¿Quieres intentarlo de nuevo?',
         code: 'invalid-credentials',
     },
-
     invalidId: {
-        message: 'La ID proporcionada no es valida',
+        message: 'El identificador proporcionado no es válido',
         code: 'invalid-id',
     },
-
     missingToken: {
-        message: 'No se ha proporcionado un token',
+        message: 'Por favor, inicia sesión para continuar',
         code: 'missing-token',
     }
-
 }
 
+
 export const categoryErrors = {
-
     missingName: {
-        message: 'No se ha proporcionado el nombre de la categoría',
-        code: 'missing-name',
+        message: 'Por favor, ingresa un nombre para la categoría',
+        code: 'category-name-missing',
     },
-
     tooLongDescription: {
-        message: 'La descripción de la categoría es muy larga, no puede superar los 100 caracteres',
-        code: 'too-long-description',
+        message: 'La descripción es un poco larga. ¿Podrías acortarla a 100 caracteres?',
+        code: 'category-description-long',
     },
-
     invalidId: {
-        message: 'La ID de categoría proporcionada no es válida',
-        code: 'invalid-id',
+        message: 'No pudimos encontrar esta categoría. ¿Quieres intentar de nuevo?',
+        code: 'category-id-invalid',
     },
-
     invalidImg: {
-        message: 'La imagen ingresada no es valida',
-        code: 'invalid-img',
+        message: 'La imagen de la categoría no es válida. ¿Podrías intentar con otra?',
+        code: 'category-image-invalid',
     },
-
-
     categoryAlreadyExist: {
-        message: 'La categoría ya existe en la base de datos',
-        code: 'category-already-exist',
+        message: 'Esta categoría ya existe. ¿Quieres crear una diferente?',
+        code: 'category-name-duplicate',
     },
-
     categoryNotFound: {
-        message: 'La categoría no existe en la base de datos',
+        message: 'No pudimos encontrar esta categoría. ¿Quieres crear una nueva?',
         code: 'category-not-found',
     }
-
 }
 
 export const subcategoryErrors = {
-
     missingName: {
-        message: 'No se ha proporcionado el nombre de la subcategoría',
-        code: 'missing-name',
+        message: 'Por favor, ingresa un nombre para la subcategoría',
+        code: 'subcategory-name-missing',
     },
-
     missingDescription: {
-        message: 'No se ha proporcionado la descripción de la subcategoría',
-        code: 'missing-description',
+        message: 'No olvides agregar una descripción para la subcategoría',
+        code: 'subcategory-description-missing',
     },
-
     tooLongDescription: {
-        message: 'La descripción de la subcategoría es muy larga, no puede superar los 100 caracteres',
-        code: 'too-long-description',
+        message: 'La descripción es un poco larga. ¿Podrías acortarla a 100 caracteres?',
+        code: 'subcategory-description-long',
     },
-
     missingCategoryId: {
-        message: 'No se ha proporcionado la categoría a la que pertenece la subcategoría',
-        code: 'missing-category-id',
+        message: 'Por favor, selecciona la categoría a la que pertenece esta subcategoría',
+        code: 'subcategory-parent-missing',
     },
-
     invalidCategoryId: {
-        message: 'La ID de categoría proporcionada no es válida',
-        code: 'invalid-id',
+        message: 'La categoría seleccionada no es válida',
+        code: 'subcategory-parent-invalid',
     },
-
     subcategoryAlreadyExist: {
-        message: 'La subcategoría ya existe en la base de datos',
-        code: 'subcategory-already-exist',
+        message: 'Esta subcategoría ya existe. ¿Quieres crear una diferente?',
+        code: 'subcategory-name-duplicate',
     },
-
     missingId: {
-        message: 'No se ha proporcionado una ID',
-        code: 'missing-id',
+        message: 'No pudimos identificar la subcategoría. ¿Quieres intentar de nuevo?',
+        code: 'subcategory-id-missing',
     },
-
     subcategoryNotFound: {
-        message: 'La subcategoría no existe en la base de datos',
+        message: 'No pudimos encontrar esta subcategoría. ¿Quieres crear una nueva?',
         code: 'subcategory-not-found',
     },
-
     categoryNotFound: {
-        message: 'La categoría no existe en la base de datos',
-        code: 'category-not-found',
+        message: 'No pudimos encontrar la categoría asociada. ¿Quieres seleccionar otra?',
+        code: 'subcategory-parent-notfound',
     },
 }
 
 export const variantTypesErrors = {
-
     variantTypeAlreadyExist: {
-        message: 'El tipo de variante ya existe en la base de datos',
-        code: 'variant-type-already-exist',
+        message: 'Este tipo de variante ya existe. ¿Quieres crear uno diferente?',
+        code: 'variant-type-duplicate',
     },
-
     missingName: {
-        message: 'No se ha proporcionado el nombre del tipo de variante',
-        code: 'missing-name',
+        message: 'Por favor, ingresa un nombre para el tipo de variante',
+        code: 'variant-type-name-missing',
     },
-
     missingType: {
-        message: 'No se ha proporcionado el tipo de variante',
-        code: 'missing-type',
+        message: 'No olvides seleccionar el tipo de variante',
+        code: 'variant-type-missing',
     },
-
     invalidName: {
-        message: 'El nombre del tipo de variante no es válido',
-        code: 'invalid-name',
+        message: 'El nombre del tipo de variante no es válido. ¿Podrías revisarlo?',
+        code: 'variant-type-name-invalid',
     },
-
     invalidType: {
-        message: 'El tipo de variante no es válido',
-        code: 'invalid-type',
+        message: 'El tipo de variante seleccionado no es válido',
+        code: 'variant-type-invalid',
     },
-
     variantTypeNotFound: {
-        message: 'El tipo de variante no existe en la base de datos',
+        message: 'No pudimos encontrar este tipo de variante. ¿Quieres crear uno nuevo?',
         code: 'variant-type-not-found',
     }
-
 }
 
 export const variantsErrors = {
-
     missingPrice: {
-        message: 'No se ha proporcionado el precio de la variante',
-        code: 'missing-price',
+        message: 'Por favor, ingresa el precio de la variante',
+        code: 'variant-price-missing',
     },
-
     missingStock: {
-        message: 'No se ha proporcionado el stock de la variante',
-        code: 'missing-stock',
+        message: 'No olvides ingresar el stock disponible de la variante',
+        code: 'variant-stock-missing',
     },
-
     missingVariantType: {
-        message: 'No se ha proporcionado el tipo de variante de la variante',
-        code: 'missing-variant-type',
+        message: 'Por favor, selecciona el tipo de variante',
+        code: 'variant-type-missing',
     },
-
     invalidStock: {
-        message: 'El stock de la variante no es válido',
-        code: 'invalid-stock',
+        message: 'El stock ingresado no es válido. ¿Podrías revisarlo?',
+        code: 'variant-stock-invalid',
     },
-
     invalidPrice: {
-        message: 'El precio de la variante no es válido',
-        code: 'invalid-price',
+        message: 'El precio ingresado no es válido. ¿Podrías revisarlo?',
+        code: 'variant-price-invalid',
     },
-
     variantAlreadyExist: {
-        message: 'La variante ya existe en la base de datos',
-        code: 'variant-already-exist',
+        message: 'Esta variante ya existe. ¿Quieres crear una diferente?',
+        code: 'variant-duplicate',
     },
-
     variantNotFound: {
-        message: 'La variante no existe en la base de datos',
+        message: 'No pudimos encontrar esta variante. ¿Quieres crear una nueva?',
         code: 'variant-not-found',
     },
-
     invalidVariantTypeId: {
-        message: 'La ID del tipo de variante proporcionada no es válida',
-        code: 'invalid-variant-type-id',
+        message: 'El tipo de variante seleccionado no es válido',
+        code: 'variant-type-id-invalid',
     }
-
-
 }
 
 export const productsErrors = {
-
     missingName: {
-        message: 'No se ha proporcionado el nombre del producto',
-        code: 'missing-name',
+        message: 'Por favor, ingresa un nombre para el producto',
+        code: 'product-name-missing',
     },
-
     missingDescription: {
-        message: 'No se ha proporcionado la descripción del producto',
-        code: 'missing-description',
+        message: 'No olvides agregar una descripción para el producto',
+        code: 'product-description-missing',
     },
-
     tooLongDescription: {
-        message: 'La descripción del producto es muy larga, no puede superar los 100 caracteres',
-        code: 'too-long-description',
+        message: 'La descripción es un poco larga. ¿Podrías acortarla a 100 caracteres?',
+        code: 'product-description-long',
     },
-
     missingPrice: {
-        message: 'No se ha proporcionado el precio del producto',
-        code: 'missing-price',
+        message: 'Por favor, ingresa el precio del producto',
+        code: 'product-price-missing',
     },
-
     invalidPrice: {
-        message: 'El precio del producto debe ser un número válido mayor a 0',
-        code: 'invalid-price',
+        message: 'El precio debe ser mayor a 0. ¿Podrías revisarlo?',
+        code: 'product-price-invalid',
     },
-
     missingStock: {
-        message: 'No se ha proporcionado el stock del producto',
-        code: 'missing-stock',
+        message: 'No olvides ingresar el stock disponible del producto',
+        code: 'product-stock-missing',
     },
-
     invalidStock: {
-        message: 'El stock del producto debe ser un número entero válido',
-        code: 'invalid-stock',
+        message: 'El stock debe ser un número entero. ¿Podrías revisarlo?',
+        code: 'product-stock-invalid',
     },
-
     invalidVariants: {
-        message: 'Las variantes del producto deben ser una lista de objetos válidos',
-        code: 'invalid-variants',
+        message: 'Las variantes del producto no son válidas. ¿Podrías revisarlas?',
+        code: 'product-variants-invalid',
     },
-
     missingImages: {
-        message: 'No se ha proporcionado las imágenes del producto',
-        code: 'missing-images',
+        message: 'No olvides agregar imágenes del producto',
+        code: 'product-images-missing',
     },
-
     invalidImages: {
-        message: 'Las imágenes del producto deben ser una lista de URLs válidas',
-        code: 'invalid-images',
+        message: 'Las imágenes del producto no son válidas. ¿Podrías revisarlas?',
+        code: 'product-images-invalid',
     },
-
     missingCategoryId: {
-        message: 'No se ha proporcionado la categoría a la que pertenece el producto',
-        code: 'missing-category-id',
+        message: 'Por favor, selecciona la categoría del producto',
+        code: 'product-category-missing',
     },
-
     invalidCategoryId: {
-        message: 'La ID de categoría proporcionada para el producto no es válida',
-        code: 'invalid-category-id',
+        message: 'La categoría seleccionada no es válida',
+        code: 'product-category-invalid',
     },
-
     missingSubcategoryId: {
-        message: 'No se ha proporcionado la subcategoría a la que pertenece el producto',
-        code: 'missing-subcategory-id',
+        message: 'Por favor, selecciona la subcategoría del producto',
+        code: 'product-subcategory-missing',
     },
-
     invalidSubcategoryId: {
-        message: 'La ID de subcategoría proporcionada para el producto no es válida',
-        code: 'invalid-subcategory-id',
+        message: 'La subcategoría seleccionada no es válida',
+        code: 'product-subcategory-invalid',
     },
-
     productAlreadyExist: {
-        message: 'El producto ya existe en la base de datos',
-        code: 'product-already-exist',
+        message: 'Este producto ya existe. ¿Quieres crear uno diferente?',
+        code: 'product-duplicate',
     },
-
     productNotFound: {
-        message: 'El producto no existe en la base de datos',
+        message: 'No pudimos encontrar este producto. ¿Quieres crear uno nuevo?',
         code: 'product-not-found',
     },
-
     invalidPriceParameters: {
-        message: 'El maximo precio debe ser mayor al minimo',
-        code: 'invalid-price-parameters',
+        message: 'El precio máximo debe ser mayor al mínimo. ¿Podrías revisarlo?',
+        code: 'product-price-range-invalid',
     }
 }
 
 export const fileUploadErrors = {
-
     missingImgName: {
-        message: 'No se ha proporcionado el nombre de la imagen',
-        code: 'missing-img-name',
+        message: 'Por favor, ingresa un nombre para la imagen',
+        code: 'file-name-missing',
     },
-
     tooManyFiles: {
-        message: 'No se pueden subir más de 5 imágenes',
-        code: 'too-many-files',
+        message: 'Solo puedes subir hasta 5 imágenes. ¿Podrías seleccionar menos?',
+        code: 'file-count-exceeded',
     },
-
     missingImg: {
-        message: 'No se ha proporcionado ninguna imagen',
-        code: 'missing-img',
+        message: 'No olvides seleccionar una imagen para subir',
+        code: 'file-missing',
     },
-
     invalidImgSize: {
-        message: (maxFileSize: number) => `El tamaño de la imagen excede el límite permitido (${(maxFileSize / 1024) / 1024} MB)`,
-        code: 'invalid-img-size',
+        message: (maxFileSize: number) => `La imagen es demasiado grande. El tamaño máximo es ${(maxFileSize / 1024) / 1024} MB`,
+        code: 'file-size-exceeded',
     },
-
     invalidImgType: {
-        message: (types: string[]) => `El tipo de imagen no es válido, solo se permite los tipos: ${types}`,
-        code: 'invalid-img-type',
+        message: (types: string[]) => `El tipo de imagen no es válido. Puedes usar: ${types.join(', ')}`,
+        code: 'file-type-invalid',
     },
-
     invalidImgFormat: {
-        message: 'El formato de la imagen no es válido o está corrupto',
-        code: 'invalid-img-format',
+        message: 'El formato de la imagen no es válido. ¿Podrías intentar con otra?',
+        code: 'file-format-invalid',
     },
-
     invalidImgName: {
-        message: 'El nombre de la imagen no es válido',
-        code: 'invalid-img-name',
+        message: 'El nombre de la imagen no es válido. ¿Podrías cambiarlo?',
+        code: 'file-name-invalid',
     },
-
     invalidImgExtension: {
-        message: (fileExtension: string, validExtensions: string[]) => `Extensión invalida: ${fileExtension}, extensiones validas: ${validExtensions}`,
-        code: 'invalid-img-extension',
+        message: (fileExtension: string, validExtensions: string[]) => `La extensión ${fileExtension} no es válida. Puedes usar: ${validExtensions.join(', ')}`,
+        code: 'file-extension-invalid',
     },
-
     imageNotFound: {
-        message: 'La imagen no existe en la base de datos',
-        code: 'image-not-found',
+        message: 'No pudimos encontrar esta imagen. ¿Quieres subir una nueva?',
+        code: 'file-not-found',
     },
-
-
-
 }
 
-
 export const orderErrors = {
-
     userNotFound: {
-        message: 'El usuario no existe en la base de datos',
-        code: 'user-not-found',
+        message: 'No pudimos encontrar tu cuenta. ¿Quieres crear una nueva?',
+        code: 'order-user-not-found',
     },
-
     missingUserId: {
-        message: 'No se ha proporcionado el ID del usuario',
-        code: 'missing-user-id',
+        message: 'Falta información del usuario. Por favor, inicia sesión de nuevo',
+        code: 'order-user-id-missing',
     },
-
     invalidUserId: {
-        message: 'El ID del usuario proporcionado no es válido',
-        code: 'invalid-user-id',
+        message: 'La información del usuario no es válida. Por favor, inicia sesión de nuevo',
+        code: 'order-user-id-invalid',
     },
-
     invalidOrderId: {
-        message: 'El ID del pedido proporcionado no es válido',
-        code: 'invalid-order-id',
+        message: 'El número de pedido no es válido',
+        code: 'order-id-invalid',
     },
-
     invalidOrderStatus: {
         message: 'El estado del pedido no es válido',
-        code: 'invalid-order-status',
+        code: 'order-status-invalid',
     },
-
     missingItems: {
-        message: 'No se ha proporcionado ningún item',
-        code: 'missing-items',
+        message: 'Tu carrito está vacío. ¿Quieres agregar algunos productos?',
+        code: 'order-items-missing',
     },
-
     invalidItems: {
-        message: 'Los items del pedido deben ser una lista de objetos válidos',
-        code: 'invalid-items',
+        message: 'Hay un problema con los productos en tu carrito. ¿Podrías revisarlos?',
+        code: 'order-items-invalid',
     },
-
     missingTotalPrice: {
-        message: 'No se ha proporcionado el precio total del pedido',
-        code: 'missing-total-price',
+        message: 'No pudimos calcular el total de tu pedido. ¿Quieres intentar de nuevo?',
+        code: 'order-total-price-missing',
     },
-
     invalidTotalPrice: {
-        message: 'El precio total del pedido debe ser un número válido mayor a 0',
-        code: 'invalid-total-price',
+        message: 'El total de tu pedido parece incorrecto. ¿Podrías revisarlo?',
+        code: 'order-total-price-invalid',
     },
-
     missingShippingAddress: {
-        message: 'No se ha proporcionado la dirección de envío del pedido',
-        code: 'missing-shipping-address',
+        message: 'No olvides agregar una dirección de envío',
+        code: 'order-shipping-address-missing',
     },
-
     invalidShippingAddress: {
-        message: 'La dirección de envío del pedido debe ser un objeto válido',
-        code: 'invalid-shipping-address',
+        message: 'La dirección de envío no parece ser válida. ¿Podrías revisarla?',
+        code: 'order-shipping-address-invalid',
     },
-
     missingPaymentMethod: {
-        message: 'No se ha proporcionado el método de pago del pedido',
-        code: 'missing-payment-method',
+        message: 'Por favor, selecciona un método de pago',
+        code: 'order-payment-method-missing',
     },
-
     invalidPaymentMethod: {
-        message: 'El método de pago del pedido debe ser un objeto válido',
-        code: 'invalid-payment-method',
+        message: 'El método de pago seleccionado no es válido. ¿Quieres elegir otro?',
+        code: 'order-payment-method-invalid',
     },
-
     invalidCouponCode: {
-        message: 'El código de cupón no es válido',
-        code: 'invalid-coupon-code',
+        message: 'El código de cupón no es válido. ¿Quieres intentar con otro?',
+        code: 'order-coupon-code-invalid',
     },
-
     invalidOrderTotal: {
-        message: 'El total del pedido debe ser mayor al mínimo',
-        code: 'invalid-order-total',
+        message: 'El total de tu pedido no alcanza el mínimo requerido',
+        code: 'order-total-invalid',
     },
-
     invalidTrackingUrl: {
-        message: 'La URL de seguimiento debe ser una URL válida',
-        code: 'invalid-tracking-url',
+        message: 'El enlace de seguimiento no es válido',
+        code: 'order-tracking-url-invalid',
     },
-
     ordersNotFound: {
-        message: 'Los pedidos no existen en la base de datos',
+        message: 'No encontramos pedidos asociados a tu cuenta',
         code: 'orders-not-found',
     },
-
     orderNotFound: {
-        message: 'El pedido no existe en la base de datos',
+        message: 'No pudimos encontrar este pedido. ¿Quieres hacer uno nuevo?',
         code: 'order-not-found',
     },
-
     orderAlreadyExist: {
-        message: 'El pedido ya existe en la base de datos',
+        message: 'Este pedido ya existe. ¿Quieres revisar tus pedidos actuales?',
         code: 'order-already-exist',
     },
-
     orderNotBelongToUser: {
-        message: 'El pedido no pertenece al usuario',
+        message: 'Este pedido no pertenece a tu cuenta',
         code: 'order-not-belong-to-user',
     },
-
     productNotFound: {
-        message: (productId: string) => `El producto con ID ${productId} no existe en la base de datos`,
-        code: 'product-not-found',
+        message: (productId: string) => `No pudimos encontrar uno de los productos en tu carrito. ¿Quieres revisarlo?`,
+        code: 'order-product-not-found',
     },
-
     insufficientStock: {
-        message: 'No hay stock suficiente para realizar el pedido',
-        code: 'insufficient-stock',
+        message: 'Lo sentimos, no hay suficiente stock para completar tu pedido',
+        code: 'order-insufficient-stock',
     },
-
     invalidPrice: {
-        message: 'El precio del producto es invalido',
-        code: 'invalid-price',
+        message: 'El precio de uno de los productos no es válido. ¿Podrías revisarlo?',
+        code: 'order-product-price-invalid',
     },
-
 }
 
 export const couponErrors = {
-
     invalidCouponCode: {
-        message: 'El código de cupón no es válido',
-        code: 'invalid-coupon-code',
+        message: 'El código de cupón no es válido. ¿Quieres intentar con otro?',
+        code: 'coupon-code-invalid',
     },
-
     invalidDiscountType: {
-        message: (discountTypes: string[]) => `El tipo de descuento no es válido, validos: ${discountTypes.join(', ')}`,
-        code: 'invalid-discount-type',
+        message: (discountTypes: string[]) => `El tipo de descuento no es válido. Puedes usar: ${discountTypes.join(', ')}`,
+        code: 'coupon-discount-type-invalid',
     },
-
     invalidDiscountAmount: {
-        message: 'La cantidad de descuento debe ser un número válido mayor a 0',
-        code: 'invalid-discount-amount',
+        message: 'El descuento debe ser mayor a 0. ¿Podrías revisarlo?',
+        code: 'coupon-discount-amount-invalid',
     },
-
     invalidMinimumPurchaseAmount: {
-        message: 'El mínimo de compra debe ser un número válido mayor a 0',
-        code: 'invalid-minimum-purchase-amount',
+        message: 'El mínimo de compra debe ser mayor a 0. ¿Podrías revisarlo?',
+        code: 'coupon-minimum-purchase-invalid',
     },
-
     invalidEndDate: {
-        message: 'La fecha de finalización del cupón debe ser una fecha válida',
-        code: 'invalid-end-date',
+        message: 'La fecha de finalización del cupón no es válida. ¿Podrías revisarla?',
+        code: 'coupon-end-date-invalid',
     },
-
     invalidStatus: {
-        message: (statusOptions: string[]) => `El estado del cupón no es válido, solo puede ser: ${statusOptions.join(', ')}`,
-        code: 'invalid-status',
+        message: (statusOptions: string[]) => `El estado del cupón no es válido. Puede ser: ${statusOptions.join(', ')}`,
+        code: 'coupon-status-invalid',
     },
-
     missingDiscountType: {
-        message: 'No se ha proporcionado el tipo de descuento',
-        code: 'missing-discount-type',
+        message: 'Por favor, selecciona el tipo de descuento',
+        code: 'coupon-discount-type-missing',
     },
-
     missingDiscountAmount: {
-        message: 'No se ha proporcionado la cantidad de descuento',
-        code: 'missing-discount-amount',
+        message: 'Por favor, ingresa la cantidad de descuento',
+        code: 'coupon-discount-amount-missing',
     },
-
     missingMinimumPurchaseAmount: {
-        message: 'No se ha proporcionado el mínimo de compra',
-        code: 'missing-minimum-purchase-amount',
+        message: 'Por favor, ingresa el mínimo de compra',
+        code: 'coupon-minimum-purchase-missing',
     },
-
     missingEndDate: {
-        message: 'No se ha proporcionado la fecha de finalización del cupón',
-        code: 'missing-end-date',
+        message: 'Por favor, ingresa la fecha de finalización del cupón',
+        code: 'coupon-end-date-missing',
     },
-
     missingStatus: {
-        message: 'No se ha proporcionado el estado del cupón',
-        code: 'missing-status',
+        message: 'Por favor, selecciona el estado del cupón',
+        code: 'coupon-status-missing',
     },
-
     missingCouponCode: {
-        message: 'No se ha proporcionado el código del cupón',
-        code: 'missing-coupon-code',
+        message: 'Por favor, ingresa el código del cupón',
+        code: 'coupon-code-missing',
     },
-
     missingProductIds: {
-        message: 'No se ha proporcionado ningún ID de producto',
-        code: 'missing-product-ids',
+        message: 'Por favor, selecciona al menos un producto para el cupón',
+        code: 'coupon-product-ids-missing',
     },
-
     missingPurchaseAmount: {
-        message: 'No se ha proporcionado la cantidad de compra',
-        code: 'missing-purchase-amount',
+        message: 'Por favor, ingresa el monto de la compra',
+        code: 'coupon-purchase-amount-missing',
     },
-
     invalidPurchaseAmount: {
-        message: 'La cantidad de compra debe ser un número válido mayor a 0',
-        code: 'invalid-purchase-amount',
+        message: 'El monto de la compra debe ser mayor a 0. ¿Podrías revisarlo?',
+        code: 'coupon-purchase-amount-invalid',
     },
-
     productNotFound: {
-        message: (productId: string) => `El producto con ID ${productId} no existe en la base de datos`,
-        code: 'product-not-found',
+        message: (productId: string) => `No pudimos encontrar uno de los productos. ¿Quieres revisarlo?`,
+        code: 'coupon-product-not-found',
     },
-
     couponNotFound: {
-        message: 'El cupón no existe en la base de datos',
+        message: 'No pudimos encontrar este cupón. ¿Quieres crear uno nuevo?',
         code: 'coupon-not-found',
     },
-
     couponAlreadyExist: {
-        message: 'El cupón ya existe en la base de datos',
+        message: 'Este cupón ya existe. ¿Quieres crear uno diferente?',
         code: 'coupon-already-exist',
     },
-
     invalidCategoryId: {
-        message: 'El ID de categoría no es válido',
-        code: 'invalid-category-id',
+        message: 'La categoría seleccionada no es válida',
+        code: 'coupon-category-invalid',
     },
-
     invalidProductId: {
-        message: 'Uno o más IDs de producto no son válidos',
-        code: 'invalid-product-ids',
+        message: 'Uno o más productos seleccionados no son válidos',
+        code: 'coupon-product-ids-invalid',
     },
-
     invalidSubcategoryId: {
-        message: 'El ID de subcategoría no es válido',
-        code: 'invalid-subcategory-id',
+        message: 'La subcategoría seleccionada no es válida',
+        code: 'coupon-subcategory-invalid',
     },
-
     expiredCoupon: {
-        message: 'El cupón ha expirado',
-        code: 'expired-coupon',
+        message: 'Lo sentimos, este cupón ha expirado',
+        code: 'coupon-expired',
     },
-
     inactiveCoupon: {
-        message: 'El cupón no está activo',
-        code: 'inactive-coupon',
+        message: 'Este cupón no está activo actualmente',
+        code: 'coupon-inactive',
     },
-
     minimumPurchaseAmountNotReached: {
-        message: 'La cantidad de compra debe ser mayor o igual al mínimo de compra',
-        code: 'minimum-purchase-amount-not-reached',
+        message: 'Tu compra no alcanza el mínimo requerido para usar este cupón',
+        code: 'coupon-minimum-purchase-not-reached',
     },
-
     productsNotFound: {
-        message: 'Uno o más productos ingresados no existen en la base de datos',
-        code: 'products-not-found',
+        message: 'No pudimos encontrar algunos de los productos seleccionados',
+        code: 'coupon-products-not-found',
     },
-
     expiredEndDate: {
-        message: 'La fecha de finalización del cupón ha expirado',
-        code: 'expired-end-date',
+        message: 'La fecha de finalización del cupón ya pasó. ¿Quieres actualizarla?',
+        code: 'coupon-end-date-expired',
     },
-
     couponNotApplicable: {
-        message: 'El cupón no se aplica a ningún producto',
+        message: 'Este cupón no se aplica a los productos en tu carrito',
         code: 'coupon-not-applicable',
     },
-
 }
 
+
 export const interfacesValidatorsErrors = {
-
     productVariant: {
-
         notArray: {
-            message: 'El producto debe ser una lista de objetos',
-            code: 'not-array',
+            message: 'La lista de productos no es válida. ¿Podrías revisarla?',
+            code: 'product-variant-not-array',
         },
-
         noVariants: {
-            message: 'No se ha proporcionado ninguna variante',
-            code: 'no-variants',
+            message: 'No se han agregado variantes al producto. ¿Quieres agregar alguna?',
+            code: 'product-variant-missing',
         },
-
         invalidPrice: {
-            message: 'El precio de la variante debe ser un número válido mayor a 0',
-            code: 'invalid-price',
+            message: 'El precio de la variante debe ser mayor a 0. ¿Podrías revisarlo?',
+            code: 'product-variant-price-invalid',
         },
-
         invalidStock: {
-            message: 'El stock de la variante debe ser un número válido mayor a 0',
-            code: 'invalid-stock',
+            message: 'El stock de la variante debe ser mayor a 0. ¿Podrías revisarlo?',
+            code: 'product-variant-stock-invalid',
         },
-
         invalidSize: {
-            message: 'El tamaño de la variante debe ser un número válido mayor a 0',
-            code: 'invalid-size',
+            message: 'El tamaño de la variante no es válido. ¿Podrías revisarlo?',
+            code: 'product-variant-size-invalid',
         },
-
         invalidColor: {
-            message: 'El color de la variante debe ser un número válido mayor a 0',
-            code: 'invalid-color',
+            message: 'El color de la variante no es válido. ¿Podrías revisarlo?',
+            code: 'product-variant-color-invalid',
         }
-
     },
-
     orderItem: {
-
         noItems: {
-            message: 'No se ha proporcionado ningún item',
-            code: 'no-items',
+            message: 'Tu carrito está vacío. ¿Quieres agregar algunos productos?',
+            code: 'order-item-missing',
         },
-
         invalidProductId: {
-            message: 'El ID del producto del item debe ser un número válido mayor a 0',
-            code: 'invalid-product-id',
+            message: 'Uno de los productos en tu carrito no es válido. ¿Podrías revisarlo?',
+            code: 'order-item-product-id-invalid',
         },
-
         invalidQuantity: {
-            message: 'La cantidad del item debe ser un número válido mayor a 0',
-            code: 'invalid-quantity',
+            message: 'La cantidad de un producto debe ser mayor a 0. ¿Podrías revisarla?',
+            code: 'order-item-quantity-invalid',
         },
-
         invalidQuantityValue: {
-            message: 'La cantidad del item debe ser un número válido mayor a 0',
-            code: 'invalid-quantity-value',
+            message: 'La cantidad de un producto debe ser mayor a 0. ¿Podrías revisarla?',
+            code: 'order-item-quantity-value-invalid',
         },
-
         invalidVariant: {
-            message: 'La variante del item debe ser un objeto válido',
-            code: 'invalid-variant',
+            message: 'Una de las variantes seleccionadas no es válida. ¿Podrías revisarla?',
+            code: 'order-item-variant-invalid',
         }
-
     },
-
     shippingAddress: {
-
         noAdress: {
-            message: 'No se ha proporcionado ninguna dirección',
-            code: 'no-address',
+            message: 'Por favor, agrega una dirección de envío',
+            code: 'shipping-address-missing',
         },
-
         invalidPhone: {
-            message: 'El teléfono debe ser un número válido mayor a 0',
-            code: 'invalid-phone',
+            message: 'El número de teléfono no es válido. ¿Podrías revisarlo?',
+            code: 'shipping-address-phone-invalid',
         },
-
         invalidStreet: {
-            message: 'La calle debe ser una cadena de caracteres válida',
-            code: 'invalid-street',
+            message: 'La calle no es válida. ¿Podrías revisarla?',
+            code: 'shipping-address-street-invalid',
         },
-
         invalidCity: {
-            message: 'La ciudad debe ser una cadena de caracteres válida',
-            code: 'invalid-city',
+            message: 'La ciudad no es válida. ¿Podrías revisarla?',
+            code: 'shipping-address-city-invalid',
         },
-
         invalidState: {
-            message: 'El estado debe ser una cadena de caracteres válida',
-            code: 'invalid-state',
+            message: 'El estado no es válido. ¿Podrías revisarlo?',
+            code: 'shipping-address-state-invalid',
         },
-
         invalidPostalCode: {
-            message: 'El código postal debe ser un número válido mayor a 0',
-            code: 'invalid-postal-code',
+            message: 'El código postal no es válido. ¿Podrías revisarlo?',
+            code: 'shipping-address-postal-code-invalid',
         },
-
         invalidCountry: {
-            message: 'El país debe ser una cadena de caracteres válida',
-            code: 'invalid-country',
+            message: 'El país no es válido. ¿Podrías revisarlo?',
+            code: 'shipping-address-country-invalid',
         },
-
     },
-
     orderTotal: {
-
         noOrderTotal: {
-            message: 'No se ha proporcionado el total del pedido',
-            code: 'no-order-total',
+            message: 'No pudimos calcular el total de tu pedido. ¿Quieres intentar de nuevo?',
+            code: 'order-total-missing',
         },
-
         invalidSubtotal: {
-            message: 'El subtotal debe ser un número válido mayor a 0',
-            code: 'invalid-subtotal',
+            message: 'El subtotal de tu pedido no es válido. ¿Podrías revisarlo?',
+            code: 'order-total-subtotal-invalid',
         },
-
         invalidDiscount: {
-            message: 'El descuento debe ser un número válido mayor a 0',
-            code: 'invalid-discount',
+            message: 'El descuento aplicado no es válido. ¿Podrías revisarlo?',
+            code: 'order-total-discount-invalid',
         },
-
         invalidTotal: {
-            message: 'El total debe ser un número válido mayor a 0',
-            code: 'invalid-total',
+            message: 'El total de tu pedido no es válido. ¿Podrías revisarlo?',
+            code: 'order-total-invalid',
         },
-
         invalidSubtotalValue: {
-            message: 'El subtotal debe ser un número válido mayor a 0',
-            code: 'invalid-subtotal-value',
+            message: 'El subtotal de tu pedido debe ser mayor a 0. ¿Podrías revisarlo?',
+            code: 'order-total-subtotal-value-invalid',
         },
-
         invalidDiscountValue: {
-            message: 'El descuento debe ser un número válido mayor a 0',
-            code: 'invalid-discount-value',
+            message: 'El descuento aplicado debe ser mayor a 0. ¿Podrías revisarlo?',
+            code: 'order-total-discount-value-invalid',
         },
-
         invalidTotalValue: {
-            message: 'El total debe ser un número válido mayor a 0',
-            code: 'invalid-total-value',
+            message: 'El total de tu pedido debe ser mayor a 0. ¿Podrías revisarlo?',
+            code: 'order-total-value-invalid',
         }
-
     },
-
     url: {
-
         invalidUrl: {
-            message: 'La url debe ser una cadena de caracteres válida',
-            code: 'invalid-url',
+            message: 'La URL no es válida. ¿Podrías revisarla?',
+            code: 'url-invalid',
         }
-
     }
-
-
-
 }
 
 export const sharedErrors = {
-
     unauthorized: {
-        message: 'No tienes permiso para realizar esta acción',
-        code: 'unauthorized',
+        message: 'No tienes permiso para realizar esta acción. ¿Quieres iniciar sesión?',
+        code: 'shared-unauthorized',
     },
-
     missingFields: {
-        message: 'No se han proporcionado todos los campos',
-        code: 'missing-fields',
+        message: 'Faltan algunos datos. ¿Podrías completar todos los campos?',
+        code: 'shared-fields-missing',
     },
-
     invalidBearer: {
-        message: 'El Bearer ingresado no es valido',
-        code: 'invalid-bearer',
+        message: 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo',
+        code: 'shared-bearer-invalid',
     },
-
     noFieldToUpdate: {
-        message: 'No se puede realizar esta acción si no se proporciona ningún parámetro',
-        code: 'no-field-to-update',
+        message: 'No se ha seleccionado ningún campo para actualizar',
+        code: 'shared-update-fields-missing',
     },
-
     missingId: {
-        message: 'No se ha proporcionado una ID',
-        code: 'missing-id',
+        message: 'Falta un identificador necesario',
+        code: 'shared-id-missing',
     },
-
     unknownError: {
-        message: 'Ha ocurrido un error inesperado en el servidor',
-        code: 'unknown-error',
+        message: 'Ups, algo salió mal. Por favor, inténtalo de nuevo más tarde',
+        code: 'shared-unknown-error',
     },
-
     invalidId: {
-        message: 'La ID proporcionada no es valida',
-        code: 'invalid-id',
+        message: 'El identificador proporcionado no es válido',
+        code: 'shared-id-invalid',
     },
-
     invalidParameters: {
-        message: 'Los parámetros proporcionados no son válidos',
-        code: 'invalid-parameters',
+        message: 'Algunos de los datos ingresados no son válidos. ¿Podrías revisarlos?',
+        code: 'shared-parameters-invalid',
     },
-
     invalidPage: {
-        message: 'La página debe ser un número entero mayor a 0',
-        code: 'invalid-page',
+        message: 'El número de página no es válido. ¿Podrías revisarlo?',
+        code: 'shared-page-invalid',
     },
-
     invalidLimit: {
-        message: 'El limite debe ser un número entero mayor a 0',
-        code: 'invalid-limit',
+        message: 'El límite de resultados no es válido. ¿Podrías revisarlo?',
+        code: 'shared-limit-invalid',
     },
-
     invalidImg: {
-        message: 'La imagen ingresada no es valida',
-        code: 'invalid-img',
+        message: 'La imagen no es válida. ¿Podrías intentar con otra?',
+        code: 'shared-img-invalid',
     },
 }
-
