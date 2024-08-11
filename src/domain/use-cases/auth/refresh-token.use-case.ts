@@ -1,12 +1,12 @@
 import { sharedErrors } from "../../../config";
-import { LogSeverityLevel } from "../../entities";
+import { LogSeverityLevel, UserEntity } from "../../entities";
 import { CustomError } from "../../errors/custom-error";
 import { AuthRepository, LogRepository } from "../../repositories";
 import { CreateLog } from "../logs/create-log.use-case";
 
 interface RefreshTokenUseCase {
 
-    execute(refreshToken: string): Promise<string>;
+    execute(refreshToken: string): Promise<{ user: UserEntity, token: string }>;
 
 }
 
@@ -19,12 +19,16 @@ export class RefreshToken implements RefreshTokenUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(refreshToken: string): Promise<string> {
+    async execute(refreshToken: string): Promise<{ user: UserEntity, token: string }> {
 
         try {
-            const accessToken = await this.authRepository.refreshToken(refreshToken);
+            const [user, token] = await this.authRepository.refreshToken(refreshToken);
 
-            return accessToken;
+            return {
+                user,
+                token
+            };
+
         } catch (error) {
 
             if (error instanceof CustomError) throw error;

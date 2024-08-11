@@ -190,7 +190,7 @@ export class AuthController {
             if (!token) return ResponsesHandler.sendErrorResponse(res, 400, missingToken.message, missingToken.code);
 
             new RefreshToken(this.authRepository, this.logRepository).execute(token)
-                .then((token) => ResponsesHandler.sendSuccessResponse(res, `Se ha refrescado el token correctamente`, { token }))
+                .then((response) => ResponsesHandler.sendSuccessResponse(res, `Se ha refrescado el token correctamente`, { response }))
                 .catch((error) => ErrorsHandler.handleErrors(error, res));
 
         } catch (error) {

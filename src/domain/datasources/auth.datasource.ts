@@ -28,5 +28,5 @@ export abstract class AuthDatasource {
 
     abstract updateUser(updateUserDto: UpdateUserDto): Promise<UserEntity>;
 
-    abstract refreshToken(refreshToken: string): Promise<string>;
+    abstract refreshToken(refreshToken: string): Promise<[UserEntity, string]>;
 }

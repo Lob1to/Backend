@@ -7,5 +7,5 @@ export abstract class AuthRepository {
     abstract signOut(userId: string): Promise<void>;
     abstract deleteUser(id: string): Promise<UserEntity>;
     abstract updateUser(updateUserDto: UpdateUserDto): Promise<UserEntity>;
-    abstract refreshToken(refreshToken: string): Promise<string>;
+    abstract refreshToken(refreshToken: string): Promise<[UserEntity, string]>;
 }

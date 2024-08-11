@@ -129,7 +129,7 @@ export class AuthDatasourceImpl implements AuthDatasource {
         }
     }
 
-    async refreshToken(refreshToken: string): Promise<string> {
+    async refreshToken(refreshToken: string): Promise<[UserEntity, string]> {
 
         const payload = await JwtAdapter.validateToken<{ id: string, role: string[], tokenType: string }>(refreshToken);
         if (!payload) throw CustomError.badRequest(invalidToken.message, invalidToken.code);
@@ -141,8 +141,9 @@ export class AuthDatasourceImpl implements AuthDatasource {
 
         const newAccessToken: string = await JwtAdapter.generateToken({ id: payload.id, role: payload.role, tokenType: 'access-token' }) as string;
         if (!newAccessToken) throw CustomError.internalServer(tokenGenerationError.message, tokenGenerationError.code);
+        const userEntity = UserEntity.fromObject(user);
 
-        return newAccessToken;
+        return [userEntity, newAccessToken];
     }
 
 }

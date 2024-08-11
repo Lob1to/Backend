@@ -69,7 +69,7 @@ export const authErrors = {
         code: 'email-already-in-use',
     },
     invalidToken: {
-        message: 'Tu sesión ha expirado. Por favor, inicia sesión de nuevo',
+        message: 'La llave de acceso no es valida. Por favor, inicia sesión de nuevo',
         code: 'invalid-token',
     },
     invalidTokenData: {
@@ -82,7 +82,7 @@ export const authErrors = {
     },
     invalidCredentials: {
         message: 'No se ha encontrado una cuenta con ese correo. ¿Quieres intentarlo de nuevo?',
-        code: 'invalid-email',
+        code: 'invalid-credentials',
     },
     invalidId: {
         message: 'El identificador proporcionado no es válido',
