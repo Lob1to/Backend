@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 import { CategoriesRepository, CreateCategory, GetCategories, LogRepository, CreateCategoryDto, UpdateCategoryDto, UpdateCategory, DeleteCategory, PaginationDto } from "../../domain";
-import mongoose from "mongoose";
-
 
 export class CategoriesController {
 

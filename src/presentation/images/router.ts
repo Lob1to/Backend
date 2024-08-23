@@ -20,7 +20,7 @@ export class ImagesRoutes {
         const controller = new ImagesController(getImageRepository, logRepository);
 
         router.use(cors());
-        router.use(TypeMiddleware.validTypes(['users', 'products'], 1));
+        router.use(TypeMiddleware.validTypes(['users', 'products', 'categories'], 1));
 
         router.get('/:type/:img', controller.getImage);
         router.get('/:type/:id/:img', controller.getImage);

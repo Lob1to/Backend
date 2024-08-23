@@ -10,12 +10,13 @@ export class CategoriesDatasourceImpl implements CategoriesDatasource {
 
     async createCategory(createDto: CreateCategoryDto): Promise<CategoryEntity> {
 
-        const { name, description } = createDto;
+        const { name, image, description } = createDto;
         const category = await CategoryModel.findOne({ name });
+
         try {
             if (category) throw CustomError.badRequest(categoryAlreadyExist.message, categoryAlreadyExist.code);
 
-            const newCategory = await new CategoryModel({ name, description });
+            const newCategory = await new CategoryModel({ name, image, description });
             newCategory.save();
 
             return CategoryEntity.fromObject(newCategory!);

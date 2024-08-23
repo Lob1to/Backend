@@ -37,6 +37,7 @@ const productSchema: Schema<IProduct> = new Schema({
     stock: { type: Number, required: true },
     variantId: [String],
     variantTypeId: {
+        default: undefined,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'VariantType'
     },

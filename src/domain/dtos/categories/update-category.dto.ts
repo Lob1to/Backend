@@ -8,6 +8,7 @@ export class UpdateCategoryDto {
     constructor(
         public id: string,
         public name?: string,
+        public image?: string,
         public description?: string
     ) { }
 
@@ -17,8 +18,9 @@ export class UpdateCategoryDto {
 
         if (this.id) returnObj.id = this.id;
         if (this.name) returnObj.name = this.name;
+        if (this.image) returnObj.image = this.image;
         if (this.description) returnObj.description = this.description;
-        if (!returnObj.name && !returnObj.description) throw CustomError.badRequest(noFieldToUpdate.message, noFieldToUpdate.code);
+        if (!returnObj.name && !returnObj.description && !returnObj.image) throw CustomError.badRequest(noFieldToUpdate.message, noFieldToUpdate.code);
 
         return returnObj;
 
@@ -26,14 +28,14 @@ export class UpdateCategoryDto {
 
     static create(props: { [key: string]: any }): [string?, string?, UpdateCategoryDto?] {
 
-        const { id, name, description } = props;
+        const { id, name, image, description } = props;
         const { tooLongDescription } = categoryErrors;
         const { missingId } = sharedErrors;
 
         if (!id) return [missingId.message, missingId.code];
         if (description && description.length > validators.description.maxLength) return [tooLongDescription.message, tooLongDescription.code];
 
-        return [undefined, undefined, new UpdateCategoryDto(id, name, description)];
+        return [undefined, undefined, new UpdateCategoryDto(id, name, image, description)];
 
     }
 

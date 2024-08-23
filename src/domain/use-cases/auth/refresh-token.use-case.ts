@@ -6,7 +6,7 @@ import { CreateLog } from "../logs/create-log.use-case";
 
 interface RefreshTokenUseCase {
 
-    execute(refreshToken: string): Promise<{ user: UserEntity, token: string }>;
+    execute(refreshToken: string): Promise<{ [key: string]: any }>;
 
 }
 
@@ -19,10 +19,11 @@ export class RefreshToken implements RefreshTokenUseCase {
         private readonly logRepository: LogRepository,
     ) { }
 
-    async execute(refreshToken: string): Promise<{ user: UserEntity, token: string }> {
+    async execute(refreshToken: string): Promise<{ [key: string]: any }> {
 
         try {
-            const [user, token] = await this.authRepository.refreshToken(refreshToken);
+            const [userWithPass, token] = await this.authRepository.refreshToken(refreshToken);
+            const { password, ...user } = userWithPass;
 
             return {
                 user,
@@ -36,7 +37,7 @@ export class RefreshToken implements RefreshTokenUseCase {
             new CreateLog(this.logRepository).execute({
                 message: `${error}`,
                 level: LogSeverityLevel.high,
-                origin: 'login.use-case',
+                origin: 'refresh-token.use-case',
             });
 
             throw CustomError.internalServer(unknownError.message, unknownError.code);

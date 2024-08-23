@@ -17,7 +17,12 @@ export abstract class FileUploadRepository {
         file: any,
         id: string,
         imgNumber: number,
-        validExtensions: string[]): Promise<FileEntity>
+        validExtensions: string[]): Promise<FileEntity>;
+
+    abstract uploadCategoryPicture(
+        file: any,
+        id: string,
+        validExtensions: string[]): Promise<FileEntity>;
 
     abstract uploadSingleFile(
         name: string,

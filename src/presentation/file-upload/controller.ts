@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { UploadedFile } from "express-fileupload";
-import { UploadProfilePicture, UploadSingleFile, UploadMultipleFiles, FileUploadRepository, LogRepository, UploadProductImages, CustomError, ProductsRepository, AuthRepository, DeleteProductImage, UploadProductImage } from "../../domain";
+import { UploadProfilePicture, UploadSingleFile, UploadMultipleFiles, FileUploadRepository, LogRepository, CustomError, ProductsRepository, AuthRepository, DeleteProductImage, UploadProductImage, CategoriesRepository } from "../../domain";
 import { ErrorsHandler, ResponsesHandler } from "../handlers";
 import { fileUploadErrors, sharedErrors } from "../../config";
+import { UploadCategoryImage } from "../../domain/use-cases/file-upload/upload-category-image.use-case";
 
 const { missingImgName, tooManyFiles, invalidImgName } = fileUploadErrors;
 const { missingId, invalidId } = sharedErrors;
@@ -12,6 +13,7 @@ export class FileUploadController {
     constructor(
         private readonly fileUploadRepository: FileUploadRepository,
         private readonly productsRepository: ProductsRepository,
+        private readonly categoriesRepository: CategoriesRepository,
         private readonly authRepository: AuthRepository,
         private readonly logRepository: LogRepository,
     ) { }
@@ -45,6 +47,24 @@ export class FileUploadController {
 
             new UploadProductImage(this.fileUploadRepository, this.productsRepository, this.logRepository).execute(file, productId, imgNumber)
                 .then(file => ResponsesHandler.sendSuccessResponse(res, `Imagen número ${imgNumber} del producto con ID: ${productId} subida correctamente`, file)
+                )
+                .catch(error => ErrorsHandler.handleErrors(error, res));
+
+        } catch (error) {
+            ErrorsHandler.handleUnknownError(res);
+        }
+
+    }
+
+    uploadCategoryPicture = (req: Request, res: Response) => {
+
+        try {
+
+            const file = req.body.files[0] as UploadedFile;
+            const categoryId = req.params.id;
+
+            new UploadCategoryImage(this.fileUploadRepository, this.categoriesRepository, this.logRepository).execute(file, categoryId)
+                .then(file => ResponsesHandler.sendSuccessResponse(res, `Imagen de la categoría con ID: ${categoryId} subida correctamente`, file)
                 )
                 .catch(error => ErrorsHandler.handleErrors(error, res));
 

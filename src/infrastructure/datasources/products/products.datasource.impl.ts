@@ -78,8 +78,8 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
             const products = await ProductModel.find(query)
                 .skip((page - 1) * limit)
                 .limit(limit)
-                .populate('categoryId')
-                .populate('subcategoryId')
+                .populate('categoryId', 'name')
+                .populate('subcategoryId', 'name')
                 .populate({
                     path: 'variantId',
                     model: 'Variant',
@@ -129,7 +129,20 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
         if (!mongoose.Types.ObjectId.isValid(id)) throw CustomError.badRequest(invalidId.message, invalidId.code);
         try {
-            const product = await ProductModel.findById(id);
+            const product = await ProductModel.findById(id)
+                .populate('categoryId', 'name')
+                .populate('subcategoryId', 'name').populate({
+                    path: 'variantId',
+                    model: 'Variant',
+                    select: 'id price stock variantType',
+                    populate: {
+                        path: 'variantType',
+                        model: 'VariantType',
+                        select: 'id name'
+                    }
+                })
+                .populate('variantTypeId', 'id name');
+
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
             const productEntity = ProductEntity.fromObject(product)
@@ -173,7 +186,20 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
-            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateData, { new: true })
+                .populate('categoryId', 'name')
+                .populate('subcategoryId', 'name').populate({
+                    path: 'variantId',
+                    model: 'Variant',
+                    select: 'id price stock variantType',
+                    populate: {
+                        path: 'variantType',
+                        model: 'VariantType',
+                        select: 'id name'
+                    }
+                })
+                .populate('variantTypeId', 'id name');
+
             if (!updatedProduct) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
             CacheAdapter.delByPattern('products_list_');
@@ -198,7 +224,19 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
             const product = await ProductModel.findById(id);
             if (!product) throw CustomError.notFound(productNotFound.message, productNotFound.code);
 
-            await ProductModel.findByIdAndDelete(id);
+            await ProductModel.findByIdAndDelete(id)
+                .populate('categoryId', 'name')
+                .populate('subcategoryId', 'name').populate({
+                    path: 'variantId',
+                    model: 'Variant',
+                    select: 'id price stock variantType',
+                    populate: {
+                        path: 'variantType',
+                        model: 'VariantType',
+                        select: 'id name'
+                    }
+                })
+                .populate('variantTypeId', 'id name');
 
             return ProductEntity.fromObject(product);
 

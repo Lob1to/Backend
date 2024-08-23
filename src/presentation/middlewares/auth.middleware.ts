@@ -41,7 +41,6 @@ export class AuthMiddleware {
                 return ResponsesHandler.sendErrorResponse(res, 401, unauthorized.message, unauthorized.code);
             }
 
-            // TODO: Validar si el usuario esta activo.
             const { password, ...data } = UserEntity.fromObject(user!);
 
             req.body.user = data;

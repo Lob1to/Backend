@@ -1,14 +1,15 @@
 import { CustomError, FileEntity, FileUploadDatasource } from "../../../domain";
-import { UploadQueue, FileValidator, CacheAdapter, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor, fileUploadErrors } from "../../../config";
+import { UploadQueue, FileValidator, CacheAdapter, auth, sharedErrors, envs, validators, authErrors, productsErrors, ImageCompressor, fileUploadErrors, categoryErrors } from "../../../config";
 import { Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { UploadedFile } from "express-fileupload";
 import { isValidObjectId } from "mongoose";
-import { ProductModel, UserModel } from "../../../data/mongo";
+import { CategoryModel, ProductModel, UserModel } from "../../../data/mongo";
 
 const { userNotFound } = authErrors;
 const { invalidImgName } = fileUploadErrors;
 const { productNotFound } = productsErrors;
+const { categoryNotFound } = categoryErrors;
 const { unauthorized } = sharedErrors;
 
 export class FileUploadDatasourceImpl implements FileUploadDatasource {
@@ -161,6 +162,25 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
         const product = await ProductModel.findById(id);
 
         if (!product) throw CustomError.badRequest(productNotFound.message, productNotFound.code);
+
+        await this.checkIfImageExistsAndDelete(type, name, id);
+
+        const productPicture = await this.uploadSingleFile(name, file, id, type, validExtensions);
+
+        return FileEntity.fromObject(productPicture);
+
+    }
+
+    async uploadCategoryPicture(file: any, id: string, validExtensions: string[]): Promise<FileEntity> {
+
+        const name = 'image-1';
+        const type = 'categories';
+
+        if (!isValidObjectId(id)) throw CustomError.badRequest(categoryNotFound.message, categoryNotFound.code);
+
+        const category = await CategoryModel.findById(id);
+
+        if (!category) throw CustomError.badRequest(categoryNotFound.message, categoryNotFound.code);
 
         await this.checkIfImageExistsAndDelete(type, name, id);
 
