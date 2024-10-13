@@ -52,7 +52,7 @@ export class CreateProductDto {
 
 
         if (images && !Array.isArray(images)) return [invalidImages.message, invalidImages.code];
-        if (images && !images.every((image: { [key: string]: any }) => image.url || image.image)) return [invalidImages.message, invalidImages.code];
+        if (images && !images.every((image: { [key: string]: any }) => image.url || image.image || image.path)) return [invalidImages.message, invalidImages.code];
         if (!categoryId) return [missingCategoryId.message, missingCategoryId.code];
         if (!subcategoryId) return [missingSubcategoryId.message, missingSubcategoryId.code];
 

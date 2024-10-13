@@ -15,6 +15,7 @@ interface UploadCategoryImageUseCase {
 
 interface ImageOptions {
     url: string,
+    path: string,
 }
 
 const { unknownError } = sharedErrors;
@@ -35,6 +36,7 @@ export class UploadCategoryImage implements UploadCategoryImageUseCase {
 
             const image: ImageOptions = {
                 url: fileUploaded.imageUrl,
+                path: fileUploaded.imagePath,
             };
 
             const [error, errorCode, updateDto] = UpdateCategoryDto.create({

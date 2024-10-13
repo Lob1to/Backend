@@ -1,6 +1,7 @@
 export interface ProductImage {
     image: number;
     url: string;
+    path: string;
 }
 
 export class ProductEntity {

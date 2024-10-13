@@ -17,6 +17,7 @@ interface UploadProductImageUseCase {
 interface ImageOptions {
     image: number,
     url: string,
+    path: string,
 }
 
 const { unknownError } = sharedErrors;
@@ -38,6 +39,7 @@ export class UploadProductImage implements UploadProductImageUseCase {
             const image: ImageOptions = {
                 image: imgNumber,
                 url: fileUploaded.imageUrl,
+                path: fileUploaded.imagePath,
             };
 
             const productImages = (await new GetProductById(this.productsRepository, this.logRepository).execute(id))

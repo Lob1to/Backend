@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Router } from 'express';
 import fileUpload from 'express-fileupload';
 
@@ -37,6 +38,8 @@ export class Server {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
+
+        this.app.use(cors());
 
         //* Routes
 

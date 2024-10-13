@@ -7,6 +7,7 @@ export class FileEntity {
         public name: string,
         public path: string,
         public imageUrl: string,
+        public imagePath: string,
         public extension: string,
         public size: number,
 
@@ -18,11 +19,12 @@ export class FileEntity {
             name,
             path,
             imageUrl,
+            imagePath,
             extension,
             size
         } = object;
 
-        return new FileEntity(name, path, imageUrl, extension, size);
+        return new FileEntity(name, path, imageUrl, imagePath, extension, size);
 
     }
 

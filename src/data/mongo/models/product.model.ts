@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface IImage extends Document {
     image: number;
     url: string;
+    path: string;
 }
 
 interface IProduct extends Document {
@@ -25,6 +26,11 @@ const imageSchema: Schema<IImage> = new Schema({
     },
 
     url: {
+        type: String,
+        required: true,
+    },
+
+    path: {
         type: String,
         required: true,
     }

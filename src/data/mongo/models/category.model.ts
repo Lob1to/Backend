@@ -9,6 +9,7 @@ interface ICategory extends Document {
 interface IImage extends Document {
     image: number;
     url: string;
+    path: string;
 }
 const imageSchema: Schema<IImage> = new Schema({
 
@@ -18,6 +19,11 @@ const imageSchema: Schema<IImage> = new Schema({
     },
 
     url: {
+        type: String,
+        required: true,
+    },
+
+    path: {
         type: String,
         required: true,
     }

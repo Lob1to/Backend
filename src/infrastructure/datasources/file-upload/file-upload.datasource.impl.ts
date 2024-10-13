@@ -231,22 +231,11 @@ export class FileUploadDatasourceImpl implements FileUploadDatasource {
 
             const uploadTask = uploadBytesResumable(storageRef, compressedBuffer);
 
-            await new Promise((resolve, reject) => {
-
-                uploadTask.on(
-                    'state_changed',
-                    (snapshot) => {
-                        // TODO: Implementar el progreso en tiempo real usando websockets
-                    },
-                    (error) => reject(error),
-                    () => resolve(null)
-                );
-            });
-
             const fileEntity = FileEntity.fromObject({
                 name: fileName,
                 path: filePath,
                 imageUrl: `${envs.WEBSERVICE_URL}/images/${filePath}`,
+                imagePath: `/images/${filePath}`,
                 extension: 'webp',
                 size: file.size,
             });

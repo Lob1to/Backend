@@ -52,7 +52,7 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
 
         const { page, limit } = paginationDto;
         const { categoryId, subcategoryId } = getProductsDto;
-        const { maxPrice, minPrice, ...getProductsDtoValues } = getProductsDto.values;
+        const { maxPrice, minPrice, name, ...getProductsDtoValues } = getProductsDto.values;
 
 
         let query: { [key: string]: any } = { ...getProductsDtoValues };
@@ -72,6 +72,10 @@ export class ProductsDatasourceImpl implements ProductsDatasource {
             query.price = {};
             if (maxPrice) query.price.$lte = maxPrice;
             if (minPrice) query.price.$gte = minPrice;
+        }
+
+        if (name) {
+            query.name = { $regex: name, $options: 'i' };
         }
 
         try {
