@@ -1,5 +1,13 @@
 import NodeCache from "node-cache";
 
+/**
+ * A cache adapter that uses the `node-cache` library to provide in-memory caching.
+ * 
+ * The cache has a default time-to-live (TTL) of 100 seconds and a check period of 120 seconds.
+ * 
+ * This cache adapter provides methods to get, set, delete, and flush cache entries, as well as
+ * retrieve cache statistics.
+ */
 export class CacheAdapter {
 
     private static cache: NodeCache = new NodeCache({ stdTTL: 100, checkperiod: 120 });

@@ -1,24 +1,30 @@
 import 'dotenv/config';
 import * as env from 'env-var';
 
+/**
+ * Provides environment variables for the application, including configuration for MongoDB, email service, JWT, and Firebase.
+ * These variables are loaded from the `.env` file using the `dotenv` package.
+ */
 export const envs = {
+    // Port for the application to listen on
     PORT: env.get('PORT').required().asPortNumber(),
-    //* MongoDB config
+
+    // MongoDB configuration
     MONGO_USER: env.get('MONGO_USER').required().asString(),
     MONGO_PASS: env.get('MONGO_PASS').required().asString(),
     MONGO_DB_NAME: env.get('MONGO_DB_NAME').required().asString(),
     MONGO_URL: env.get('MONGO_URL').required().asString(),
 
-    //* Mailer config
+    // Email service configuration
     MAILER_SERVICE: env.get('MAILER_SERVICE').required().asString(),
     MAILER_EMAIL: env.get('MAILER_EMAIL').required().asString(),
     MAILER_SECRET_KEY: env.get('MAILER_SECRET_KEY').required().asString(),
     WEBSERVICE_URL: env.get('WEBSERVICE_URL').required().asString(),
 
-    //* JWT config
+    // JWT configuration
     JWT_SEED: env.get('JWT_SEED').required().asString(),
 
-    //* Firebase config
+    // Firebase configuration
     FIREBASE_API_KEY: env.get('FIREBASE_API_KEY').required().asString(),
     FIREBASE_AUTH_DOMAIN: env.get('FIREBASE_AUTH_DOMAIN').required().asString(),
     FIREBASE_PROJECT_ID: env.get('FIREBASE_PROJECT_ID').required().asString(),
@@ -27,11 +33,7 @@ export const envs = {
     FIREBASE_APP_ID: env.get('FIREBASE_APP_ID').required().asString(),
     FIREBASE_MEASUREMENT_ID: env.get('FIREBASE_MEASUREMENT_ID').required().asString(),
 
-    //* Firebase auth credentials
+    // Firebase auth credentials
     FIREBASE_AUTH_EMAIL: env.get('FIREBASE_AUTH_EMAIL').required().asEmailString(),
-    FIREBASE_AUTH_KEY: env.get('FIREBASE_AUTH_KEY').required().asString(),
-}
-
-
-
-
+    FIREBASE_AUTH_KEY: env.get('FIREBASE_AUTH_KEY').required().asString()
+};
